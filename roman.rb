@@ -25,10 +25,10 @@ roman = rules_for "Gregs Roman Game" do |game|
     
     list.custom :senator do |senators|
       senators.each do |s|
-        s.has :gold => rand(4)+1
-        s.has :people => rand(4)+1
-        s.has :influence => s.gold + s.people - 1
-        s.has :gives => senators_give[rand(senators_give.length)]
+        s.cost :gold => rand(4)+1
+        s.cost :people => rand(4)+1
+        s.benefit :influence => s.gold + s.people - 1
+        s.benefit :city => [senators_give[rand(senators_give.length)]]
         def s.to_s 
           "#{@people},#{@gold} => #{@influence},#{@gives}" 
         end
@@ -93,20 +93,27 @@ roman = rules_for "Gregs Roman Game" do |game|
     player.has :people
     player.has :score
     player.has :influence
-    player.has :city
+    player.has :city, []
   end
   
   game.players_can do |player|
     player.can :buy_senator do |actor|
-      senator = game.board.choose_from :senate
-      actor.spend :gold, senator.gold
-      actor.spend :people, senator.people
-      actor.gain :influence, senator.influence
-      actor.collect :city, senator.gives
-      game.board.remove :senate, senator
+      all = game.board.all(:senate)
+      #p all.length
+      affordable = all.find_all {|s| s.afford_by(actor)}
+      #p affordable.length
+      senator = affordable.random
+      #p senator
+      if (senator)
+        actor.purchase senator
+        game.board.remove :senate, senator
+        true
+      else
+        false
+      end
     end
     player.can :pass do |actor|
-      
+      true
     end
   end
 end

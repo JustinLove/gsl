@@ -98,9 +98,14 @@ class Round < Prototype
 end
 
 class InsufficientResources < RuntimeError
-  attr :resource
-  def initialize(r)
+  def initialize(r, has = 0, req = 0)
     @resource = r
+    @has = has
+    @req = req
+  end
+  
+  def to_s
+    "Insufficient #{@resource}, #{@has} < #{@req}"
   end
 end
 
@@ -108,36 +113,69 @@ class Player < Prototype
   attr_reader :name
   
   @@actions = {}
-  @@resources = []
-
+  @@action_order = []
+  @@resources = {}
   
-  def self.has(resource)
-    @@resources << resource
+  def self.has(resource, example = 0)
+    @@resources[resource] = example;
   end
   
   def self.can(action, &block)
     @@actions[action] = block
+    @@action_order << action
   end
   
   def initialize(named)
     @name = named
     @resources = {}
-    @@resources.each {|r| has(r)}
+    @@resources.each do |k,v|
+      if (v.class == Array)
+        vn = v.dup
+      else
+        vn = v
+      end
+      has(k,vn)
+    end
   end
 
-  def has(resource)
-    @resources[resource] = 0
+  def has(resource, value)
+    @resources[resource] = value
   end
   
   def take_turn()
-    @@actions.random.call(self)
-    p @name, @resources
+    for a in @@action_order
+      v = @@actions[a].call(self)
+      #p a, v
+      if (v)
+        p "#{@name} #{a}", @resources
+        break
+      end
+    end
+  end
+
+  def spend_check(resource, how_much)
+    if (how_much.class == Array)
+      if (!@resources[resource].include? how_much)
+        raise InsufficientResources.new(resource)
+      end
+    elsif (@resources[resource] < how_much)
+      raise InsufficientResources.new(resource, @resources[resource], how_much)
+    end
+  end
+  
+  def can_spend(resource, how_much)
+    begin
+      spend_check(resource, how_much)
+      #puts "#{resource} okay"
+      return true
+    rescue InsufficientResources
+      #puts "#{resource} xxxxx`"
+      return false
+    end
   end
   
   def spend(resource, how_much)
-    if (@resources[resource] < how_much)
-      raise InsufficientResources.new(:resource)
-    end
+    spend_check(resource, how_much)
     @resources[resource] -= how_much
   end
   
@@ -150,10 +188,17 @@ class Player < Prototype
   end
   
   def collect(resource, what)
-    if @resources[resource].class != Array
-      @resources[resource] = []
-    end
     @resources[resource] << what
+  end
+  
+  def method_missing(method, arg1)
+    #p method, arg1
+    by = method.to_s + '_by'
+    if (arg1.respond_to?(by))
+      arg1.__send__(by, self)
+    else
+      super
+    end
   end
   
 end
@@ -165,11 +210,32 @@ class Component
   def initialize(sym, description)
     @symbol = sym
     @description = description
+    @costs = []
+    @benefits = []
   end
 
   def has(hash)
     hash.each {|k,v| instance_variable_set("@#{k}", v)}
     hash.each {|k,v| self.class.__send__(:attr_reader, k)}
+  end
+  
+  def cost(hash)
+    hash.each {|k,v| @costs << k}
+    has hash
+  end
+  
+  def benefit(hash)
+    hash.each {|k,v| @benefits << k}
+    has hash
+  end
+  
+  def purchase_by(player)
+    @costs.each {|k| player.spend k, instance_variable_get("@#{k}")}
+    @benefits.each {|k| player.gain k, instance_variable_get("@#{k}")}
+  end
+  
+  def afford_by(player)
+    @costs.all? {|k| player.can_spend(k, instance_variable_get("@#{k}"))}
   end
 end
 
@@ -225,13 +291,16 @@ class Board < Prototype
     hash.each {|k,v| self.class.__send__(:attr_reader, k)}
   end
   
+  def all(area)
+    instance_variable_get("@#{area}").flatten.compact
+  end
+  
   def choose_from(area)
-    instance_variable_get("@#{area}").flatten.compact.random
+    all(area).random
   end
   
   def remove(area, what)
     from = instance_variable_get("@#{area}")
-    
   end
 end
 
