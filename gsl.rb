@@ -153,7 +153,7 @@ class Player < Prototype
       v = @@actions[a].call(self)
       #p a, v
       if (v)
-        p "#{@name} #{a}", @resources
+        p "#{@name} #{a}"
         break
       end
     end
@@ -202,6 +202,10 @@ class Player < Prototype
     else
       super
     end
+  end
+  
+  def to_s
+    @name + ": " + @resources.inspect
   end
   
 end
