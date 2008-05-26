@@ -70,17 +70,20 @@ roman = rules_for "Gregs Roman Game" do |game|
   game.every_round do |round|
     round.phase_order [:setup, :execute, :finish]
     round.to_setup do
+      p '-----New Round----'
       game.board.senate.each do |row|
         game.components.assign_random(:senator, row)
       end
       game.players.each do |player|
-        player.gain :gold, 4
-        player.gain :people, 4
+        city = player.fetch(:city)
+        player.gain :gold, city.find_all {|b| b == :farm}.length + 2
+        player.gain :people, city.find_all {|b| b == :gate}.length + 2
         player.reset :influence, 0
+        player.done = false
       end
     end
     round.to_execute do
-      3.times do
+      while (game.players.any? do |player| !player.done end)
         game.players.each do |player| player.take_turn end
       end
     end
@@ -113,6 +116,7 @@ roman = rules_for "Gregs Roman Game" do |game|
       end
     end
     player.can :pass do |actor|
+      actor.done = true
       true
     end
   end

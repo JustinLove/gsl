@@ -111,6 +111,7 @@ end
 
 class Player < Prototype
   attr_reader :name
+  attr_accessor :done
   
   @@actions = {}
   @@action_order = []
@@ -127,6 +128,7 @@ class Player < Prototype
   
   def initialize(named)
     @name = named
+    @done = false
     @resources = {}
     @@resources.each do |k,v|
       if (v.class == Array)
@@ -137,9 +139,13 @@ class Player < Prototype
       has(k,vn)
     end
   end
-
+  
   def has(resource, value)
     @resources[resource] = value
+  end
+  
+  def fetch(resource)
+    @resources[resource]
   end
   
   def take_turn()
@@ -176,6 +182,7 @@ class Player < Prototype
   
   def spend(resource, how_much)
     spend_check(resource, how_much)
+    #puts "#{resource} - #{how_much}"
     @resources[resource] -= how_much
   end
   
@@ -185,10 +192,6 @@ class Player < Prototype
   
   def reset(resource, to)
     @resources[resource] = to
-  end
-  
-  def collect(resource, what)
-    @resources[resource] << what
   end
   
   def method_missing(method, arg1)
