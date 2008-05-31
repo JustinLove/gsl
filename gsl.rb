@@ -144,10 +144,6 @@ class Player < Prototype
     @resources[resource] = value
   end
   
-  def fetch(resource)
-    @resources[resource]
-  end
-  
   def take_turn()
     for a in @@action_order
       v = @@actions[a].call(self)
@@ -194,11 +190,17 @@ class Player < Prototype
     @resources[resource] = to
   end
   
-  def method_missing(method, arg1)
+  def count_in(resource, what)
+    @resources[resource].find_all {|r| r == what}.length
+  end
+  
+  def method_missing(method, arg1 = nil)
     #p method, arg1
     by = method.to_s + '_by'
     if (arg1.respond_to?(by))
       arg1.__send__(by, self)
+    elsif (@resources.keys.include? method)
+      @resources[method]
     else
       super
     end

@@ -60,8 +60,8 @@ roman = rules_for "Gregs Roman Game" do |game|
   
   game.game_setup do
     game.players.each do |player|
-      player.gain :gold, 6
-      player.gain :people, 6
+      player.gain :gold, 0
+      player.gain :people, 0
     end
   end
   
@@ -75,9 +75,8 @@ roman = rules_for "Gregs Roman Game" do |game|
         game.components.assign_random(:senator, row)
       end
       game.players.each do |player|
-        city = player.fetch(:city)
-        player.gain :gold, city.find_all {|b| b == :farm}.length + 2
-        player.gain :people, city.find_all {|b| b == :gate}.length + 2
+        player.gain :gold, player.count_in(:city, :farm) + 5
+        player.gain :people, player.count_in(:city, :gate) + 5
         player.reset :influence, 0
         player.done = false
       end
