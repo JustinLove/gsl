@@ -18,20 +18,22 @@ end
 
 class Game < Prototype
   attr_reader :name
+  attr_reader :desiger
   attr_reader :player_range
   attr_reader :players
   attr_reader :components
   attr_reader :board
   
-  def initialize(name)
+  def initialize(name, designer = "")
     @name = name
+    @designer = designer
   end
   
   def for_players(range)
     @player_range = range
   end
   
-  def has_components()
+  def contents()
     @components = Componenets.new
     yield(@components)
   end
@@ -116,9 +118,14 @@ class Player < Prototype
   @@actions = {}
   @@action_order = []
   @@resources = {}
+  @@player_values = {}
   
   def self.has(resource, example = 0)
     @@resources[resource] = example;
+  end
+  
+  def self.values(resource, modifier)
+    @@player_values[resource] = modifier
   end
   
   def self.can(action, &block)
@@ -185,6 +192,24 @@ class Player < Prototype
   def gain(resource, how_much)
     @resources[resource] += how_much
   end
+
+  def valuate_resource(resource, how_much)
+    if (how_much.kind_of? Enumerable)
+      return how_much.inject(0) {|a, x| a + valuate_resource(resource, x)}
+    elsif (how_much.kind_of? Numeric)
+      return value_modifier(resource) * how_much
+    else
+      return value_modifier(resource) * value_modifier(how_much)
+    end
+  end
+  
+  def value_modifier(what)
+    if (@@player_values.include? what)
+      return @@player_values[what]
+    else
+      return 1
+    end
+  end
   
   def reset(resource, to)
     @resources[resource] = to
@@ -245,6 +270,11 @@ class Component
   
   def afford_by(player)
     @costs.all? {|k| player.can_spend(k, instance_variable_get("@#{k}"))}
+  end
+  
+  def valuate_by(player)
+    @costs.inject(0) {|n,k| n - player.valuate_resource(k, instance_variable_get("@#{k}"))} +
+      @benefits.inject(0) {|n,k| n + player.valuate_resource(k, instance_variable_get("@#{k}"))}
   end
 end
 
@@ -310,6 +340,7 @@ class Board < Prototype
   
   def remove(area, what)
     from = instance_variable_get("@#{area}")
+    remove_one(from, what)
   end
 end
 

@@ -1,33 +1,33 @@
 require 'gsl'
 
-roman = rules_for "Gregs Roman Game" do |game|
+roman = rules_for "Gregs Roman Game", "Greg" do |game|
   game.for_players 3..5
   
-  game.has_components do |list|
+  game.has_contents do |list|
     list.has 50, :gold, "yellow cube"
     list.has 50, :person, "white cube"
     list.has 20, :senator, "custom tile"
     list.has 16, :privlige, "custom tile"
-    list.has 20, :gate, "tile"
+    list.has 10, :gold_gate, "tile"
+    list.has 10, :white_gate, "tile"
     list.has 20, :farm, "tile"
-    list.has 20, :mine, "tile"
-    list.has 10, :dock, "tile"
-    list.has 10, :colusemum, "tile"
-    list.has 10, :forum, "tile"
-    list.has 10, :market, "tile"
+    list.has 10, :fort, "tile"
+    list.has 20, :road, "tile"
+    list.has 6, :coluseum, "tile"
+    list.has 6, :forum, "tile"
+    list.has 6, :bath, "tile"
     list.has 10, :monument, "tile"
-    list.has 10, :expansion, "tile"
     list.has 10, :temple, "tile"
     list.players_have 1, :pawn, "pawn"
     list.players_have 1, :score, "cube"
     
-    senators_give = [:gate, :farm, :mine, :special, :expansion, :temple, :monument]
+    senators_give = [:gold_gate, :white_gate, :farm, :fort, :road, :special, :temple, :monument]
     
     list.custom :senator do |senators|
       senators.each do |s|
-        s.cost :gold => rand(4)+1
-        s.cost :people => rand(4)+1
-        s.benefit :influence => s.gold + s.people - 1
+        s.cost :gold => rand(3)+1
+        s.cost :people => rand(3)+1
+        s.benefit :influence => s.gold + s.people
         s.benefit :city => [senators_give[rand(senators_give.length)]]
         def s.to_s 
           "#{@people},#{@gold} => #{@influence},#{@city}" 
@@ -75,8 +75,8 @@ roman = rules_for "Gregs Roman Game" do |game|
         game.components.assign_random(:senator, row)
       end
       game.players.each do |player|
-        player.gain :gold, player.count_in(:city, :farm) + 5
-        player.gain :people, player.count_in(:city, :gate) + 5
+        player.gain :gold, player.count_in(:city, :gold_gate) + 5
+        player.gain :people, player.count_in(:city, :white_gate) + 5
         player.reset :influence, 0
         player.done = false
       end
@@ -99,16 +99,28 @@ roman = rules_for "Gregs Roman Game" do |game|
     player.has :score
     player.has :influence
     player.has :city, []
+    
+    player.values :influence, 0.3
+    player.values :fort, 0.3
+    player.values :coluseum, 2
+    player.values :forum, 2
+    player.values :bath, 2
+    
   end
   
   game.players_can do |player|
     player.can :buy_senator do |actor|
       all = game.board.all(:senate)
       #p all.length
-      affordable = all.find_all {|s| s.afford_by(actor)}
+      affordable = all.find_all {|s| s.afford_by(actor)}.
+        map {|s| [s, s.valuate_by(actor)]}.
+        sort_by {|a| a[1]}
+      #p :sortdone
       #p affordable.length
-      senator = affordable.random
-      if (senator)
+      item = affordable.last
+      if (item)
+        p item.last
+        senator = item.first
         puts senator
         actor.purchase senator
         game.board.remove :senate, senator
