@@ -86,20 +86,22 @@ waste = rules_for "Industrial Waste", "Jurgen Strohm" do |game|
   end
   
   game.scoring do
-    players.each {|p| p.pay_fines; p.scoring}
+    players.each {|player| player.pay_fines; player.scoring; p player}
   end
 
-  all = game.board.all(:action)
-  #p all.length
-  valued = all.
-    map {|c| [c, c.valuate_by(actor)]}.
-    sort_by {|a| a[1]}
-  item = valued.last
-  p item.last
-  set = item.first
-  puts set
-  actor.gain :actions, set
-  game.board.remove :action, set
+  game.players_can :choose_cards do |player|
+    all = game.board.all(:action)
+    #p all.length
+    valued = all.
+      map {|c| [c, c.valuate_by(actor)]}.
+      sort_by {|a| a[1]}
+    item = valued.last
+    p item.last
+    set = item.first
+    puts set
+    actor.gain :actions, set
+    game.board.remove :action, set
+  end
   
 end
 
