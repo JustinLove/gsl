@@ -23,10 +23,12 @@ class Game < Prototype
   attr_reader :players
   attr_reader :components
   attr_reader :board
+  attr_accessor :over
   
   def initialize(name, designer = "")
     @name = name
     @designer = designer
+    @over = true
   end
   
   def for_players(range)
@@ -58,16 +60,27 @@ class Game < Prototype
   
   alias :players_can :players_have
   
-  def game_setup(&block)
-    @setup = block
+  def preparation(&block)
+    @preparation = block
+  end
+  
+  def scoring(&block)
+    @scoring = block
   end
   
   def play(number_of_players)
     @players = Array.new(4) {|i| Player.new("Player #{i}")}
-    @setup.call()
-    @rounds.times do |n|
-      @aRound.play()
+    @preparation.call()
+    if (instance_variables.include? '@rounds')
+      @rounds.times do |n|
+        @aRound.play()
+      end
+    else
+      begin
+        @aRound.play()
+      end while (!over)
     end
+    @scoring.call()
   end
 end
 
@@ -114,6 +127,7 @@ end
 class Player < Prototype
   attr_reader :name
   attr_accessor :done
+  attr_accessor :score
   
   @@actions = {}
   @@action_order = []
@@ -151,13 +165,21 @@ class Player < Prototype
     @resources[resource] = value
   end
   
-  def take_turn()
-    for a in @@action_order
-      v = @@actions[a].call(self)
-      #p a, v
-      if (v)
-        p "#{@name} #{a}"
-        break
+  def take_turn(which = nil)
+    if (which)
+      if (@@actions.keys.include? which)
+        @@actions[which].call(self)
+      else
+        __send__(which) #trigger method missing
+      end
+    else
+      for a in @@action_order
+        v = @@actions[a].call(self)
+        #p a, v
+        if (v)
+          p "#{@name} #{a}"
+          break
+        end
       end
     end
   end
@@ -188,6 +210,8 @@ class Player < Prototype
     #puts "#{resource} - #{how_much}"
     @resources[resource] -= how_much
   end
+  
+  alias :lose :spend
   
   def gain(resource, how_much)
     @resources[resource] += how_much
@@ -226,6 +250,8 @@ class Player < Prototype
       arg1.__send__(by, self)
     elsif (@resources.keys.include? method)
       @resources[method]
+    elsif (@@actions and @@actions.keys.include? method)
+      @@actions[method].call(self)
     else
       super
     end
@@ -278,25 +304,37 @@ class Component
   end
 end
 
-class Componenets
+class Componenets < Prototype
   attr_reader :list
   
   def initialize()
     @list = Hash.new
   end
   
-  def has(count, sym, description)
+  def has(count, sym, description = nil)
     @list[sym] = Array.new(count)
+    description ||= sym
     #p 'define', sym, @list[sym]
     count.times {|i| @list[sym][i] = Component.new(sym, description) }
   end
   
-  def players_have(count, sym, description)
+  def players_have(count, sym, description = nil)
     has(count, sym, description)
   end
 
   def custom(which)
     yield(@list[which])
+  end
+  
+  def cards(which, distribution)
+    @list[which] = Array.new()
+    distribution.each do |k, v|
+      v.times { @list[which] << Component.new(which, k) }
+    end
+  end
+  
+  def shuffle(which)
+    @list[which].shuffle!
   end
   
   def assign_random(which, set)
@@ -327,25 +365,38 @@ end
 class Board < Prototype
   def has(hash)
     hash.each {|k,v| instance_variable_set("@#{k}", v)}
-    hash.each {|k,v| self.class.__send__(:attr_reader, k)}
+    hash.each {|k,v| self.class.__send__(:attr_accessor, k)}
   end
   
   def all(area)
-    instance_variable_get("@#{area}").flatten.compact
+    areas(area).flatten.compact
+  end
+
+  def areas(area)
+    instance_variable_get("@#{area}")
   end
   
   def choose_from(area)
     all(area).random
   end
   
+  def draw_unique(area, to)
+    begin 
+      item = areas(area).pop
+    end until !to.include?(item)
+    #p item
+    to << item
+    yield(item)
+  end
+  
   def remove(area, what)
-    from = instance_variable_get("@#{area}")
+    from = areas(area)
     remove_one(from, what)
   end
 end
 
-def rules_for(name)
-  game = Game.new(name)
+def rules_for(name, designer)
+  game = Game.new(name, designer)
   yield(game)
   return game
 end

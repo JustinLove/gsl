@@ -3,7 +3,7 @@ require 'gsl'
 roman = rules_for "Gregs Roman Game", "Greg" do |game|
   game.for_players 3..5
   
-  game.has_contents do |list|
+  game.contents do |list|
     list.has 50, :gold, "yellow cube"
     list.has 50, :person, "white cube"
     list.has 20, :senator, "custom tile"
@@ -29,8 +29,8 @@ roman = rules_for "Gregs Roman Game", "Greg" do |game|
         s.cost :people => rand(3)+1
         s.benefit :influence => s.gold + s.people
         s.benefit :city => [senators_give[rand(senators_give.length)]]
-        def s.to_s 
-          "#{@people},#{@gold} => #{@influence},#{@city}" 
+        def s.to_s
+          "#{@people},#{@gold} => #{@influence},#{@city}"
         end
       end
     end
@@ -58,7 +58,7 @@ roman = rules_for "Gregs Roman Game", "Greg" do |game|
     layout.has :turn_order => Array.new(game.player_range.max)
   end
   
-  game.game_setup do
+  game.preparation do
     game.players.each do |player|
       player.gain :gold, 0
       player.gain :people, 0
