@@ -70,7 +70,7 @@ class Game < Prototype
   
   def play(number_of_players)
     @players = Array.new(4) {|i| Player.new("Player #{i}")}
-    @preparation.call()
+    @preparation.call() if @preparation
     if (instance_variables.include? '@rounds')
       @rounds.times do |n|
         @aRound.play()
@@ -80,7 +80,7 @@ class Game < Prototype
         @aRound.play()
       end while (!over)
     end
-    @scoring.call()
+    @scoring.call() if @scoring
   end
 end
 
