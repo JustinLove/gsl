@@ -16,13 +16,13 @@ waste = rules_for "Industrial Waste", "Jurgen Strohm" do |game|
     list.cards :action, {
       :order => 9,
       :material_action => 8,
-      :growth => 8,
+      :growth_action => 8,
       :innovation => 7,
       :disposal => 7,
       :advisor => 4,
       :hire => 4,
       :removal => 3,
-      :birbary => 2,
+      :bribary => 2,
       :accident => 1
     }
     
@@ -38,7 +38,7 @@ waste = rules_for "Industrial Waste", "Jurgen Strohm" do |game|
   game.has_board do |layout|
     layout.has :first_player => 0
     layout.has :action_sets => []
-    layout.has :draw_pile => []
+    layout.deck :draw_pile => :action
     layout.has :game_over => true
   end
   
@@ -56,7 +56,7 @@ waste = rules_for "Industrial Waste", "Jurgen Strohm" do |game|
   end
   
   game.preparation do
-    game.board.draw_pile.replace game.components.shuffle :action
+    game.board.reshuffle :draw_pile
   end
   
   game.every_round do |round|
@@ -69,6 +69,10 @@ waste = rules_for "Industrial Waste", "Jurgen Strohm" do |game|
           game.board.draw_unique :draw_pile, game.board.action_sets[i] do |card|
             if (card == :accident)
               game.players.each {|player| player.pay_fines}
+              game.board.reshuffle :draw_pile
+              false
+            else
+              true
             end
           end
         end

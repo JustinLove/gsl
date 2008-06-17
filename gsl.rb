@@ -41,7 +41,7 @@ class Game < Prototype
   end
   
   def has_board()
-    @board = Board.new
+    @board = Board.new(self)
     yield(@board)
   end
   
@@ -363,9 +363,22 @@ def remove_one(thingy, what)
 end
 
 class Board < Prototype
+  def initialize(game)
+    @game = game
+    @decks = {}
+  end
+  
   def has(hash)
     hash.each {|k,v| instance_variable_set("@#{k}", v)}
     hash.each {|k,v| self.class.__send__(:attr_accessor, k)}
+  end
+  
+  def deck(hash)
+    hash.each {|k,v| has k => []; @decks[k] = v}
+  end
+  
+  def reshuffle(area)
+    areas(area).replace @game.components.shuffle :action
   end
   
   def all(area)
@@ -383,10 +396,12 @@ class Board < Prototype
   def draw_unique(area, to)
     begin 
       item = areas(area).pop
+      if !yield(item)
+        retry
+      end
     end until !to.include?(item)
     #p item
     to << item
-    yield(item)
   end
   
   def remove(area, what)
