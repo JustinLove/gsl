@@ -279,6 +279,14 @@ class Component
     hash.each {|k,v| self.class.__send__(:attr_reader, k)}
   end
   
+  def special(&proc)
+    self.class.define_method @symbol, &proc
+  end
+  
+  def execute(actor)
+    self.__send__ @symbol, actor
+  end
+  
   def cost(hash)
     hash.each {|k,v| @costs << k}
     has hash

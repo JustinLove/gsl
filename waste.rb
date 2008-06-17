@@ -48,6 +48,7 @@ waste = rules_for "Industrial Waste", "Jurgen Strohm" do |game|
     player.has :materials, 5
     player.has :required_materials, 5
     player.has :waste, 0
+    player.values :waste, -1
     player.has :generated_waste, 5
     player.has :money, 15
     player.has :growth, 14
