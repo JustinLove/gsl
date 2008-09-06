@@ -10,81 +10,41 @@ class Hash
   end
 end
 
-class Prototype
+module Prototype
   def method_missing(which, *args, &block)
-    p "missing #{self.class}.#{which}" + args.inspect + block.inspect
+    puts "missing #{self.class}.#{which} #{args.inspect} {#{block.inspect}}"
   end
 end
 
-class Game < Prototype
-  attr_reader :name
-  attr_reader :desiger
-  attr_reader :player_range
-  attr_reader :players
-  attr_reader :components
-  attr_reader :board
-  attr_accessor :over
-  
-  def initialize(name, designer = "")
-    @name = name
-    @designer = designer
-    @over = true
-  end
-  
-  def for_players(range)
-    @player_range = range
-  end
-  
-  def contents()
-    @components = Componenets.new
-    yield(@components)
-  end
-  
-  def has_board()
-    @board = Board.new(self)
-    yield(@board)
-  end
-  
-  def has_rounds(n)
-    @rounds = n
-  end
-  
-  def every_round()
-    @aRound = Round.new
-    yield(@aRound)
-  end
-  
-  def players_have()
-    yield(Player)
-  end
-  
-  alias :players_can :players_have
-  
-  def preparation(&block)
-    @preparation = block
-  end
-  
-  def scoring(&block)
-    @scoring = block
-  end
-  
-  def play(number_of_players)
-    @players = Array.new(4) {|i| Player.new("Player #{i}")}
-    @preparation.call() if @preparation
-    if (instance_variables.include? '@rounds')
-      @rounds.times do |n|
-        @aRound.play()
-      end
-    else
-      begin
-        @aRound.play()
-      end while (!over)
+module Properties
+  def as_property(named)
+    define_method(named) do |value|
+      instance_variable_set("@#{named}", value)
     end
-    @scoring.call() if @scoring
   end
 end
 
-class Round < Prototype
+class Game
+  include Prototype
+  extend Properties
+
+  as_property :title
+  as_property :author
+  as_property :players
+  
+  def initialize(file)
+    self.instance_eval(File.read(file), file)
+    puts self
+  end
+  
+  def to_s
+    "#{@title} by #{@author}, #{@players} players"
+  end
+end
+
+class Round
+  include Prototype
+  
   def initialize()
     @phases = Hash.new
   end
@@ -124,7 +84,9 @@ class InsufficientResources < RuntimeError
   end
 end
 
-class Player < Prototype
+class Player
+  include Prototype
+  
   attr_reader :name
   attr_accessor :done
   attr_accessor :score
@@ -312,7 +274,9 @@ class Component
   end
 end
 
-class Componenets < Prototype
+class Componenets
+  include Prototype
+  
   attr_reader :list
   
   def initialize()
@@ -370,7 +334,9 @@ def remove_one(thingy, what)
   end
 end
 
-class Board < Prototype
+class Board
+  include Prototype
+  
   def initialize(game)
     @game = game
     @decks = {}
@@ -424,3 +390,4 @@ def rules_for(name, designer)
   return game
 end
 
+Game.new(ARGV.shift)

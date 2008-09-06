@@ -1,148 +1,165 @@
-require 'gsl'
+title "Industrial Waste"
+author "Jurgon Strohm"
+players 3..4
 
-waste = rules_for "Industrial Waste", "Jurgen Strohm" do |game|
-  game.for_players 3..4
-  
-  game.contents do |list|
-    list.has 12, :loan, "card"
-    list.has 54, :money, "euros"
-    list.players_have 4, :cylinder
-    list.players_have 1, :factory
-    list.has 1, :board
-    list.players_have 1, :mat
-    list.has 1, :first, "EURO"
-    list.has 50, :material, "barrel"
-    
-    list.cards :action, {
-      :order => 9,
-      :material_action => 8,
-      :growth_action => 8,
-      :innovation => 7,
-      :disposal => 7,
-      :advisor => 4,
-      :hire => 4,
-      :removal => 3,
-      :bribary => 2,
-      :accident => 1
-    }
-    
-    list.custom :action do |actions|
-      actions.each do |a|
-        def a.to_s
-          "#{@description}"
-        end
-      end
-    end
-  end
-  
-  game.has_board do |layout|
-    layout.has :first_player => 0
-    layout.has :action_sets => []
-    layout.deck :draw_pile => :action
-    layout.has :game_over => true
-  end
-  
-  game.players_have do |player|
-    player.has :workers, 5
-    player.has :rationalization, 5
-    player.has :materials, 5
-    player.has :required_materials, 5
-    player.has :waste, 0
-    player.values :waste, -1
-    player.has :generated_waste, 5
-    player.has :money, 15
-    player.has :growth, 14
-    player.has :loans, 0
-    player.has :actions, []
-  end
-  
-  game.preparation do
-    game.board.reshuffle :draw_pile
-  end
-  
-  game.every_round do |round|
-    round.phase_order [:lay_cards, :choose_cards, :play_cards, :pay_costs, :change_starting]
-    round.to_lay_cards do
-      n = game.players.length + 1
-      n.times {|i| game.board.action_sets[i] = []}
-      3.times do
-        n.times do |i|
-          game.board.draw_unique :draw_pile, game.board.action_sets[i] do |card|
-            if (card == :accident)
-              game.players.each {|player| player.pay_fines}
-              game.board.reshuffle :draw_pile
-              false
-            else
-              true
-            end
-          end
-        end
-      end
-    end
-    round.to_choose_cards do
-      game.players.each do |player| player.take_turn :choose_cards end
-    end
-    round.to_play_cards do
-      game.players.each do |player| player.done = false end
-      while (game.players.any? do |player| !player.done end)
-        game.players.each do |player| player.take_turn :play_cards end
-      end
-    end
-    round.to_pay_costs do
-      game.players.each do |player| player.pay_costs end
-    end
-    round.to_change_starting do
-      game.board.first_player += 1
-      game.over = game.board.game_over
-    end
-  end
-  
-  game.scoring do
-    game.players.each {|player| player.pay_fines; player.scoring; p player}
-  end
+=begin
 
-  game.players_can do |player|
-    player.can :choose_cards do |actor|
-      all = game.board.action_sets
-      #p all.length
-      valued = all.map {|s|
-        #p s
-        [s, s.map {|c| c.valuate_by(actor)}.reduce(:+) ]
-      }.sort_by {|a| a[1]}
-      item = valued.last
-      #puts item.last
-      set = item.first
-      #puts set
-      actor.gain :actions, set
-      game.board.remove :action_sets, set
-    end
-    player.can :play_cards do |actor|
-      actor.done = true
-    end
-    player.can :pay_costs do |actor|
-      actor.spend :money, actor.workers
-    end
-    player.can :scoring do |actor|
-      actor.score = actor.growth
-      [:rationalization, :required_materials, :generated_waste].each do |tech|
-        actor.score += [15, 10, 6, 3, 1].fetch(actor.__send__(tech) - 1)
-      end
-      actor.score += actor.money / 2
-      actor.score -= actor.loans
-    end
-    player.can :pay_fines do |actor|
-      case actor.waste
-      when 0..8
-      when 9..12
-        actor.lose :growth, 1
-        actor.spend :money, 5
-      when 12..16
-        actor.lose :growth, 2
-        actor.spend :money, 10
-      end
-    end
-  end
-  
-end
+Contents:
+  - action cards:
+    - order: 4
+    - material-sale: 8
+    - growth: 8
+    - innovation: 7
+    - waste disposal: 7
+    - advisor: 4
+    - hiring/firing: 4
+    - waste removal: 3
+    - bribery: 2
+    - accident: 1
+  - loan cards:
+    - -10: 8
+    - -20: 4
+  - EURO bank notes, millions:
+    - 1: 12
+    - 2: 12
+    - 5: 12
+    - 10: 12
+    - 20: 12
+  - cylinders: 4 per player
+  - factories: 1 per player
+  - game board
+  - company mats: 1 per player
+  - EURO
+  - raw materials: 50
 
-waste.play(4);
+Preparation:
+  - shuffle action-cards
+  - each player:
+    - set rationalization, materials-required, and waste-reduction 5
+    - set stored-waste to 0
+    - set co-workers to 5
+    - set growth to 14
+    - set loans to 0
+    - set money 15
+    - set raw-materials 5
+  - the youngest player is the dealer
+  - the dealer is the starting player
+  - the starting player takes the EURO
+
+Playing the game:
+
+Loans:
+At any time, a player may take-a-loan:
+   - take 10 million
+   - take -10 loan
+
+Game board:
+Growth (14-20):
+  - money earned for each order
+  - victory points
+
+Co-workers (1-5): 
+  - required level of rationalization
+  - money paid by each player at the end of each round
+
+The company mat (each player):
+Building:
+  - rationalization (1-5)
+  - materials-required (1-5)
+  - waste-reduction (1-5)
+  - waste-disposal (0-16):
+    - green (0-8)
+    - yellow (9-12)
+    - red (13-16)
+  - raw-materials
+
+[rationalization, materials-required, waste-reduction]: victory points
+  - 5: 1
+  - 4: 3
+  - 3: 6
+  - 2: 10
+  - 1: 15
+
+Playing a round:
+   - lay out card combinations
+   - choose card combinations
+   - play the cards
+   - pay basic costs
+   - change the starting player
+
+lay out card combinations: 3 time in players+1 combinations, dealer draws one card.
+  - combination-duplicates: discard and redraw.
+  - out: reshuffle
+  - draw accident: discard and redraw.
+    - waste-disposal green: n/a
+    - waste-disposal yellow: -5 million, -1 growth (play bribery: -0 growth)
+    - waste-disposal red: -10 million, -2 growth (play bribery: -0 growth)
+
+choose card combinations:
+  - each player clockwise: move one combination to held-cards
+  - discard leftover combinations
+
+play the cards: each player clockwise repeating, choose one:
+  - play a card (and then discard it)
+  - discard a card: material-sale: disallow discard
+  - save a card (last card only)
+
+Card: material-sale:
+  - player auctions M raw materials; M = player's materials-required
+  - players bid in relative-left-clockwise-once
+     - buyer is other-player: pay to seller
+     - buyer is seller: pay to bank
+
+Card: order:
+  - check co-workers >= rationalization
+  - spend raw-materials = materials-required
+  - gain waste-disposal = waste-reduction (overflow: disallow action)
+  - gain money = growth
+
+Card: growth: growth + 1.  If growth = 20, set game-over flag
+
+Card: hiring/firing: co-workers +/- 1
+
+Card: innovation:
+  - spend 5 million
+  - choose one [rationalization, materials-required, waste-reduction] - 1
+
+Card: waste disposal: waste-disposal - 3
+
+Card: waste removal: 
+  - w = min(active player waste-disposal, 1)
+  - active player waste-disposal - w
+  - other players waste-disposal - w
+
+Card: bribery:
+  - play only during accident
+  - spend 1 million
+  - reduce growth loss to 0
+
+Card: advisor:
+  - repay-loan: -10 money, +10 loans
+  - sell-materials: sell twice as many
+  - growth: perform-twice
+  - hiring/firing; perform-twice
+  - waste disposal: perform-twice
+  - waste removal: perform-twice
+  - order: money + 5
+
+pay the basic costs: each player pays money = co-workers
+
+change starting player:
+  - pass starting-player to left
+  - if accident was drawn, reshuffle cards
+  - check for game-over flag
+
+Game over:
+  - process accident as above
+
+Scoring:
+  - +growth
+  - +[rationalization, materials-required, waste-reduction]
+  - +money/2 round down
+  - +loans (negative)
+  - tiebreaker: money
+
+=end
