@@ -43,6 +43,8 @@ class Game
   include Prototype
   extend Properties
 
+  attr_reader :players
+
   as_property :title
   as_property :author
   as_property :number_of_players
@@ -60,26 +62,6 @@ class Game
     self.play(@number_of_players.random)
   end
   
-  def play(players)
-    puts self
-    @common = deep_copy(@@master_common)
-    @players = Array.new(players) {Player.new}
-    puts "#{@players.size} players"
-    self.instance_eval(&@preparation)
-  end
-  
-  def shuffle(deck)
-    @common[deck].shuffle!
-  end
-  
-  def each_player(&proc)
-    @players.each {|p| p.instance_eval &proc}
-  end
-  
-  def to_s
-    "#{@title} by #{@author}, #{@number_of_players} players"
-  end
-  
   def common_components(list)
     list.each do |name,value|
       Game.make_common(name, value)
@@ -91,7 +73,30 @@ class Game
       Player.make_components(name, value)
     end
   end
+
+  def play(players)
+    puts self
+    @common = deep_copy(@@master_common)
+    @players = Array.new(players) {Player.new(self)}
+    puts "#{@players.size} players"
+    self.instance_eval(&@preparation)
+  end
   
+  def shuffle(deck)
+    @common[deck].shuffle!
+  end
+  
+  def each_player(&proc)
+    @players.each {|pl| pl.instance_eval &proc}
+  end
+  
+  def starting_player_is(spec)
+  end
+  
+  def to_s
+    "#{@title} by #{@author}, #{@number_of_players} players"
+  end
+    
 end
 
 class Component
@@ -129,15 +134,32 @@ class Player
   include Prototype
   extend Prototype
   
+  attr_reader :color
+  
   @@master_components = {}
   
   def self.make_components(name, value)
     @@master_components[name] = Component.send(value.class.name.downcase, name, value)
   end
   
-  def initialize
+  def initialize(game)
+    @game = game
     @components = deep_copy(@@master_components)
+    @resources = {}
   end
+  
+  def set_to(n, *resources)
+    resources.each {|r| @resources[r] = n}
+  end
+  
+  def pick_color(*choices)
+    @color = (choices - @game.players.map {|pl| pl.color}).random
+  end
+  
+  def to_s
+    "#{@color} player #{@resources.inspect}"
+  end
+  
 end
 
 Game.new(ARGV.shift)
