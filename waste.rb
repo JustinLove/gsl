@@ -2,35 +2,39 @@ title "Industrial Waste"
 author "Jurgon Strohm"
 players 3..4
 
+components :action_cards => {
+    :order => 4,
+    :material_sale => 8,
+    :growth => 8,
+    :innovation => 7,
+    :waste_disposal => 7,
+    :advisor => 4,
+    :hiring_firing => 4,
+    :waste_removal => 3,
+    :bribery => 2,
+    :accident => 1,
+  },
+  :loan_cards => {
+    :'-10' => 8,
+    :'-20' => 4,
+  },
+  :EURO_bank_notes => {
+    :'1' => 12,
+    :'2' => 12,
+    :'5' => 12,
+    :'10' => 12,
+    :'20' => 12,
+  },
+  :game_board => 1,
+  :EURO => 1,
+  :raw_materials => 50
+
 =begin
 
 Contents:
-  - action cards:
-    - order: 4
-    - material-sale: 8
-    - growth: 8
-    - innovation: 7
-    - waste disposal: 7
-    - advisor: 4
-    - hiring/firing: 4
-    - waste removal: 3
-    - bribery: 2
-    - accident: 1
-  - loan cards:
-    - -10: 8
-    - -20: 4
-  - EURO bank notes, millions:
-    - 1: 12
-    - 2: 12
-    - 5: 12
-    - 10: 12
-    - 20: 12
   - cylinders: 4 per player
   - factories: 1 per player
-  - game board
   - company mats: 1 per player
-  - EURO
-  - raw materials: 50
 
 Preparation:
   - shuffle action-cards
