@@ -1,6 +1,6 @@
 title "Industrial Waste"
 author "Jurgon Strohm"
-players 3..4
+number_of_players 3..4
 
 common_components :action_cards => {
     :order => 4,
@@ -33,9 +33,25 @@ player_components :cylinders => 4,
   :factory => 1,
   :company_mat => 1
 
+preparation do
+  shuffle :action_cards
+  each_player do
+    pick_color :blue, :yellow, :green, :red
+    set_to 5, :rationalization, :materials_required, :waste_reduction
+    set_to 0, :stored_waste
+    set_to 5, :co_workers
+    set_to 14, :growth
+    set_to 0, :loans
+    set_to 15, :money
+    set_to 5, :raw_materials
+  end
+  starting_player_is :youngest
+end
+
 =begin
 
 Preparation:
+  - the oldest player is the bank
   - shuffle action-cards
   - each player:
     - set rationalization, materials-required, and waste-reduction 5
