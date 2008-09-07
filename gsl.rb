@@ -42,27 +42,33 @@ class Game
     "#{@title} by #{@author}, #{@players} players"
   end
   
-  def components(list)
+  def common_components(list)
     list.each do |name,value|
-      Component.make(name, value)
+      Component.make_common(name, value)
     end
   end
+  
+  def player_components(list)
+    list.each do |name,value|
+      Player.make_components(name, value)
+    end
+  end    
 end
 
 class Component
   include Prototype
   extend Prototype
   
-  @@components = {}
+  @@common = {}
   
   def initialize(name)
     @name = name
   end
   
-  def self.make(name, value)
-    @@components[name] = Component.send(value.class.name.downcase, name, value)
+  def self.make_common(name, value)
+    @@common[name] = Component.send(value.class.name.downcase, name, value)
   end
-  
+
   def self.hash(name, value)
     list = []
     value.each do|k,v|
@@ -82,11 +88,22 @@ class Component
   end
   
   def self.to_s
-    @@components.inspect
+    @@common.inspect
   end
   
   def to_s
     @name
+  end
+end
+
+class Player
+  include Prototype
+  extend Prototype
+  
+  @@components = {}
+  
+  def self.make_components(name, value)
+    @@components[name] = Component.send(value.class.name.downcase, name, value)
   end
 end
 

@@ -2,7 +2,7 @@ title "Industrial Waste"
 author "Jurgon Strohm"
 players 3..4
 
-components :action_cards => {
+common_components :action_cards => {
     :order => 4,
     :material_sale => 8,
     :growth => 8,
@@ -29,12 +29,11 @@ components :action_cards => {
   :EURO => 1,
   :raw_materials => 50
 
-=begin
+player_components :cylinders => 4,
+  :factory => 1,
+  :company_mat => 1
 
-Contents:
-  - cylinders: 4 per player
-  - factories: 1 per player
-  - company mats: 1 per player
+=begin
 
 Preparation:
   - shuffle action-cards
