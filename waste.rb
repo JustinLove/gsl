@@ -48,22 +48,12 @@ preparation do
   starting_player_is :youngest
 end
 
-=begin
+at_any_time :take_a_loan do
+  gain 10, :money
+  gain -10, :loans
+end
 
-Preparation:
-  - the oldest player is the bank
-  - shuffle action-cards
-  - each player:
-    - set rationalization, materials-required, and waste-reduction 5
-    - set stored-waste to 0
-    - set co-workers to 5
-    - set growth to 14
-    - set loans to 0
-    - set money 15
-    - set raw-materials 5
-  - the youngest player is the dealer
-  - the dealer is the starting player
-  - the starting player takes the EURO
+=begin
 
 Playing the game:
 

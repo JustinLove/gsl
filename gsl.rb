@@ -93,6 +93,10 @@ class Game
   def starting_player_is(spec)
   end
   
+  def at_any_time(action, &proc)
+    Player.at_any_time(action, proc)
+  end
+  
   def to_s
     "#{@title} by #{@author}, #{@number_of_players} players"
   end
@@ -130,6 +134,18 @@ class Component
   end
 end
 
+class InsufficientResources < RuntimeError
+  def initialize(r, has = 0, req = 0)
+    @resource = r
+    @has = has
+    @req = req
+  end
+  
+  def to_s
+    "Insufficient #{@resource}, #{@has} < #{@req}"
+  end
+end
+
 class Player
   include Prototype
   extend Prototype
@@ -137,9 +153,15 @@ class Player
   attr_reader :color
   
   @@master_components = {}
+  @@any_time = []
   
   def self.make_components(name, value)
     @@master_components[name] = Component.send(value.class.name.downcase, name, value)
+  end
+  
+  def self.at_any_time(action, proc)
+    define_method(action, proc)
+    @@any_time << action
   end
   
   def initialize(game)
@@ -150,6 +172,20 @@ class Player
   
   def set_to(n, *resources)
     resources.each {|r| @resources[r] = n}
+  end
+  
+  def change_resource(n, resource)
+    if @resources[resource] >= n
+      @resources[resource] += n
+    else
+      throw InsufficientResources(resource, @resources[resource], n)
+    end
+  end
+
+  alias :gain :change_resource
+  
+  def lose(n, resource)
+    change_resource(-n, resource)
   end
   
   def pick_color(*choices)
