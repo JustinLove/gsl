@@ -53,14 +53,27 @@ at_any_time :take_a_loan do
   gain -10, :loans
 end
 
+#game board
+player_resource :growth, 14..20
+player_resource :co_workers, 1..5
+
+#company mat
+# scoring value...?
+player_resource :rationalization, 1..5
+player_resource :materials_required, 1..5
+player_resource :waste_reduction, 1..5
+player_resource :waste_disposal, 0..16,
+  :classify => {
+    :green => 0..8,
+    :yellow => 9..12,
+    :red => 13..16
+  }
+player_resource :raw_materials
+
+#hidden trackable information ;^)
+player_resource :money
+
 =begin
-
-Playing the game:
-
-Loans:
-At any time, a player may take-a-loan:
-   - take 10 million
-   - take -10 loan
 
 Game board:
 Growth (14-20):

@@ -1,3 +1,5 @@
+Infinity = 1.0/0
+
 class Array
   def random
     self[rand(self.length)]
@@ -73,6 +75,9 @@ class Game
       Player.make_components(name, value)
     end
   end
+  
+  def player_resource(name, range = 0..Infinity, option = nil)
+  end
 
   def play(players)
     puts self
@@ -132,6 +137,11 @@ class Component
   def to_s
     @name
   end
+end
+
+class Resource
+  # Class.new(Resource) do .. end
+  # set_const
 end
 
 class InsufficientResources < RuntimeError
