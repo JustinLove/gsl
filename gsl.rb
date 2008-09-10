@@ -1,5 +1,7 @@
 Infinity = 1.0/0
 
+def Error(*args); throw *args; end
+
 class Array
   def random
     self[rand(self.length)]
@@ -50,7 +52,6 @@ class Game
   as_property :title
   as_property :author
   as_property :number_of_players
-  as_proc :preparation
 
   @@master_common = {}
   
@@ -61,7 +62,7 @@ class Game
   def initialize(file)
     # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
     self.instance_eval(File.read(file), file)
-    self.play(@number_of_players.random)
+    self.go(@number_of_players.random)
   end
   
   def common_components(list)
@@ -85,12 +86,12 @@ class Game
     end
   end
 
-  def play(players)
+  def go(players)
     puts self
     @common = deep_copy(@@master_common)
     @players = Array.new(players) {Player.new(self)}
     puts "#{@players.size} players"
-    self.instance_eval(&@preparation)
+    play
   end
   
   def shuffle(deck)
@@ -107,7 +108,18 @@ class Game
   def at_any_time(action, &proc)
     Player.at_any_time(action, proc)
   end
+
+  def to(name, &proc)
+    self.class.__send__ :define_method, name, &proc
+  end
   
+  alias every to
+  
+  def game_over
+    @rounds ||= 0
+    return (@rounds = @rounds + 1) > @players.length
+  end
+    
   def to_s
     "#{@title} by #{@author}, #{@number_of_players} players"
   end

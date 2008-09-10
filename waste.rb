@@ -33,7 +33,7 @@ player_components :cylinders => 4,
   :factory => 1,
   :company_mat => 1
 
-preparation do
+to :prepare do
   shuffle :action_cards
   each_player do
     pick_color :blue, :yellow, :green, :red
@@ -69,7 +69,7 @@ player_resource :waste_disposal, 0..16 do
     when 9..12 then :yellow
     when 13..16 then :red
     else
-      :error
+      Error "impossible section"
     end
   end
 end
@@ -78,41 +78,21 @@ player_resource :raw_materials
 #hidden trackable information ;^)
 player_resource :money
 
+to :play do
+  prepare
+  round until game_over
+  score
+end
+
+every :round do
+  lay_out_card_combinations
+  choose_card_combinations
+  play_the_cards
+  pay_basic_costs
+  change_the_starting_player
+end
+
 =begin
-
-Game board:
-Growth (14-20):
-  - money earned for each order
-  - victory points
-
-Co-workers (1-5): 
-  - required level of rationalization
-  - money paid by each player at the end of each round
-
-The company mat (each player):
-Building:
-  - rationalization (1-5)
-  - materials-required (1-5)
-  - waste-reduction (1-5)
-  - waste-disposal (0-16):
-    - green (0-8)
-    - yellow (9-12)
-    - red (13-16)
-  - raw-materials
-
-[rationalization, materials-required, waste-reduction]: victory points
-  - 5: 1
-  - 4: 3
-  - 3: 6
-  - 2: 10
-  - 1: 15
-
-Playing a round:
-   - lay out card combinations
-   - choose card combinations
-   - play the cards
-   - pay basic costs
-   - change the starting player
 
 lay out card combinations: 3 time in players+1 combinations, dealer draws one card.
   - combination-duplicates: discard and redraw.
