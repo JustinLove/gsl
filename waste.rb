@@ -62,12 +62,17 @@ player_resource :co_workers, 1..5
 player_resource :rationalization, 1..5
 player_resource :materials_required, 1..5
 player_resource :waste_reduction, 1..5
-player_resource :waste_disposal, 0..16,
-  :classify => {
-    :green => 0..8,
-    :yellow => 9..12,
-    :red => 13..16
-  }
+player_resource :waste_disposal, 0..16 do
+  def section
+    case @value
+    when 0..8 then :green
+    when 9..12 then :yellow
+    when 13..16 then :red
+    else
+      :error
+    end
+  end
+end
 player_resource :raw_materials
 
 #hidden trackable information ;^)

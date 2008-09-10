@@ -76,7 +76,13 @@ class Game
     end
   end
   
-  def player_resource(name, range = 0..Infinity, option = nil)
+  def player_resource(name, range = 0..Infinity, option = nil, &proc)
+    r = Resource.define(name)
+    r.range = range
+    r.option = option
+    if (!proc.nil?)
+      r.__send__ :include, Module.new(&proc)
+    end
   end
 
   def play(players)
@@ -140,8 +146,57 @@ class Component
 end
 
 class Resource
-  # Class.new(Resource) do .. end
-  # set_const
+  class << self
+    def define(name)
+      const_name = name.to_s.capitalize
+      if (const_defined?(const_name))
+        return const_get(const_name)
+      end
+      return const_set(const_name, Class.new(self) do
+        include Prototype
+        extend Properties
+        
+        class << self
+          attr_accessor :name, :range, :option
+          def to_s
+            "#{name} #{range}"
+          end
+        end
+        
+        @name = name
+        @range = 0..Infinity
+        @option = nil
+        
+        attr_accessor :value
+        
+        def initialize(value = 0)
+          @value = value
+        end
+        
+        def set(n)
+          if self.class.range.include?(n)
+            @value = n
+          else
+            throw 'resource out of range'
+          end
+        end
+        
+        def change(n)
+          if self.class.range.include?(@value+n)
+            @value += n
+          else
+            throw InsufficientResources(name, @value, n)
+          end
+        end
+
+        alias :gain :change
+
+        def lose(n)
+          change(-n)
+        end
+      end)
+    end
+  end
 end
 
 class InsufficientResources < RuntimeError
@@ -177,19 +232,17 @@ class Player
   def initialize(game)
     @game = game
     @components = deep_copy(@@master_components)
-    @resources = {}
+    @resources = Hash.new do |hash, key|
+      hash[key] = Resource.define(key).new
+    end
   end
   
   def set_to(n, *resources)
-    resources.each {|r| @resources[r] = n}
+    resources.each {|r| @resources[r].set(n)}
   end
   
   def change_resource(n, resource)
-    if @resources[resource] >= n
-      @resources[resource] += n
-    else
-      throw InsufficientResources(resource, @resources[resource], n)
-    end
+    @resources[resource].change(n)
   end
 
   alias :gain :change_resource
