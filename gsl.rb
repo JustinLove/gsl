@@ -77,7 +77,7 @@ class Game
     end
   end
   
-  def player_resource(name, range = 0..Infinity, option = nil, &proc)
+  def common_resource(name, range = 0..Infinity, option = nil, &proc)
     r = Resource.define(name)
     r.range = range
     r.option = option
@@ -85,6 +85,8 @@ class Game
       r.__send__ :include, Module.new(&proc)
     end
   end
+  
+  alias :player_resource :common_resource
 
   def go(players)
     puts self
@@ -163,9 +165,14 @@ end
 
 class Resource
   class << self
+    alias :class_name :name
     attr_accessor :name, :range, :option
     def to_s
-      "#{name} #{range}"
+      if name then
+        "#{name} #{range}"
+      else
+        super
+      end
     end
     def define(name)
       const_name = name.to_s.capitalize
@@ -185,10 +192,19 @@ class Resource
 
   attr_accessor :value
 
-  def initialize(value = 0)
-    @value = value
+  def set(n)
+    if (n.kind_of? Numeric)
+      class << self
+        self.__send__ :include, Value_Resource
+      end
+      self.set(n)
+    else
+      throw "can't have that kind of resource"
+    end
   end
+end
 
+module Value_Resource
   def set(n)
     if self.class.range.include?(n)
       @value = n
@@ -206,9 +222,9 @@ class Resource
   end
 
   alias :gain :change
-
+  
   def lose(n)
-    change(-n)
+    self.change(-n)
   end
 end
 
