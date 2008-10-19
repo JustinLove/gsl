@@ -157,57 +157,58 @@ class Component
   end
 end
 
+module Resource_Template
+end
+
+
 class Resource
   class << self
+    attr_accessor :name, :range, :option
+    def to_s
+      "#{name} #{range}"
+    end
     def define(name)
       const_name = name.to_s.capitalize
       if (const_defined?(const_name))
         return const_get(const_name)
       end
       return const_set(const_name, Class.new(self) do
-        include Prototype
-        extend Properties
-        
-        class << self
-          attr_accessor :name, :range, :option
-          def to_s
-            "#{name} #{range}"
-          end
-        end
-        
         @name = name
         @range = 0..Infinity
         @option = nil
-        
-        attr_accessor :value
-        
-        def initialize(value = 0)
-          @value = value
-        end
-        
-        def set(n)
-          if self.class.range.include?(n)
-            @value = n
-          else
-            throw 'resource out of range'
-          end
-        end
-        
-        def change(n)
-          if self.class.range.include?(@value+n)
-            @value += n
-          else
-            throw InsufficientResources(name, @value, n)
-          end
-        end
-
-        alias :gain :change
-
-        def lose(n)
-          change(-n)
-        end
       end)
     end
+  end
+
+  include Prototype
+  extend Properties
+
+  attr_accessor :value
+
+  def initialize(value = 0)
+    @value = value
+  end
+
+  def set(n)
+    if self.class.range.include?(n)
+      @value = n
+    else
+      throw 'resource out of range'
+    end
+  end
+
+  def change(n)
+    if self.class.range.include?(@value+n)
+      @value += n
+    else
+      throw InsufficientResources(name, @value, n)
+    end
+  end
+
+  alias :gain :change
+
+  def lose(n)
+    change(-n)
   end
 end
 
