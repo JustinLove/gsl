@@ -53,10 +53,15 @@ class Game
   as_property :author
   as_property :number_of_players
 
-  @@master_common = {}
+  @@master_components = {}
+  @@common_resources = []
   
-  def self.make_common(name, value)
-    @@master_common[name] = Component.send(value.class.name.downcase, name, value)
+  def self.make_componenets(name, value)
+    @@master_components[name] = Component.send(value.class.name.downcase, name, value)
+  end
+  
+  def self.make_resource(name)
+    @@common_resources << name
   end
   
   def initialize(file)
@@ -67,7 +72,7 @@ class Game
   
   def common_components(list)
     list.each do |name,value|
-      Game.make_common(name, value)
+      Game.make_componenets(name, value)
     end
   end
   
@@ -77,20 +82,29 @@ class Game
     end
   end
   
-  def common_resource(name, range = 0..Infinity, option = nil, &proc)
+  def create_resource(name, range = 0..Infinity, option = nil, &proc)
     r = Resource.define(name)
     r.range = range
     r.option = option
     if (!proc.nil?)
       r.__send__ :include, Module.new(&proc)
     end
+    r
   end
-  
-  alias :player_resource :common_resource
+
+  def common_resource(name, range = 0..Infinity, option = nil, &proc)
+    create_resource(name, range, option, &proc)
+    Game.make_resource(name)
+  end
+
+  def player_resource(name, range = 0..Infinity, option = nil, &proc)
+    create_resource(name, range, option, &proc)
+    Player.make_resource(name)
+  end
 
   def go(players)
     puts self
-    @common = deep_copy(@@master_common)
+    @common = deep_copy(@@master_components)
     @players = Array.new(players) {Player.new(self)}
     puts "#{@players.size} players"
     play
@@ -247,10 +261,15 @@ class Player
   attr_reader :color
   
   @@master_components = {}
+  @@player_resources = []
   @@any_time = []
   
   def self.make_components(name, value)
     @@master_components[name] = Component.send(value.class.name.downcase, name, value)
+  end
+  
+  def self.make_resource(name)
+    @@player_resources << name
   end
   
   def self.at_any_time(action, proc)

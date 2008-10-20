@@ -92,6 +92,8 @@ every :round do
   change_the_starting_player
 end
 
+common_resource :combinations
+
 =begin
 
 lay out card combinations: 3 time in players+1 combinations, dealer draws one card.
