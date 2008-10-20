@@ -195,7 +195,7 @@ class Resource
   def set(n)
     if (n.kind_of? Numeric)
       class << self
-        self.__send__ :include, Value_Resource
+        include Value_Resource
       end
       self.set(n)
     else
