@@ -212,6 +212,10 @@ class Resource
         include Value_Resource
       end
       self.set(n)
+    elsif (n.kind_of? Enumerable)
+      class << self
+        include Set_Resource
+      end
     else
       throw "can't have that kind of resource"
     end
@@ -240,6 +244,35 @@ module Value_Resource
   def lose(n)
     self.change(-n)
   end
+end
+
+module Set_Resource
+  def set(n)
+    if self.class.range.include?(n.size)
+      @value = n
+    else
+      throw 'resource out of range'
+    end
+  end
+
+  def gain(n)
+    possible = @value + n
+    if self.class.range.include?(possible.size)
+      @value = possible
+    else
+      throw InsufficientResources(name, @value, n)
+    end
+  end
+
+  def gain(lose)
+    possible = @value - n
+    if @value.include?(n) && self.class.range.include?(possible.size)
+      @value = possible
+    else
+      throw InsufficientResources(name, @value, n)
+    end
+  end
+
 end
 
 class InsufficientResources < RuntimeError
