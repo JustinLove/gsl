@@ -1,6 +1,7 @@
 Infinity = 1.0/0
 
 def Error(*args); throw *args; end
+Empty = nil
 
 class Object
   def cv; self.class; end
@@ -80,9 +81,12 @@ module ResourceUser
   end
 
   def resource_init
-    @components = deep_copy(cv.components);
     @resources = Hash.new do |hash, key|
       hash[key] = Resource.define(key).new
+      if (cv.components.keys.include? key)
+        hash[key].set deep_copy(cv.components[key])
+      end
+      hash[key]
     end
   end
 
@@ -164,13 +168,25 @@ class Game
     puts "#{@players.size} players"
     play
   end
-  
-  def draw(deck)
-    @components[deck].shift
+
+  def draw(deck = nil, &filter)
+    @deck = deck || @deck
+    @resources[@deck].draw(&filter)
   end
   
-  def shuffle(deck)
-    @components[deck].shuffle!
+  def shuffle(deck = nil)
+    @deck = deck || @deck
+    @resources[@deck].shuffle
+  end
+  
+  def reshuffle(deck = nil)
+    @deck = deck || @deck
+    @resources[@deck].reshuffle
+  end
+  
+  def discard(card, deck = nil)
+    @deck = deck || @deck
+    @resources[@deck].discard card
   end
   
   def number_playing
@@ -208,6 +224,7 @@ end
 class Component
   include Prototype
   extend Prototype
+  attr_reader :name
   
   def self.hash(name, value)
     list = []
@@ -235,10 +252,6 @@ class Component
     @name
   end
 end
-
-module Resource_Template
-end
-
 
 class Resource
   class << self
@@ -334,6 +347,30 @@ module Set_Resource
       @value = possible
     else
       throw InsufficientResources(name, @value, n)
+    end
+  end
+  
+  def discard(card)
+    @discards ||= []
+    @discards << card
+  end
+
+  def shuffle
+    @value.shuffle!
+  end
+
+  def reshuffle
+    @value.concat @discards || []
+    @discards = []
+    @value.shuffle!
+  end
+  
+  def draw(&filter)
+    @filter = filter || @filter
+    if @filter
+      @filter.call @value.shift
+    else
+      @value.shift
     end
   end
 

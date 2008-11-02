@@ -92,14 +92,29 @@ every :round do
   change_the_starting_player
 end
 
+every :accident do
+end
+
 common_resource :combinations
 
 to :lay_out_card_combinations do
   set_to (number_playing + 1).piles, :combinations
   3.times do
-    combinations.each {|pile| pile << draw(:action_cards)}
+    combinations.each do |pile|
+      pile << draw(:action_cards) do |card|
+        case (card && card.name) || Empty
+        when Empty: reshuffle; draw;
+        when :accident: accident; discard card; reshuffle; draw;
+        else card
+        end
+      end
+    end
   end
-  p combinations
+  combinations.each do |pile|
+    pile.each do |card|
+      discard card
+    end
+  end
 end
 
 =begin
