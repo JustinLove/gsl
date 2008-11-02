@@ -71,7 +71,7 @@ module ResourceUser
   end
 
   module Class
-    def make_componenets(name, value)
+    def make_components(name, value)
       cv.components[name] = Component.send(value.class.name.downcase, name, value)
     end
 
@@ -91,7 +91,7 @@ module ResourceUser
   end
 
   def method_missing(method, *args, &block)
-    return @resources[method].value if @resources.keys.include? method
+    return @resources[method] if @resources.keys.include? method
     super
   end
   
@@ -131,7 +131,7 @@ class Game
   
   def common_components(list)
     list.each do |name,value|
-      Game.make_componenets(name, value)
+      Game.make_components(name, value)
     end
   end
   

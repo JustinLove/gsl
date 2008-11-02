@@ -38,7 +38,7 @@ to :prepare do
   each_player do
     pick_color :blue, :yellow, :green, :red
     set_to 5, :rationalization, :materials_required, :waste_reduction
-    set_to 0, :stored_waste
+    set_to 0, :waste_disposal
     set_to 5, :co_workers
     set_to 14, :growth
     set_to 0, :loans
@@ -93,6 +93,12 @@ every :round do
 end
 
 every :accident do
+  each_player do
+    case waste_disposal.section
+    when :red: lose 10, :money; use(:bribary) || lose(2, :growth);
+    when :yellow: lose 5, :money; use(:bribary) || lose(1, :growth);
+    end
+  end
 end
 
 common_resource :combinations
@@ -100,7 +106,7 @@ common_resource :combinations
 to :lay_out_card_combinations do
   set_to (number_playing + 1).piles, :combinations
   3.times do
-    combinations.each do |pile|
+    combinations.value.each do |pile|
       pile << draw(:action_cards) do |card|
         case (card && card.name) || Empty
         when Empty: reshuffle; draw;
@@ -110,7 +116,7 @@ to :lay_out_card_combinations do
       end
     end
   end
-  combinations.each do |pile|
+  combinations.value.each do |pile|
     pile.each do |card|
       discard card
     end
