@@ -95,7 +95,7 @@ end
 common_resource :combinations
 
 to :lay_out_card_combinations do
-  set_to(Array.new(number_playing + 1) {[]}, :combinations)
+  set_to (number_playing + 1).piles, :combinations
   3.times do
     combinations.each {|pile| pile << draw(:action_cards)}
   end
