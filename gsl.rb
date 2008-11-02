@@ -2,6 +2,17 @@ Infinity = 1.0/0
 
 def Error(*args); throw *args; end
 
+class Object
+  def cv; self.class; end
+end
+
+class Class
+  def cv; self; end
+  def psuedo_class_var(var)
+    self.class.__send__ :attr_accessor, "#{var}"
+  end
+end
+
 class Array
   def random
     self[rand(self.length)]
@@ -43,9 +54,58 @@ def deep_copy(obj)
   Marshal::load(Marshal.dump(obj))
 end
 
+module ResourceUser
+  def self.included(base)
+    base.extend ResourceUser::Class
+    base.psuedo_class_var :components
+    base.psuedo_class_var :resources
+    base.cv.components = {}
+    base.cv.resources = []
+  end
+
+  module Class
+    def make_componenets(name, value)
+      cv.components[name] = Component.send(value.class.name.downcase, name, value)
+    end
+
+    def make_resource(name)
+      cv.resources << name
+    end
+  end
+
+  def resource_init
+    @components = deep_copy(cv.components);
+    @resources = Hash.new do |hash, key|
+      hash[key] = Resource.define(key).new
+    end
+  end
+
+  def method_missing(method, *args, &block)
+    return @resources[method].value if @resources.keys.include? method
+    super
+  end
+  
+  def set_to(n, *resources)
+    resources.each {|r| @resources[r].set(n)}
+  end
+  
+  def change_resource(n, resource)
+    @resources[resource].change(n)
+  end
+
+  def gain(n, resource)
+    @resources[resource].gain(n)
+  end
+
+  def lose(n, resource)
+    @resources[resource].lose(n)
+  end
+end
+
 class Game
   include Prototype
   extend Properties
+  include ResourceUser
 
   attr_reader :players
 
@@ -53,17 +113,6 @@ class Game
   as_property :author
   as_property :number_of_players
 
-  @@master_components = {}
-  @@common_resources = []
-  
-  def self.make_componenets(name, value)
-    @@master_components[name] = Component.send(value.class.name.downcase, name, value)
-  end
-  
-  def self.make_resource(name)
-    @@common_resources << name
-  end
-  
   def initialize(file)
     # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
     self.instance_eval(File.read(file), file)
@@ -104,14 +153,22 @@ class Game
 
   def go(players)
     puts self
-    @common = deep_copy(@@master_components)
+    resource_init
     @players = Array.new(players) {Player.new(self)}
     puts "#{@players.size} players"
     play
   end
   
+  def draw(deck)
+    @components[deck].shift
+  end
+  
   def shuffle(deck)
-    @common[deck].shuffle!
+    @components[deck].shuffle!
+  end
+  
+  def number_playing
+    @players.size
   end
   
   def each_player(&proc)
@@ -216,6 +273,7 @@ class Resource
       class << self
         include Set_Resource
       end
+      self.set(n)
     else
       throw "can't have that kind of resource"
     end
@@ -264,7 +322,7 @@ module Set_Resource
     end
   end
 
-  def gain(lose)
+  def lose(n)
     possible = @value - n
     if @value.include?(n) && self.class.range.include?(possible.size)
       @value = possible
@@ -290,20 +348,11 @@ end
 class Player
   include Prototype
   extend Prototype
+  include ResourceUser
   
   attr_reader :color
   
-  @@master_components = {}
-  @@player_resources = []
   @@any_time = []
-  
-  def self.make_components(name, value)
-    @@master_components[name] = Component.send(value.class.name.downcase, name, value)
-  end
-  
-  def self.make_resource(name)
-    @@player_resources << name
-  end
   
   def self.at_any_time(action, proc)
     define_method(action, proc)
@@ -312,26 +361,9 @@ class Player
   
   def initialize(game)
     @game = game
-    @components = deep_copy(@@master_components)
-    @resources = Hash.new do |hash, key|
-      hash[key] = Resource.define(key).new
-    end
+    resource_init
   end
-  
-  def set_to(n, *resources)
-    resources.each {|r| @resources[r].set(n)}
-  end
-  
-  def change_resource(n, resource)
-    @resources[resource].change(n)
-  end
-
-  alias :gain :change_resource
-  
-  def lose(n, resource)
-    change_resource(-n, resource)
-  end
-  
+    
   def pick_color(*choices)
     @color = (choices - @game.players.map {|pl| pl.color}).random
   end

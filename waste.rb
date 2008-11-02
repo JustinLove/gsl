@@ -94,6 +94,14 @@ end
 
 common_resource :combinations
 
+to :lay_out_card_combinations do
+  set_to(Array.new(number_playing + 1) {[]}, :combinations)
+  3.times do
+    combinations.each {|pile| pile << draw(:action_cards)}
+  end
+  p combinations
+end
+
 =begin
 
 lay out card combinations: 3 time in players+1 combinations, dealer draws one card.
