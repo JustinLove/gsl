@@ -127,11 +127,9 @@ class Game
   as_property :number_of_players
 
   def initialize(file)
-    $game = self
     # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
     self.instance_eval(File.read(file), file)
     self.go(@number_of_players.random)
-    $game = nil
   end
   
   def common_components(list)
@@ -263,8 +261,15 @@ class Component
     @name
   end
   
+  def discard_to(where)
+    if (where.class.name == @kind)
+      @home = where
+    end
+    return self
+  end
+  
   def discard
-    $game.discard self, @kind
+    @home.discard self
   end
 end
 
@@ -273,8 +278,8 @@ class Resource
     alias :class_name :name
     attr_accessor :name, :range, :option
     def to_s
-      if name then
-        "#{name} #{range}"
+      if @name then
+        "#{@name} #{@range}"
       else
         super
       end
@@ -380,12 +385,20 @@ module Set_Resource
     @value.shuffle!
   end
   
+  def primitive_draw
+    card = @value.shift
+    if (card.respond_to? :discard_to)
+      card.discard_to self
+    end
+    card
+  end
+  
   def draw(&filter)
     @filter = filter || @filter
     if @filter
-      @filter.call @value.shift
+      @filter.call primitive_draw
     else
-      @value.shift
+      primitive_draw
     end
   end
 
