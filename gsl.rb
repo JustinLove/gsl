@@ -2,6 +2,8 @@ Infinity = 1.0/0
 
 def Error(*args); throw *args; end
 Empty = nil
+Acted = true
+Passed = false
 
 class Object
   def cv; self.class; end
@@ -118,15 +120,18 @@ class Game
   include ResourceUser
 
   attr_reader :players
+  attr_reader :resources
 
   as_property :title
   as_property :author
   as_property :number_of_players
 
   def initialize(file)
+    $game = self
     # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
     self.instance_eval(File.read(file), file)
     self.go(@number_of_players.random)
+    $game = nil
   end
   
   def common_components(list)
@@ -197,6 +202,11 @@ class Game
     @players.each {|pl| pl.instance_eval &proc}
   end
   
+  def each_player_until_pass(&proc)
+    acted = true
+    @players.each {|pl| acted &&= pl.instance_eval &proc} until !acted
+  end
+  
   def starting_player_is(spec)
   end
   
@@ -229,7 +239,7 @@ class Component
   def self.hash(name, value)
     list = []
     value.each do|k,v|
-      v.times {list << Component.new(k)}
+      v.times {list << Component.new(k, name)}
     end
     array(name, list)
   end
@@ -244,12 +254,17 @@ class Component
     array(name, list)
   end
   
-  def initialize(name)
+  def initialize(name, kind = nil)
     @name = name
+    @kind = kind || name
   end
   
   def to_s
     @name
+  end
+  
+  def discard
+    $game.discard self, @kind
   end
 end
 
@@ -407,10 +422,31 @@ class Player
     resource_init
   end
     
+  def method_missing(method, *args, &block)
+    return @resources[method] if @resources.keys.include? method
+    return @game.__send__(method, *args, &block) if @game.resources.keys.include? method
+    super
+  end
+
   def pick_color(*choices)
     @color = (choices - @game.players.map {|pl| pl.color}).random
   end
   
+  def choose_best(from)
+    choices = __send__(from)
+    choices.shuffle
+    choices.draw
+  end
+  
+  def use(card)
+    if (card)
+      card.discard
+      Acted
+    else
+      Passed
+    end
+  end
+
   def to_s
     "#{@color} player #{@resources.inspect}"
   end

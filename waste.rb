@@ -44,6 +44,7 @@ to :prepare do
     set_to 0, :loans
     set_to 15, :money
     set_to 5, :raw_materials
+    set_to [], :held_cards
   end
   starting_player_is :youngest
 end
@@ -74,6 +75,7 @@ player_resource :waste_disposal, 0..16 do
   end
 end
 player_resource :raw_materials
+player_resource :held_cards, 0..5 #actually players + 1
 
 #hidden trackable information ;^)
 player_resource :money
@@ -116,6 +118,12 @@ to :lay_out_card_combinations do
       end
     end
   end
+end
+
+to :choose_card_combinations do
+  each_player do
+    gain choose_best(:combinations), :held_cards
+  end
   combinations.value.each do |pile|
     pile.each do |card|
       discard card
@@ -123,19 +131,13 @@ to :lay_out_card_combinations do
   end
 end
 
+to :play_the_cards do
+  each_player_until_pass do
+     use choose_best(:held_cards)
+  end
+end
+
 =begin
-
-lay out card combinations: 3 time in players+1 combinations, dealer draws one card.
-  - combination-duplicates: discard and redraw.
-  - out: reshuffle
-  - draw accident: discard and redraw.
-    - waste-disposal green: n/a
-    - waste-disposal yellow: -5 million, -1 growth (play bribery: -0 growth)
-    - waste-disposal red: -10 million, -2 growth (play bribery: -0 growth)
-
-choose card combinations:
-  - each player clockwise: move one combination to held-cards
-  - discard leftover combinations
 
 play the cards: each player clockwise repeating, choose one:
   - play a card (and then discard it)
