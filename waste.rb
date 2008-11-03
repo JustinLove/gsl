@@ -34,7 +34,8 @@ player_components :cylinders => 4,
   :company_mat => 1
 
 to :prepare do
-  shuffle :action_cards
+  # this doesn't collect all cards from a previous run...
+  reshuffle :action_cards
   each_player do
     pick_color :blue, :yellow, :green, :red
     set_to 5, :rationalization, :materials_required, :waste_reduction
@@ -82,7 +83,7 @@ player_resource :money
 
 to :play do
   prepare
-  round until game_over
+  round until game_over?
   score
 end
 
@@ -106,7 +107,7 @@ end
 common_resource :combinations
 
 to :lay_out_card_combinations do
-  set_to (number_playing + 1).piles, :combinations
+  set_to (number_playing? + 1).piles, :combinations
   3.times do
     combinations.value.each do |pile|
       pile << draw(:action_cards) do |card|

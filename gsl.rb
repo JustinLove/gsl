@@ -192,7 +192,7 @@ class Game
     @resources[@deck].discard card
   end
   
-  def number_playing
+  def number_playing?
     @players.size
   end
   
@@ -218,7 +218,7 @@ class Game
   
   alias every to
   
-  def game_over
+  def game_over?
     @rounds ||= 0
     return (@rounds = @rounds + 1) > @players.length
   end
