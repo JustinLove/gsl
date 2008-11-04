@@ -46,6 +46,7 @@ to :prepare do
     set_to 15, :money
     set_to 5, :raw_materials
     set_to [], :held_cards
+    set_to [], :saved_cards
   end
   starting_player_is :youngest
 end
@@ -77,6 +78,7 @@ player_resource :waste_disposal, 0..16 do
 end
 player_resource :raw_materials
 player_resource :held_cards, 0..5 #actually players + 1
+player_resource :saved_cards, 0..1
 
 #hidden trackable information ;^)
 player_resource :money
@@ -124,6 +126,9 @@ end
 to :choose_card_combinations do
   each_player do
     gain choose_best(:combinations), :held_cards
+    if saved_cards.value.count > 1
+      gain saved_cards.draw, :held_cards
+    end
   end
   combinations.value.each do |pile|
     pile.each do |card|
@@ -134,16 +139,24 @@ end
 
 to :play_the_cards do
   each_player_until_pass do
-     use choose_best(:held_cards)
+     choose_best :held_cards,
+       :good => Action{|card| use card},
+       :bad => Action{|card|
+         if held_cards.value.count < 1
+           gain card, :saved_cards
+           Passed
+         elsif card.name == :material_sale 
+           use card
+           Acted
+         else
+           card.discard
+           Acted
+         end
+       }
   end
 end
 
 =begin
-
-play the cards: each player clockwise repeating, choose one:
-  - play a card (and then discard it)
-  - discard a card: material-sale: disallow discard
-  - save a card (last card only)
 
 Card: material-sale:
   - player auctions M raw materials; M = player's materials-required

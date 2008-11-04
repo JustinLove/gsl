@@ -4,6 +4,7 @@ def Error(*args); throw *args; end
 Empty = nil
 Acted = true
 Passed = false
+alias :Action :lambda
 
 class Object
   def cv; self.class; end
@@ -401,6 +402,15 @@ module Set_Resource
       primitive_draw
     end
   end
+  
+  def first
+    card = @value.first
+    if (card.respond_to? :discard_to)
+      card.discard_to self
+    end
+    card
+  end
+    
 
 end
 
@@ -445,10 +455,19 @@ class Player
     @color = (choices - @game.players.map {|pl| pl.color}).random
   end
   
-  def choose_best(from)
+  def choose_best(from, actions = nil)
     choices = __send__(from)
     choices.shuffle
-    choices.draw
+    if (choices.first != Empty && !actions.nil?)
+      kind = [:bad, :good].random
+      if (actions[kind].call(choices.first) == Acted)
+        choices.draw
+      else
+        Empty
+      end
+    else
+      choices.draw
+    end
   end
   
   def use(card)
