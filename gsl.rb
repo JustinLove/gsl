@@ -360,6 +360,13 @@ class Resource
 
   attr_accessor :value
 
+  def method_missing(method, *args, &proc)
+    if @value.respond_to? method
+      return @value.__send__ method, *args, &proc
+    end
+    super
+  end
+
   def set(n)
     if (n.kind_of? Numeric)
       class << self

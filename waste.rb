@@ -112,7 +112,7 @@ common_resource :combinations
 to :lay_out_card_combinations do
   set_to (number_playing? + 1).piles, :combinations
   3.times do
-    combinations.value.each do |pile|
+    combinations.each do |pile|
       pile << draw(:action_cards) do |card|
         case (card && card.name) || Empty
         when Empty: reshuffle; draw;
@@ -127,11 +127,11 @@ end
 to :choose_card_combinations do
   each_player do
     gain choose_best(:combinations), :held_cards
-    if saved_cards.value.count > 1
+    if saved_cards.count > 1
       gain saved_cards.draw, :held_cards
     end
   end
-  combinations.value.each do |pile|
+  combinations.each do |pile|
     pile.each do |card|
       discard card
     end
@@ -143,7 +143,7 @@ to :play_the_cards do
      choose_best :held_cards,
        :good => Action{|card| use card},
        :bad => Action{|card|
-         if held_cards.value.count < 1
+         if held_cards.count < 1
            gain card, :saved_cards
            Passed
          elsif card.name == :material_sale 
@@ -164,7 +164,7 @@ card :material_sale do
   $bid = 0
   $bidder = self
   each_player_from_left do
-    bid = auction.value + (materials_required.value - raw_materials.value) + (-1..2).random
+    bid = auction + (materials_required - raw_materials) + (-1..2).random
     if (bid > $bid)
       $bid = bid
       $bidder = self
@@ -177,13 +177,13 @@ card :material_sale do
   end
 end
 
-=begin
+card :order do
+  if co_workers < rationalization
+    throw "Illegal"
+  end
+end
 
-Card: material-sale:
-  - player auctions M raw materials; M = player's materials-required
-  - players bid in relative-left-clockwise-once
-     - buyer is other-player: pay to seller
-     - buyer is seller: pay to bank
+=begin
 
 Card: order:
   - check co-workers >= rationalization
