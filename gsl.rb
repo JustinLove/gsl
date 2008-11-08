@@ -147,6 +147,12 @@ module ResourceUser
     @resources[resource].lose(n)
   end
   forward :lose
+  
+  def must_have(&condition)
+    if !(instance_eval &condition)
+      throw "Failed precondition"
+    end
+  end
 end
 
 class Game
@@ -562,7 +568,7 @@ class Player
   def each_player_from_left(&proc)
     @game.each_player self, &proc
   end
-
+  
   def to_s
     "#{@color} player"
   end

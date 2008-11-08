@@ -178,18 +178,13 @@ card :material_sale do
 end
 
 card :order do
-  if co_workers < rationalization
-    throw "Illegal"
-  end
+  must_have {co_workers >= rationalization}
+  lose materials_required.value, :raw_materials # !!! handle underun
+  gain waste_reduction.value, :waste_disposal # !!! handle overflow...
+  gain growth.value, :money
 end
 
 =begin
-
-Card: order:
-  - check co-workers >= rationalization
-  - spend raw-materials = materials-required
-  - gain waste-disposal = waste-reduction (overflow: disallow action)
-  - gain money = growth
 
 Card: growth: growth + 1.  If growth = 20, set game-over flag
 
