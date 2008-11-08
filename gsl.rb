@@ -249,7 +249,7 @@ class Game
   
   def each_player_until_pass(&proc)
     acted = true
-    @players.each {|pl| acted &&= pl.instance_eval &proc} until !acted
+    @players.each {|pl| acted &&= pl.instance_eval &proc; puts pl.report} until !acted
   end
   
   def starting_player_is(spec)
@@ -378,6 +378,10 @@ class Resource
     super
   end
 
+  def to_s
+     "#{self.class.name}:#{@value}"
+  end
+
   def set(n)
     if (n.kind_of? Numeric)
       class << self
@@ -491,8 +495,6 @@ module Set_Resource
     end
     card
   end
-    
-
 end
 
 class InsufficientResources < RuntimeError
@@ -579,6 +581,15 @@ class Player
   
   def to_s
     "#{@color} player"
+  end
+  
+  def report
+    "#{self.to_s} " +
+      "#{co_workers.value}/#{rationalization.value}p " +
+      "#{raw_materials.value}/#{materials_required.value}m " +
+      "#{waste_disposal.value}(#{waste_disposal.section})/#{waste_reduction.value}w " +
+      "$#{money.value}(#{loans.value}) +#{growth.value} " +
+      "#{held_cards.count}(#{saved_cards.count})"
   end
   
 end
