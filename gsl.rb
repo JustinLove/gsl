@@ -77,6 +77,22 @@ module ResourceUser
     base.cv.resources = []
   end
 
+  def self.forward(method)
+    my_method = "my_" + method.to_s
+    alias_method my_method, method
+    define_method method do |n,resource|
+      if cv.resources.include? resource
+        puts "#{self.to_s} #{method} #{n} #{resource}"
+        __send__ my_method, n, resource
+      elsif respond_to? :forward_to
+        #puts "#{self.to_s} #{method} #{n} #{resource}"
+        forward_to.__send__ method, n, resource
+      else
+        throw "#{self.to_s} can't #{method} #{resource}"
+      end
+    end
+  end
+
   module Class
     def make_components(name, value)
       cv.components[name] = Component.send(value.class.name.downcase, name, value)
@@ -99,7 +115,7 @@ module ResourceUser
 
   def method_missing(method, *args, &block)
     if (@resources && @resources.keys.include?(method))
-      puts 'returing ' + method.to_s
+      #puts 'returning ' + method.to_s
       return @resources[method]
     end
     super
@@ -109,8 +125,10 @@ module ResourceUser
     resources.each {|r|
       if cv.resources.include? r
         @resources[r].set(n)
+      elsif respond_to? :forward_to
+        forward_to.set_to n, r
       else
-        throw self.to_s + " couldn't set " + r.to_s
+        throw "#{self.to_s} can't set_to #{r}"
       end
     }
   end
@@ -118,16 +136,17 @@ module ResourceUser
   def change_resource(n, resource)
     @resources[resource].change(n)
   end
+  forward :change_resource
 
   def gain(n, resource)
-    puts "#{self.to_s} gain #{n} #{resource}"
     @resources[resource].gain(n)
   end
+  forward :gain
 
   def lose(n, resource)
-    puts "#{self.to_s} lose #{n} #{resource}"
     @resources[resource].lose(n)
   end
+  forward :lose
 end
 
 class Game
@@ -475,6 +494,8 @@ class Player
   extend Prototype
   include ResourceUser
   
+  def forward_to; @game; end
+  
   attr_reader :color
   
   @@any_time = []
@@ -491,11 +512,11 @@ class Player
     
   def method_missing(method, *args, &block)
     if @resources.keys.include? method
-      puts 'player ' + method.to_s
+      #puts 'player ' + method.to_s
       return @resources[method]
     end
     if @game.resources.keys.include? method
-      puts 'game ' + method.to_s
+      #puts 'game ' + method.to_s
       return @game.__send__(method, *args, &block)
     end
     super

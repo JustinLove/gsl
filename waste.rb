@@ -12,7 +12,7 @@ common_components :action_cards => {
     :hiring_firing => 4,
     :waste_removal => 3,
     :bribery => 2,
-    :accident => 1,
+    #:accident => 1,
   },
   :loan_cards => {
     :'-10' => 8,
