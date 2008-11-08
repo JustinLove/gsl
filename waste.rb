@@ -191,11 +191,15 @@ card :growth do
   end
 end
 
+card :hiring_firing do
+  if (co_workers > rationalization)
+    lose 1, :co_workers
+  end
+  # +1?
+  #taking strategic advantage of this with speculative execution is tough...
+end
+
 =begin
-
-Card: growth: growth + 1.  If growth = 20, set game-over flag
-
-Card: hiring/firing: co-workers +/- 1
 
 Card: innovation:
   - spend 5 million
