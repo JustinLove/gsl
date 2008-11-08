@@ -199,12 +199,12 @@ card :hiring_firing do
   #taking strategic advantage of this with speculative execution is tough...
 end
 
+card :innovation do
+  lose 5, :money
+  lose 1, [:rationalization, :materials_required, :waste_reduction].random
+end
+
 =begin
-
-Card: innovation:
-  - spend 5 million
-  - choose one [rationalization, materials-required, waste-reduction] - 1
-
 Card: waste disposal: waste-disposal - 3
 
 Card: waste removal: 
