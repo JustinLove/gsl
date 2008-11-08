@@ -94,7 +94,7 @@ module ResourceUser
   end
 
   def method_missing(method, *args, &block)
-    return @resources[method] if @resources.keys.include? method
+    return @resources[method] if (@resources && @resources.keys.include?(method))
     super
   end
   
@@ -107,10 +107,12 @@ module ResourceUser
   end
 
   def gain(n, resource)
+    puts "#{self.to_s} gain #{n}"
     @resources[resource].gain(n)
   end
 
   def lose(n, resource)
+    puts "#{self.to_s} lose #{n}"
     @resources[resource].lose(n)
   end
 end
@@ -222,6 +224,9 @@ class Game
   def game_over?
     @rounds ||= 0
     return (@rounds = @rounds + 1) > @players.length
+  end
+  
+  def card(name, &proc)
   end
     
   def to_s
@@ -340,7 +345,10 @@ module Value_Resource
   alias :gain :change
   
   def lose(n)
+    n ||= @value
+    m = @value
     self.change(-n)
+    return @value - m
   end
 end
 
@@ -363,9 +371,12 @@ module Set_Resource
   end
 
   def lose(n)
+    n ||= @value
     possible = @value - n
     if @value.include?(n) && self.class.range.include?(possible.size)
+      m = @value - possible
       @value = possible
+      return m
     else
       throw InsufficientResources(name, @value, n)
     end
@@ -458,8 +469,9 @@ class Player
   def choose_best(from, actions = nil)
     choices = __send__(from)
     choices.shuffle
+    #p choices.value.map {|c| c.to_s}
     if (choices.first != Empty && !actions.nil?)
-      kind = [:bad, :good].random
+      kind = [:bad, :good, :good, :good].random
       if (actions[kind].call(choices.first) == Acted)
         choices.draw
       else
@@ -472,6 +484,7 @@ class Player
   
   def use(card)
     if (card)
+      puts "#{self.to_s} plays #{card.to_s}" 
       card.discard
       Acted
     else
@@ -480,7 +493,7 @@ class Player
   end
 
   def to_s
-    "#{@color} player #{@resources.inspect}"
+    "#{@color} player"
   end
   
 end

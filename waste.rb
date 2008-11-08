@@ -156,6 +156,26 @@ to :play_the_cards do
   end
 end
 
+common_resource :auction
+
+card :material_sale do
+  set_to materials_required.value, :auction
+  $bid = 0
+  $bidder = self
+  each_player_from_left do
+    bid = auction.value + (materials_required.value - raw_materials.value)
+    if (bid > $bid)
+      $bid = bid
+      $bidder = self
+    end
+  end
+  $bidder.gain lose(auction.value, :auction), :raw_materials
+  $bidder.lose $bid, :money
+  if ($bidder != self)
+    gain $bid, :money
+  end
+end
+
 =begin
 
 Card: material-sale:
