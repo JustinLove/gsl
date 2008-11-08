@@ -184,6 +184,13 @@ card :order do
   gain growth.value, :money
 end
 
+card :growth do
+  gain 1, :growth
+  if growth >= 20
+    game_over!
+  end
+end
+
 =begin
 
 Card: growth: growth + 1.  If growth = 20, set game-over flag

@@ -267,7 +267,12 @@ class Game
   
   def game_over?
     @rounds ||= 0
-    return (@rounds = @rounds + 1) > @players.length
+    return (@rounds = @rounds + 1) > @players.length || @game_over
+  end
+  
+  def game_over!
+    p 'game over!'
+    @game_over = true
   end
   
   def card(name, &proc)
@@ -530,6 +535,9 @@ class Player
     end
     if @game.resources.keys.include? method
       #puts 'game ' + method.to_s
+      return @game.__send__(method, *args, &block)
+    end
+    if @game.respond_to? method
       return @game.__send__(method, *args, &block)
     end
     super
