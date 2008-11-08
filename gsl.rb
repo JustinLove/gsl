@@ -21,6 +21,10 @@ class Array
   def random
     self[rand(self.length)]
   end
+  
+  def rotate
+    self.push self.shift
+  end
 end
 
 class Hash
@@ -94,12 +98,21 @@ module ResourceUser
   end
 
   def method_missing(method, *args, &block)
-    return @resources[method] if (@resources && @resources.keys.include?(method))
+    if (@resources && @resources.keys.include?(method))
+      puts 'returing ' + method.to_s
+      return @resources[method]
+    end
     super
   end
   
   def set_to(n, *resources)
-    resources.each {|r| @resources[r].set(n)}
+    resources.each {|r|
+      if cv.resources.include? r
+        @resources[r].set(n)
+      else
+        throw self.to_s + " couldn't set " + r.to_s
+      end
+    }
   end
   
   def change_resource(n, resource)
@@ -107,12 +120,12 @@ module ResourceUser
   end
 
   def gain(n, resource)
-    puts "#{self.to_s} gain #{n}"
+    puts "#{self.to_s} gain #{n} #{resource}"
     @resources[resource].gain(n)
   end
 
   def lose(n, resource)
-    puts "#{self.to_s} lose #{n}"
+    puts "#{self.to_s} lose #{n} #{resource}"
     @resources[resource].lose(n)
   end
 end
@@ -199,8 +212,14 @@ class Game
     @players.size
   end
   
-  def each_player(&proc)
-    @players.each {|pl| pl.instance_eval &proc}
+  def each_player(from = nil, &proc)
+    order = @players
+    if (from)
+      while order.first != from
+        order.rotate
+      end
+    end
+    order.each {|pl| pl.instance_eval &proc}
   end
   
   def each_player_until_pass(&proc)
@@ -227,6 +246,7 @@ class Game
   end
   
   def card(name, &proc)
+    Component.define_action name, proc
   end
     
   def to_s
@@ -258,6 +278,11 @@ class Component
     array(name, list)
   end
   
+  @@actions = {}
+  def self.define_action(name, proc)
+    @@actions[name] = proc
+  end
+  
   def initialize(name, kind = nil)
     @name = name
     @kind = kind || name
@@ -276,6 +301,14 @@ class Component
   
   def discard
     @home.discard self
+  end
+  
+  def use(player)
+    proc = @@actions[self.name]
+    if (proc)
+      player.instance_eval &proc
+    end
+    discard
   end
 end
 
@@ -338,7 +371,7 @@ module Value_Resource
     if self.class.range.include?(@value+n)
       @value += n
     else
-      throw InsufficientResources(name, @value, n)
+      throw InsufficientResources.new(@name, @value, n)
     end
   end
 
@@ -348,7 +381,7 @@ module Value_Resource
     n ||= @value
     m = @value
     self.change(-n)
-    return @value - m
+    return m - @value
   end
 end
 
@@ -366,7 +399,7 @@ module Set_Resource
     if self.class.range.include?(possible.size)
       @value = possible
     else
-      throw InsufficientResources(name, @value, n)
+      throw InsufficientResources.new(@name, @value, n)
     end
   end
 
@@ -378,7 +411,7 @@ module Set_Resource
       @value = possible
       return m
     else
-      throw InsufficientResources(name, @value, n)
+      throw InsufficientResources.new(@name, @value, n)
     end
   end
   
@@ -457,8 +490,14 @@ class Player
   end
     
   def method_missing(method, *args, &block)
-    return @resources[method] if @resources.keys.include? method
-    return @game.__send__(method, *args, &block) if @game.resources.keys.include? method
+    if @resources.keys.include? method
+      puts 'player ' + method.to_s
+      return @resources[method]
+    end
+    if @game.resources.keys.include? method
+      puts 'game ' + method.to_s
+      return @game.__send__(method, *args, &block)
+    end
     super
   end
 
@@ -485,11 +524,15 @@ class Player
   def use(card)
     if (card)
       puts "#{self.to_s} plays #{card.to_s}" 
-      card.discard
+      card.use self
       Acted
     else
       Passed
     end
+  end
+  
+  def each_player_from_left(&proc)
+    @game.each_player self, &proc
   end
 
   def to_s

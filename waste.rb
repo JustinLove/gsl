@@ -81,7 +81,8 @@ player_resource :held_cards, 0..5 #actually players + 1
 player_resource :saved_cards, 0..1
 
 #hidden trackable information ;^)
-player_resource :money
+player_resource :money, 0..Infinity
+player_resource :loans, -Infinity..0
 
 to :play do
   prepare
@@ -163,7 +164,7 @@ card :material_sale do
   $bid = 0
   $bidder = self
   each_player_from_left do
-    bid = auction.value + (materials_required.value - raw_materials.value)
+    bid = auction.value + (materials_required.value - raw_materials.value) + (-1..2).random
     if (bid > $bid)
       $bid = bid
       $bidder = self
