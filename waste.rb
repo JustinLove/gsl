@@ -208,13 +208,14 @@ card :waste_disposal do
   lose 3, :waste_disposal
 end
 
-=begin
-Card: waste disposal: waste-disposal - 3
+card :waste_removal do
+  if (waste_disposal >= 1)
+    lose 1, :waste_disposal
+    other_players {gain 1, :waste_disposal}
+  end
+end
 
-Card: waste removal: 
-  - w = min(active player waste-disposal, 1)
-  - active player waste-disposal - w
-  - other players waste-disposal - w
+=begin
 
 Card: bribery:
   - play only during accident

@@ -229,14 +229,16 @@ class Game
     @players.size
   end
   
-  def each_player(from = nil, &proc)
+  def each_player(options = {}, &proc)
     order = @players
+    from = options[:left_of]
+    except = options[:except]
     if (from)
       while order.first != from
         order.rotate
       end
     end
-    order.each {|pl| pl.instance_eval &proc}
+    order.each {|pl| pl.instance_eval(&proc) if pl != except}
   end
   
   def each_player_until_pass(&proc)
@@ -599,7 +601,11 @@ class Player
   end
   
   def each_player_from_left(&proc)
-    @game.each_player self, &proc
+    @game.each_player :left_of => self, &proc
+  end
+  
+  def other_players(&proc)
+    @game.each_player :except => self, &proc
   end
   
   def to_s
