@@ -103,9 +103,12 @@ to :play do
 end
 
 every :round do
+  puts "before " + action_cards.to_s
   lay_out_card_combinations
+  puts "left " + action_cards.to_s
   choose_card_combinations
   play_the_cards
+  puts "after " + action_cards.to_s
   pay_basic_costs
   change_the_starting_player
 end

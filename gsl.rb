@@ -370,11 +370,15 @@ class Component
     @home.discard self
   end
   
-  def use(player)
+  def execute(player)
     proc = @@actions[self.name]
     if (proc)
       player.instance_eval &proc
     end
+  end
+  
+  def use(player)
+    execute player
     discard
   end
 end
@@ -582,6 +586,10 @@ module Set_Resource
     end
     card
   end
+  
+  def to_s
+    "#{name}:#{@value.count}/#{@discards.count}(#{@value.count + @discards.count})"
+  end
 end
 
 class InsufficientResources < RuntimeError
@@ -637,7 +645,7 @@ class Player
   end
   
   def judge(card)
-    good = Speculate.new(self).go {card.use self}
+    good = Speculate.new(self).go {card.execute self}
     if (good)
       :good
     else
@@ -668,7 +676,7 @@ class Player
     end
     if (card)
       puts "#{self.to_s} plays #{card.to_s}" 
-      good = Speculate.new(self).go {card.use self}
+      good = Speculate.new(self).go {card.execute self}
       if (good)
         card.use self
       else
