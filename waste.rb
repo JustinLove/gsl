@@ -112,7 +112,6 @@ end
 
 every :accident do
   p "Accident!"
-  $accident = true
   each_player do
     case waste_disposal.section
     when :red: pay 10, :money; lose(2, :growth) unless use(:bribery, held_cards);
@@ -120,7 +119,6 @@ every :accident do
     end
     puts report
   end
-  $accident = false
 end
 
 common_resource :combinations
@@ -233,7 +231,7 @@ card :waste_removal do
 end
 
 card :bribery do
-  must_have {$accident}
+  only_during :accident
   pay 1, :money
 end
 

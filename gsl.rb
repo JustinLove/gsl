@@ -172,6 +172,7 @@ class Game
   as_property :number_of_players
 
   def initialize(file)
+    @context = []
     # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
     self.instance_eval(File.read(file), file)
     self.go(@number_of_players.random)
@@ -215,6 +216,29 @@ class Game
     @players = Array.new(players) {Player.new(self)}
     puts "#{@players.size} players"
     play
+  end
+  
+  def enter(flag)
+    @context |= [flag]
+  end
+  
+  def leave(flag)
+    @context.delete(flag)
+  end
+
+  def during(flag, &proc)
+    if (@context.include? flag)
+      proc.call if proc
+      true
+    else
+      false
+    end
+  end
+  
+  def only_during(flag)
+    if (!@context.include? flag)
+      raise "must be in #{flag}"
+    end
   end
 
   def draw(deck = nil, &filter)
@@ -267,9 +291,13 @@ class Game
   def at_any_time(action, &proc)
     Player.at_any_time(action, proc)
   end
-
+  
   def to(name, &proc)
-    self.class.__send__ :define_method, name, &proc
+    self.class.__send__ :define_method, name do |*args, &block|
+      enter name
+      proc.call(*args, &block)
+      leave name
+    end
   end
   
   alias every to
@@ -697,6 +725,8 @@ class Speculate
     #p 'skipping ' + method.to_s
   end
 
+  forward :during
+  forward :only_during
   forward :must_have
   forward :must_gain, :if_gain
   forward :must_lose, :if_lose
