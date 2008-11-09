@@ -25,6 +25,10 @@ class Array
   def rotate
     self.push self.shift
   end
+  
+  def to_s
+    '[' + join(" ") + ']'
+  end
 end
 
 class Hash
@@ -251,7 +255,7 @@ class Game
   
   def each_player_until_pass(&proc)
     acted = true
-    @players.each {|pl| acted &&= pl.instance_eval &proc; puts pl.report} until !acted
+    @players.each {|pl| acted &&= pl.instance_eval &proc;} until !acted
   end
   
   def starting_player_is(spec)
@@ -321,7 +325,7 @@ class Component
   end
   
   def to_s
-    @name
+    @name.to_s
   end
   
   def discard_to(where)
@@ -696,7 +700,7 @@ class Speculate
     if @player.has_resource? method
       return @player.__send__ method, *args, &proc
     end
-    p 'skipping ' + method.to_s
+    #p 'skipping ' + method.to_s
   end
 
   forward :must_have

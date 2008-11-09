@@ -132,8 +132,8 @@ end
 to :choose_card_combinations do
   each_player do
     gain choose_best(:combinations), :held_cards
-    if saved_cards.count > 1
-      gain saved_cards.draw, :held_cards
+    if saved_cards.count >= 1
+      gain [saved_cards.draw], :held_cards
     end
   end
   combinations.each do |pile|
@@ -148,14 +148,14 @@ to :play_the_cards do
      choose_best :held_cards,
        :good => Action{|card| use card},
        :bad => Action{|card|
-         if held_cards.count < 1
-           gain card, :saved_cards
+         if saved_cards.count < 1
+           gain [card], :saved_cards
            Passed
          elsif card.name == :material_sale 
            use card
            Acted
          else
-           puts "#{self} discards #{card}"
+           puts "#{self} discards #{card.to_s}"
            card.discard
            Acted
          end
@@ -163,10 +163,8 @@ to :play_the_cards do
   end
 end
 
-common_resource :auction
-
 card :material_sale do
-  set_to materials_required.value, :auction
+  auction = materials_required.value
   $bid = 0
   $bidder = self
   each_player_from_left do
@@ -176,7 +174,7 @@ card :material_sale do
       $bidder = self
     end
   end
-  $bidder.gain lose(:all, :auction), :raw_materials
+  $bidder.gain auction, :raw_materials
   $bidder.pay $bid, :money
   if ($bidder != self)
     gain $bid, :money
