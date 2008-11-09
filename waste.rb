@@ -3,7 +3,7 @@ author "Jurgon Strohm"
 number_of_players 3..4
 
 common_components :action_cards => {
-    :order => 4,
+    :order => 9,
     :material_sale => 8,
     :growth => 8,
     :innovation => 7,
