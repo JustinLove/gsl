@@ -173,9 +173,6 @@ to :play_the_cards do
          end
        }
   end
-  each_player do
-    puts "#{self} #{held_cards.to_s}"
-  end
 end
 
 card :material_sale do
@@ -184,6 +181,7 @@ card :material_sale do
   $bidder = self
   each_player_from_left do
     bid = auction + (materials_required - raw_materials) + (-1..2).random
+    bid = [bid, money].min
     if (bid > $bid)
       $bid = bid
       $bidder = self
@@ -198,8 +196,8 @@ end
 
 card :order do
   must_have {co_workers >= rationalization}
-  pay materials_required.value, :raw_materials # !!! handle underun
-  must_gain waste_reduction.value, :waste_disposal # !!! handle overflow...
+  pay materials_required.value, :raw_materials
+  must_gain waste_reduction.value, :waste_disposal
   gain growth.value, :money
 end
 
@@ -235,7 +233,6 @@ card :waste_removal do
 end
 
 card :bribery do
-  puts report
   must_have {$accident}
   pay 1, :money
 end

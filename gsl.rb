@@ -95,7 +95,7 @@ module ResourceUser
     define_method method do |n,resource|
       if cv.resources.include? resource
         if (!method.to_s.match(/^if/))
-          puts "#{self.to_s} #{method} #{n} #{resource}"
+          #puts "#{self.to_s} #{method} #{n} #{resource}"
         end
         @resources[resource].__send__ method, n
       elsif respond_to? :forward_to
@@ -255,7 +255,10 @@ class Game
   
   def each_player_until_pass(&proc)
     acted = true
-    @players.each {|pl| acted &&= pl.instance_eval &proc;} until !acted
+    while acted
+      acted = true
+      @players.each {|pl| acted &&= pl.instance_eval &proc;}
+    end
   end
   
   def starting_player_is(spec)
