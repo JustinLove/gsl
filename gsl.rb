@@ -364,6 +364,9 @@ class Resource
   extend Properties
 
   attr_accessor :value
+  def name
+    self.class.name
+  end
 
   def method_missing(method, *args, &proc)
     if @value.respond_to? method
@@ -373,7 +376,7 @@ class Resource
   end
 
   def to_s
-     "#{self.class.name}:#{@value}"
+     "#{name}:#{@value}"
   end
 
   def set(n)
@@ -392,7 +395,7 @@ class Resource
     end
   end
   
-  def pay(n = nil)
+  def pay(n = :all)
     must_lose(n)
   end
   
@@ -425,8 +428,8 @@ module Value_Resource
     return @value - old
   end
   
-  def lose(n = nil)
-    n ||= @value
+  def lose(n = :all)
+    n = @value if n == :all
     m = @value
     -self.gain(-n)
   end
@@ -451,8 +454,7 @@ module Set_Resource
     end
   end
 
-  def must_lose(n = nil)
-    n ||= @value
+  def must_lose(n)
     possible = @value - n
     old = @value
     if @value.include?(n) && self.class.range.include?(possible.size)
@@ -468,8 +470,11 @@ module Set_Resource
     @value = possible[0..(self.class.range.last)]
   end
   
-  def lose(n)
-    n ||= value
+  def lose(n = :all)
+    n = @value if n == :all
+    if !n.kind_of? Array
+      n = [n]
+    end
     possible = @value - n
     miss = self.class.range.first - possible.size
     old = @value
@@ -590,7 +595,12 @@ class Player
     end
   end
   
-  def use(card)
+  def use(card, from = nil)
+    p "use #{card.to_s}, #{from}"
+    if card.kind_of?(Symbol) && from
+      card = from.find{|c| c.name == card}
+      return use(lose(card, from.name).first)
+    end
     if (card)
       puts "#{self.to_s} plays #{card.to_s}" 
       card.use self

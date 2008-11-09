@@ -99,12 +99,16 @@ every :round do
 end
 
 every :accident do
+  p "Accident!"
+  $accident = true
   each_player do
     case waste_disposal.section
-    when :red: pay 10, :money; use(:bribary) || lose(2, :growth);
-    when :yellow: pay 5, :money; use(:bribary) || lose(1, :growth);
+    when :red: pay 10, :money; lose(2, :growth) unless use(:bribery, held_cards);
+    when :yellow: pay 5, :money; lose(1, :growth) unless use(:bribery, held_cards);
     end
+    puts report
   end
+  $accident = false
 end
 
 common_resource :combinations
@@ -170,7 +174,7 @@ card :material_sale do
       $bidder = self
     end
   end
-  $bidder.gain lose(auction.value, :auction), :raw_materials
+  $bidder.gain lose(:all, :auction), :raw_materials
   $bidder.pay $bid, :money
   if ($bidder != self)
     gain $bid, :money
@@ -215,12 +219,13 @@ card :waste_removal do
   end
 end
 
-=begin
+card :bribery do
+  puts report
+  must_have {$accident}
+  pay 1, :money
+end
 
-Card: bribery:
-  - play only during accident
-  - spend 1 million
-  - reduce growth loss to 0
+=begin
 
 Card: advisor:
   - repay-loan: -10 money, +10 loans
