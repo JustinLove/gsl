@@ -493,7 +493,7 @@ module Set_Resource
   
   def gain(n)
     possible = @value + n
-    @value = possible[0..(self.class.range.last)]
+    @value = possible[0..(self.class.range.last-1)]
   end
   
   def lose(n = :all)
@@ -659,15 +659,6 @@ class Player
   
   def to_s
     "#{@color} player"
-  end
-  
-  def report
-    "#{self.to_s} " +
-      "#{co_workers.value}/#{rationalization.value}p " +
-      "#{raw_materials.value}/#{materials_required.value}m " +
-      "#{waste_disposal.value}(#{waste_disposal.section})/#{waste_reduction.value}w " +
-      "$#{money.value}(#{loans.value}) +#{growth.value} " +
-      "#{held_cards.count}(#{saved_cards.count})"
   end
   
 end

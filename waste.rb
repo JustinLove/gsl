@@ -56,6 +56,17 @@ at_any_time :take_a_loan do
   gain -10, :loans
 end
 
+at_any_time :report do
+  "#{self.to_s} " +
+    "#{co_workers.value}/#{rationalization.value}p " +
+    "#{raw_materials.value}/#{materials_required.value}m " +
+    "#{waste_disposal.value}(#{waste_disposal.section})/#{waste_reduction.value}w " +
+    "$#{money.value}(#{loans.value}) +#{growth.value} " +
+    "#{held_cards.count}(#{saved_cards.count})"
+end
+
+
+
 #game board
 player_resource :growth, 14..20
 player_resource :co_workers, 1..5
@@ -77,7 +88,7 @@ player_resource :waste_disposal, 0..16 do
   end
 end
 player_resource :raw_materials
-player_resource :held_cards, 0..5 #actually players + 1
+player_resource :held_cards, 0..4
 player_resource :saved_cards, 0..1
 
 #hidden trackable information ;^)
@@ -87,6 +98,7 @@ player_resource :loans, -Infinity..0
 to :play do
   prepare
   round until game_over?
+  accident
   score
 end
 
@@ -148,7 +160,7 @@ to :play_the_cards do
      choose_best :held_cards,
        :good => Action{|card| use card},
        :bad => Action{|card|
-         if saved_cards.count < 1
+         if held_cards.count < 1
            gain [card], :saved_cards
            Passed
          elsif card.name == :material_sale 
@@ -160,6 +172,9 @@ to :play_the_cards do
            Acted
          end
        }
+  end
+  each_player do
+    puts "#{self} #{held_cards.to_s}"
   end
 end
 
