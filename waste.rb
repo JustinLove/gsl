@@ -46,7 +46,6 @@ to :prepare do
     set_to 15, :money
     set_to 5, :raw_materials
     set_to [], :held_cards
-    set_to [], :saved_cards
   end
   starting_player_is :youngest
 end
@@ -62,7 +61,7 @@ at_any_time :report do
     "#{raw_materials.value}/#{materials_required.value}m " +
     "#{waste_disposal.value}(#{waste_disposal.section})/#{waste_reduction.value}w " +
     "$#{money.value}(#{loans.value}) +#{growth.value} " +
-    "#{held_cards.count}(#{saved_cards.count})"
+    "#{held_cards.count}"
 end
 
 
@@ -89,7 +88,6 @@ player_resource :waste_disposal, 0..16 do
 end
 player_resource :raw_materials
 player_resource :held_cards, 0..4
-player_resource :saved_cards, 0..1
 
 #hidden trackable information ;^)
 player_resource :money, 0..Infinity
@@ -111,6 +109,7 @@ every :round do
   puts "after " + action_cards.to_s
   pay_basic_costs
   change_the_starting_player
+  #each_player {puts report}
 end
 
 every :accident do
@@ -145,9 +144,6 @@ end
 to :choose_card_combinations do
   each_player do
     gain choose_best(:combinations), :held_cards
-    if saved_cards.count >= 1
-      gain [saved_cards.draw], :held_cards
-    end
   end
   combinations.each do |pile|
     pile.each do |card|
@@ -159,10 +155,9 @@ end
 to :play_the_cards do
   each_player_until_pass do
      choose_best :held_cards,
-       :good => Action{|card| use card},
+       :good => Action{|card| use card; Acted},
        :bad => Action{|card|
-         if held_cards.count < 1
-           gain [card], :saved_cards
+         if held_cards.count <= 1
            Passed
          elsif card.name == :material_sale 
            use card
