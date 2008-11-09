@@ -196,12 +196,16 @@ card :hiring_firing do
     lose 1, :co_workers
   end
   # +1?
-  #taking strategic advantage of this with speculative execution is tough...
+  #taking strategic advantage of this without speculative execution is tough...
 end
 
 card :innovation do
   lose 5, :money
   lose 1, [:rationalization, :materials_required, :waste_reduction].random
+end
+
+card :waste_disposal do
+  lose 3, :waste_disposal
 end
 
 =begin
