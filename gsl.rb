@@ -90,7 +90,9 @@ module ResourceUser
   def self.forward(method)
     define_method method do |n,resource|
       if cv.resources.include? resource
-        puts "#{self.to_s} #{method} #{n} #{resource}"
+        if (!method.to_s.match(/^if/))
+          puts "#{self.to_s} #{method} #{n} #{resource}"
+        end
         @resources[resource].__send__ method, n
       elsif respond_to? :forward_to
         #puts "#{self.to_s} #{method} #{n} #{resource}"
@@ -138,6 +140,8 @@ module ResourceUser
   forward :lose
   forward :must_gain
   forward :must_lose
+  forward :if_gain
+  forward :if_lose
   forward :pay
   
   def has_resource?(resource)
@@ -398,6 +402,16 @@ class Resource
       raise "can't have that kind of resource"
     end
   end
+
+  def must_gain(n)
+    @value = if_gain(n)
+  end
+
+  def must_lose(n)
+    old = @value
+    @value = if_lose(n)
+    return old - @value
+  end
   
   def pay(n = :all)
     must_lose(n)
@@ -414,16 +428,19 @@ module Value_Resource
     end
   end
 
-  def must_gain(n)
+  def if_gain(n)
     if self.class.range.include?(@value+n)
-      @value += n
+      return @value + n
     else
       raise InsufficientResources.new(@name, @value, n)
     end
   end
   
-  def must_lose(n)
-    -self.must_gain(-n)
+  def if_lose(n = :all)
+    if (n == :all)
+      n = @value
+    end
+    self.if_gain(-n)
   end
   
   def gain(n)
@@ -448,25 +465,26 @@ module Set_Resource
       raise 'resource out of range'
     end
   end
-
-  def must_gain(n)
+  
+  def if_gain(n)
     possible = @value + n
     if self.class.range.include?(possible.size)
-      @value = possible
+      return possible
     else
       raise InsufficientResources.new(@name, @value, n)
     end
   end
 
-  def must_lose(n)
+  def if_lose(n = :all)
+    if (n == :all)
+      n = @value
+    end
     possible = @value - n
-    old = @value
     if @value.include?(n) && self.class.range.include?(possible.size)
-      @value = possible
+      return possible
     else
       raise InsufficientResources.new(@name, @value, n)
     end
-    return old - @value
   end
   
   def gain(n)
@@ -583,12 +601,21 @@ class Player
     @color = (choices - @game.players.map {|pl| pl.color}).random
   end
   
+  def judge(card)
+    good = Speculate.new(self).go {card.use self}
+    if (good)
+      :good
+    else
+      :bad
+    end
+  end
+  
   def choose_best(from, actions = nil)
     choices = __send__(from)
     choices.shuffle
     #p choices.value.map {|c| c.to_s}
     if (choices.first != Empty && !actions.nil?)
-      kind = [:bad, :good, :good, :good].random
+      kind = judge(choices.first)
       if (actions[kind].call(choices.first) == Acted)
         choices.draw
       else
@@ -606,7 +633,13 @@ class Player
     end
     if (card)
       puts "#{self.to_s} plays #{card.to_s}" 
-      Speculate.new(self) {card.use self}
+      good = Speculate.new(self).go {card.use self}
+      if (good)
+        card.use self
+      else
+        p 'USE FAILED'
+      end
+      return good
     else
       Passed
     end
@@ -636,22 +669,25 @@ class Player
 end
 
 class Speculate
-  def self.forward(what, *args, &proc)
+  def self.forward(what, to = nil)
     define_method what do |*args, &proc|
-      @player.__send__ what, *args, &proc
+      @player.__send__ to || what, *args, &proc
     end
   end
   
-  def initialize(player, &proc)
+  def initialize(player)
     @player = player
+  end
+  
+  def go(&proc)
     begin
-      p 'block ' + proc.inspect
+      #p 'block ' + proc.inspect
       instance_eval &proc
     rescue Exception => e
-      p 'speculate: ' + e.inspect
+      #p 'speculate: ' + e.inspect
       return Passed
     else
-      @player.__send__ :instance_eval, &proc
+      #p 'speculate succeeded'
       return Acted
     end
   end
@@ -664,6 +700,11 @@ class Speculate
   end
 
   forward :must_have
+  forward :must_gain, :if_gain
+  forward :must_lose, :if_lose
+  forward :gain, :if_gain
+  forward :lose, :if_lose
+  forward :pay, :if_lose
 end
 
 Game.new(ARGV.shift)

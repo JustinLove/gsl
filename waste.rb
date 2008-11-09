@@ -114,6 +114,7 @@ end
 common_resource :combinations
 
 to :lay_out_card_combinations do
+  #p action_cards.to_s
   set_to (number_playing? + 1).piles, :combinations
   3.times do
     combinations.each do |pile|
@@ -154,6 +155,7 @@ to :play_the_cards do
            use card
            Acted
          else
+           puts "#{self} discards #{card}"
            card.discard
            Acted
          end
