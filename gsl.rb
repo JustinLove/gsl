@@ -37,6 +37,16 @@ class Range
   def random
     self.first + rand(self.last + 1 - self.first)
   end
+  
+  def bound(n)
+    if (n < self.first)
+      return self.first
+    elsif (n > self.last)
+      return self.last
+    else
+      return n
+    end
+  end
 end
 
 class Fixnum
@@ -78,12 +88,10 @@ module ResourceUser
   end
 
   def self.forward(method)
-    my_method = "my_" + method.to_s
-    alias_method my_method, method
     define_method method do |n,resource|
       if cv.resources.include? resource
         puts "#{self.to_s} #{method} #{n} #{resource}"
-        __send__ my_method, n, resource
+        @resources[resource].__send__ method, n
       elsif respond_to? :forward_to
         #puts "#{self.to_s} #{method} #{n} #{resource}"
         forward_to.__send__ method, n, resource
@@ -122,31 +130,15 @@ module ResourceUser
   end
   
   def set_to(n, *resources)
-    resources.each {|r|
-      if cv.resources.include? r
-        @resources[r].set(n)
-      elsif respond_to? :forward_to
-        forward_to.set_to n, r
-      else
-        throw "#{self.to_s} can't set_to #{r}"
-      end
-    }
+    resources.each {|r| set n, r }
   end
   
-  def change_resource(n, resource)
-    @resources[resource].change(n)
-  end
-  forward :change_resource
-
-  def gain(n, resource)
-    @resources[resource].gain(n)
-  end
+  forward :set
   forward :gain
-
-  def lose(n, resource)
-    @resources[resource].lose(n)
-  end
   forward :lose
+  forward :must_gain
+  forward :must_lose
+  forward :pay
   
   def must_have(&condition)
     if !(instance_eval &condition)
@@ -397,6 +389,11 @@ class Resource
       throw "can't have that kind of resource"
     end
   end
+  
+  def pay(n = nil)
+    lose(n)
+  end
+  
 end
 
 module Value_Resource
@@ -408,22 +405,30 @@ module Value_Resource
     end
   end
 
-  def change(n)
+  def must_gain(n)
     if self.class.range.include?(@value+n)
       @value += n
     else
       throw InsufficientResources.new(@name, @value, n)
     end
   end
-
-  alias :gain :change
   
-  def lose(n)
+  def must_lose(n)
+    -self.must_gain(-n)
+  end
+  
+  def gain(n)
+    old = @value
+    @value = self.class.range.bound(@value+n)
+    return @value - old
+  end
+  
+  def lose(n = nil)
     n ||= @value
     m = @value
-    self.change(-n)
-    return m - @value
+    -self.gain(-n)
   end
+  
 end
 
 module Set_Resource
@@ -435,7 +440,7 @@ module Set_Resource
     end
   end
 
-  def gain(n)
+  def must_gain(n)
     possible = @value + n
     if self.class.range.include?(possible.size)
       @value = possible
@@ -444,16 +449,34 @@ module Set_Resource
     end
   end
 
-  def lose(n)
+  def must_lose(n = nil)
     n ||= @value
     possible = @value - n
+    old = @value
     if @value.include?(n) && self.class.range.include?(possible.size)
-      m = @value - possible
       @value = possible
-      return m
     else
       throw InsufficientResources.new(@name, @value, n)
     end
+    return old - @value
+  end
+  
+  def gain(n)
+    possible = @value + n
+    @value = possible[0..(self.class.range.last)]
+  end
+  
+  def lose(n)
+    n ||= value
+    possible = @value - n
+    miss = self.class.range.first - possible.size
+    old = @value
+    if (miss > 0)
+      @value = possible + n[0..miss]
+    else
+      @value = possible
+    end
+    return old - @value
   end
   
   def discard(card)
