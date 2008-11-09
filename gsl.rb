@@ -1,6 +1,6 @@
 Infinity = 1.0/0
 
-def Error(*args); throw *args; end
+def Error(*args); raise *args; end
 Empty = nil
 Acted = true
 Passed = false
@@ -96,7 +96,7 @@ module ResourceUser
         #puts "#{self.to_s} #{method} #{n} #{resource}"
         forward_to.__send__ method, n, resource
       else
-        throw "#{self.to_s} can't #{method} #{resource}"
+        raise "#{self.to_s} can't #{method} #{resource}"
       end
     end
   end
@@ -140,9 +140,13 @@ module ResourceUser
   forward :must_lose
   forward :pay
   
+  def has_resource?(resource)
+    @resources.keys.include? resource
+  end
+  
   def must_have(&condition)
     if !(instance_eval &condition)
-      throw "Failed precondition"
+      raise "Failed precondition"
     end
   end
 end
@@ -391,7 +395,7 @@ class Resource
       end
       self.set(n)
     else
-      throw "can't have that kind of resource"
+      raise "can't have that kind of resource"
     end
   end
   
@@ -406,7 +410,7 @@ module Value_Resource
     if self.class.range.include?(n)
       @value = n
     else
-      throw 'resource out of range'
+      raise 'resource out of range'
     end
   end
 
@@ -414,7 +418,7 @@ module Value_Resource
     if self.class.range.include?(@value+n)
       @value += n
     else
-      throw InsufficientResources.new(@name, @value, n)
+      raise InsufficientResources.new(@name, @value, n)
     end
   end
   
@@ -441,7 +445,7 @@ module Set_Resource
     if self.class.range.include?(n.size)
       @value = n
     else
-      throw 'resource out of range'
+      raise 'resource out of range'
     end
   end
 
@@ -450,7 +454,7 @@ module Set_Resource
     if self.class.range.include?(possible.size)
       @value = possible
     else
-      throw InsufficientResources.new(@name, @value, n)
+      raise InsufficientResources.new(@name, @value, n)
     end
   end
 
@@ -460,7 +464,7 @@ module Set_Resource
     if @value.include?(n) && self.class.range.include?(possible.size)
       @value = possible
     else
-      throw InsufficientResources.new(@name, @value, n)
+      raise InsufficientResources.new(@name, @value, n)
     end
     return old - @value
   end
@@ -596,15 +600,13 @@ class Player
   end
   
   def use(card, from = nil)
-    p "use #{card.to_s}, #{from}"
     if card.kind_of?(Symbol) && from
       card = from.find{|c| c.name == card}
       return use(lose(card, from.name).first)
     end
     if (card)
       puts "#{self.to_s} plays #{card.to_s}" 
-      card.use self
-      Acted
+      Speculate.new(self) {card.use self}
     else
       Passed
     end
@@ -631,6 +633,37 @@ class Player
       "#{held_cards.count}(#{saved_cards.count})"
   end
   
+end
+
+class Speculate
+  def self.forward(what, *args, &proc)
+    define_method what do |*args, &proc|
+      @player.__send__ what, *args, &proc
+    end
+  end
+  
+  def initialize(player, &proc)
+    @player = player
+    begin
+      p 'block ' + proc.inspect
+      instance_eval &proc
+    rescue Exception => e
+      p 'speculate: ' + e.inspect
+      return Passed
+    else
+      @player.__send__ :instance_eval, &proc
+      return Acted
+    end
+  end
+  
+  def method_missing(method, *args, &proc)
+    if @player.has_resource? method
+      return @player.__send__ method, *args, &proc
+    end
+    p 'skipping ' + method.to_s
+  end
+
+  forward :must_have
 end
 
 Game.new(ARGV.shift)
