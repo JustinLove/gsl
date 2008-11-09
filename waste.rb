@@ -52,7 +52,7 @@ end
 
 at_any_time :take_a_loan do
   gain 10, :money
-  gain -10, :loans
+  gain 10, :loans
 end
 
 at_any_time :report do
@@ -60,7 +60,7 @@ at_any_time :report do
     "#{co_workers.value}/#{rationalization.value}p " +
     "#{raw_materials.value}/#{materials_required.value}m " +
     "#{waste_disposal.value}(#{waste_disposal.section})/#{waste_reduction.value}w " +
-    "$#{money.value}(#{loans.value}) +#{growth.value} " +
+    "$#{money.value}(-#{loans.value}) +#{growth.value} " +
     "#{held_cards.count}"
 end
 
@@ -90,8 +90,8 @@ player_resource :raw_materials
 player_resource :held_cards, 0..4
 
 #hidden trackable information ;^)
-player_resource :money, 0..Infinity
-player_resource :loans, -Infinity..0
+player_resource :money
+player_resource :loans
 
 to :play do
   prepare
@@ -235,7 +235,7 @@ card :bribery do
 end
 
 card :advisor do
-  choose :repay_loan => Action{pay(10, :money); gain(10, :loans)},
+  choose :repay_loan => Action{pay(10, :money); must_lose(10, :loans)},
     :double => Action do
       must_have {held_cards.count > 0}
       use_twice = Action{use card; use card;}
