@@ -101,8 +101,8 @@ end
 every :accident do
   each_player do
     case waste_disposal.section
-    when :red: lose 10, :money; use(:bribary) || lose(2, :growth);
-    when :yellow: lose 5, :money; use(:bribary) || lose(1, :growth);
+    when :red: pay 10, :money; use(:bribary) || lose(2, :growth);
+    when :yellow: pay 5, :money; use(:bribary) || lose(1, :growth);
     end
   end
 end
@@ -171,7 +171,7 @@ card :material_sale do
     end
   end
   $bidder.gain lose(auction.value, :auction), :raw_materials
-  $bidder.lose $bid, :money
+  $bidder.pay $bid, :money
   if ($bidder != self)
     gain $bid, :money
   end
@@ -179,8 +179,8 @@ end
 
 card :order do
   must_have {co_workers >= rationalization}
-  lose materials_required.value, :raw_materials # !!! handle underun
-  gain waste_reduction.value, :waste_disposal # !!! handle overflow...
+  pay materials_required.value, :raw_materials # !!! handle underun
+  must_gain waste_reduction.value, :waste_disposal # !!! handle overflow...
   gain growth.value, :money
 end
 
@@ -200,7 +200,7 @@ card :hiring_firing do
 end
 
 card :innovation do
-  lose 5, :money
+  pay 5, :money
   lose 1, [:rationalization, :materials_required, :waste_reduction].random
 end
 

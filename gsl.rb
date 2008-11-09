@@ -391,7 +391,7 @@ class Resource
   end
   
   def pay(n = nil)
-    lose(n)
+    must_lose(n)
   end
   
 end
