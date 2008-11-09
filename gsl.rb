@@ -280,8 +280,8 @@ class Game
   def each_player_until_pass(&proc)
     acted = true
     while acted
-      acted = true
-      @players.each {|pl| acted &&= pl.instance_eval &proc;}
+      acted = false
+      @players.each {|pl| acted ||= pl.instance_eval &proc;}
     end
   end
   
