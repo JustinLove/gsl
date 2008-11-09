@@ -175,6 +175,7 @@ end
 
 card :material_sale do
   auction = materials_required.value
+  during :advisor do auction *= 2 end
   $bid = 0
   $bidder = self
   each_player_from_left do
@@ -235,16 +236,26 @@ card :bribery do
   pay 1, :money
 end
 
-=begin
+card :advisor do
+  choose :repay_loan => Action{pay(10, :money); gain(10, :loans)},
+    :double => Action do
+      must_have {held_cards.count > 0}
+      use_twice = Action{use card; use card;}
+      choose :held_cards do |card|
+        case card.name
+        when :material_sale: use card;
+        when :growth: use_twice.call;
+        when :hiring_firing: use_twice.call;
+        when :waste_disposal: use_twice.call;
+        when :waste_removal: use_twice.call;
+        when :order: gain(5, :money) if use(card);
+        else Error("can't double #{card}") 
+        end
+      end
+    end
+end
 
-Card: advisor:
-  - repay-loan: -10 money, +10 loans
-  - sell-materials: sell twice as many
-  - growth: perform-twice
-  - hiring/firing; perform-twice
-  - waste disposal: perform-twice
-  - waste removal: perform-twice
-  - order: money + 5
+=begin
 
 pay the basic costs: each player pays money = co-workers
 
