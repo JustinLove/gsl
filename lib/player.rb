@@ -87,7 +87,7 @@ module GSL
     def use(card, from = nil)
       if card.kind_of?(Symbol) && from
         card = from.find{|c| c.name == card}
-        return use(lose(card, from.name).first)
+        return use(card)
       end
       if (card)
         puts "#{self.to_s} plays #{card.to_s}" 
