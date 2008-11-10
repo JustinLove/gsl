@@ -236,7 +236,7 @@ end
 
 card :advisor do
   choose :repay_loan => Action{pay(10, :money); must_lose(10, :loans)},
-    :double => Action do
+    :double => Action{
       must_have {held_cards.count > 0}
       use_twice = Action{use card; use card;}
       choose :held_cards do |card|
@@ -250,7 +250,7 @@ card :advisor do
         else Error("can't double #{card}") 
         end
       end
-    end
+    }
 end
 
 =begin
