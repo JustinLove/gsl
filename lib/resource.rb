@@ -45,12 +45,12 @@ module GSL
     def set(n)
       if (n.kind_of? Numeric)
         class << self
-          include Value_Resource
+          include Resource::Value
         end
         self.set(n)
       elsif (n.kind_of? Enumerable)
         class << self
-          include Set_Resource
+          include Resource::Set
         end
         self.set(n)
       else
