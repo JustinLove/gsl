@@ -617,6 +617,13 @@ class Player
   
   def forward_to; @game; end
   
+  module Common
+    def execute(action)
+      instance_eval(&(action.to_proc))
+    end
+  end
+  include Common
+  
   attr_reader :color
   
   @@any_time = []
@@ -695,10 +702,6 @@ class Player
     end
   end
   
-  def execute(action)
-    instance_eval(&(action.to_proc))
-  end
-  
   def discard(card)
     card.discard
   end
@@ -719,6 +722,7 @@ end
 
 class Speculate
   include Prototype
+  include Player::Common
   
   def self.forward(what, to = nil)
     define_method what do |*args, &proc|
