@@ -582,8 +582,17 @@ module Set_Resource
     card
   end
   
+  def sort_by!(&proc)
+    @value = @value.sort_by(&proc) if @value
+    return self
+  end
+  
   def to_s
     "#{name}:#{@value.count}/#{@discards.count}(#{@value.count + @discards.count})"
+  end
+  
+  def to_a
+    [@value.to_s, @discards.to_s]
   end
 end
 
@@ -627,8 +636,12 @@ class Player
     end
     
     def rate(action)
-      good = what_if("rates #{action.to_s}") {execute action}
-      if good then 1 else 0 end
+      if (action.respond_to? :to_proc)
+        good = what_if("rates #{action.to_s}") {execute action}
+        if good then 1 else 0 end
+      else
+        0
+      end
     end
     
     def judge(action)
@@ -677,8 +690,7 @@ class Player
   
   def choose_best(from, actions = nil)
     choices = __send__(from)
-    choices.shuffle
-    #p choices.value.map {|c| c.to_s}
+    choices.sort_by! {|c| -rate(c)}
     if (choices.first != Empty && !actions.nil?)
       kind = judge(choices.first)
       if (actions[kind].call(choices.first) == Acted)
