@@ -81,7 +81,7 @@ module GSL
       end
 
       def to_s
-        "Insufficient #{@resource}, #{@has} < #{@req}"
+        "Insufficient #{@resource}, #{@req} < #{@has}"
       end
     end
   end
