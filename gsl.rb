@@ -154,7 +154,7 @@ module ResourceUser
   
   def must_have(&condition)
     if !(instance_eval &condition)
-      raise "Failed precondition"
+      raise FailedPrecondition
     end
   end
 end
@@ -237,7 +237,7 @@ class Game
   
   def only_during(flag)
     if (!@context.include? flag)
-      raise "must be in #{flag}"
+      raise FailedPrecondition, "must be in #{flag}"
     end
   end
 
@@ -608,6 +608,16 @@ class InsufficientResources < RuntimeError
   end
 end
 
+class FailedPrecondition < RuntimeError
+  def initialize(message = nil)
+    @message = message
+  end
+  
+  def to_s
+    "Precondition '#{@message}' Failed"
+  end
+end
+
 class Player
   include Prototype
   extend Prototype
@@ -723,11 +733,11 @@ class Speculate
     begin
       #p 'block ' + proc.inspect
       instance_eval &proc
-    rescue NameError, RuntimeError => e
-      raise e
-    rescue Exception => e
+    rescue InsufficientResources, FailedPrecondition => e
       p 'speculate: ' + e.inspect
       return Passed
+    rescue Exception => e
+      raise e
     else
       #p 'speculate succeeded'
       return Acted
