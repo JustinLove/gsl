@@ -78,6 +78,9 @@ module GSL
   
       def discard(card)
         @discards ||= []
+        if @discards.include? card
+          raise "attempt to discard #{card.to_s} twice"
+        end
         @discards << card
       end
 
