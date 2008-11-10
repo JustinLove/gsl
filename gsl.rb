@@ -626,6 +626,20 @@ class Player
     def what_if(on = '?', &proc)
       Speculate.new(speculator, on).go(&proc)
     end
+    
+    def rate(action)
+      good = what_if("rates #{action.to_s}") {execute action}
+      if good then 1 else 0 end
+    end
+    
+    def judge(action)
+      if rate(action) > 0 then :good else :bad end
+    end
+    
+    def legal?(action)
+      what_if("checks #{action.to_s}") {execute action}
+    end
+      
   end
   include Common
   
@@ -662,15 +676,6 @@ class Player
     @color = (choices - @game.players.map {|pl| pl.color}).random
   end
   
-  def judge(card)
-    good = what_if("judge #{card.to_s}") {execute card}
-    if (good)
-      :good
-    else
-      :bad
-    end
-  end
-  
   def choose_best(from, actions = nil)
     choices = __send__(from)
     choices.shuffle
@@ -694,14 +699,14 @@ class Player
     end
     if (card)
       puts "#{self.to_s} plays #{card.to_s}" 
-      good = what_if("use #{card.to_s}") {execute card}
-      if (good)
+      if (legal?(card))
         execute card
         discard card
+        return Acted
       else
         p 'USE FAILED'
+        return Passed
       end
-      return good
     else
       Passed
     end
@@ -743,7 +748,7 @@ class Speculate
   end
   
   def d(s)
-    puts "#{'*' * @@level} #{@player} on #{@on}: " + s
+    puts "#{'*' * @@level} #{@player} #{@on}: " + s
   end
   
   @@level = 0
