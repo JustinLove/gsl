@@ -27,7 +27,7 @@ module GSL
         d 'block ' + proc.inspect
         instance_eval &proc
       rescue Resource::Insufficient, FailedPrecondition => e
-        p e.inspect
+        d e.inspect
         #puts e.backtrace.join("\n")
         return Passed
       rescue Exception => e

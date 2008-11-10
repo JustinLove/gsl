@@ -29,13 +29,16 @@ module GSL
       end
     end
      
+    attr_accessor :in
+     
     def initialize(name, kind = nil)
       @name = name
       @kind = kind || name
+      @in = nil
     end
 
     def to_s
-      @name.to_s
+      "#{@name}(#{@in})"
     end
 
     def discard_to(where)
@@ -46,6 +49,8 @@ module GSL
     end
 
     def discard
+      @in.lose self if @in
+      @in = @home
       @home.discard self
     end
 

@@ -3,7 +3,7 @@ module GSL
     module Set
       def set(n)
         if self.class.range.include?(n.size)
-          @value = n
+          @value = own(n)
         else
           raise 'resource out of range'
         end
@@ -29,9 +29,17 @@ module GSL
           raise Insufficient.new(name, @value, n)
         end
       end
+      
+      def must_gain(n)
+        super(own(n))
+      end
+      
+      def must_lose(n)
+        super(forfeit(n))
+      end
   
       def gain(n)
-        possible = @value + n
+        possible = @value + own(n)
         @value = possible[0..(self.class.range.last-1)]
       end
   
@@ -40,7 +48,7 @@ module GSL
         if !n.kind_of? Array
           n = [n]
         end
-        possible = @value - n
+        possible = @value - forfeit(n)
         miss = self.class.range.first - possible.size
         old = @value
         if (miss > 0)
@@ -49,6 +57,23 @@ module GSL
           @value = possible
         end
         return old - @value
+      end
+      
+      def own(n)
+        if (n && n.first.respond_to?(:in))
+          n.each {|c| c.in = self}
+          n
+        else
+          n
+        end
+      end
+      
+      def forfeit(n)
+        if (n && n.first.respond_to?(:in))
+          n.each {|c| c.in = nil}
+        else
+          n
+        end
       end
   
       def discard(card)
@@ -70,6 +95,7 @@ module GSL
         card = @value.shift
         if (card.respond_to? :discard_to)
           card.discard_to self
+          card.in = nil
         end
         card
       end
@@ -97,6 +123,7 @@ module GSL
       end
   
       def to_s
+        @discards ||= []
         "#{name}:#{@value.count}/#{@discards.count}(#{@value.count + @discards.count})"
       end
   
