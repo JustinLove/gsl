@@ -13,7 +13,7 @@ module GSL
         if self.class.range.include?(@value+n)
           return @value + n
         else
-          raise InsufficientResources.new(@name, @value, n)
+          raise Insufficient.new(@name, @value, n)
         end
       end
   

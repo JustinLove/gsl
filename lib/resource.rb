@@ -72,17 +72,17 @@ module GSL
       must_lose(n)
     end
   
-  end
 
-  class InsufficientResources < RuntimeError
-    def initialize(r, has = 0, req = 0)
-      @resource = r
-      @has = has
-      @req = req
-    end
-  
-    def to_s
-      "Insufficient #{@resource}, #{@has} < #{@req}"
+    class Insufficient < RuntimeError
+      def initialize(r, has = 0, req = 0)
+        @resource = r
+        @has = has
+        @req = req
+      end
+
+      def to_s
+        "Insufficient #{@resource}, #{@has} < #{@req}"
+      end
     end
   end
 end

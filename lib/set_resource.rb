@@ -14,7 +14,7 @@ module GSL
         if self.class.range.include?(possible.size)
           return possible
         else
-          raise InsufficientResources.new(@name, @value, n)
+          raise Insufficient.new(@name, @value, n)
         end
       end
 
@@ -26,7 +26,7 @@ module GSL
         if @value.include?(n) && self.class.range.include?(possible.size)
           return possible
         else
-          raise InsufficientResources.new(@name, @value, n)
+          raise Insufficient.new(@name, @value, n)
         end
       end
   
