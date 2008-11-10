@@ -1,4 +1,4 @@
-Infinity = 1.0/0
+Infinity = 2**30
 
 def Error(*args); raise *args; end
 Empty = nil
