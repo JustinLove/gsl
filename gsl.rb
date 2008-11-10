@@ -748,7 +748,7 @@ class Speculate
   end
   
   def d(s)
-    puts "#{'*' * @@level} #{@player} #{@on}: " + s
+    #puts "#{'*' * @@level} #{@player} #{@on}: " + s
   end
   
   @@level = 0

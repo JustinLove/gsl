@@ -154,20 +154,20 @@ end
 
 to :play_the_cards do
   each_player_until_pass do
-     choose_best :held_cards,
-       :good => Action{|card| use card; Acted},
-       :bad => Action{|card|
-         if held_cards.count <= 1
-           Passed
-         elsif card.name == :material_sale 
-           use card
-           Acted
-         else
-           puts "#{self} discards #{card.to_s}"
-           discard card
-           Acted
-         end
-       }
+    choose_best :held_cards,
+     :good => Action{|card| use card; Acted},
+     :bad => Action{|card|
+       if held_cards.count <= 1
+         Passed
+       elsif card.name == :material_sale 
+         use card
+         Acted
+       else
+         puts "#{self} discards #{card.to_s}"
+         discard card
+         Acted
+       end
+     }
   end
 end
 
