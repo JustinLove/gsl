@@ -4,29 +4,31 @@ module GSL
     extend Prototype
     attr_reader :name
 
-    def self.hash(name, value)
-      list = []
-      value.each do|k,v|
-        v.times {list << Component.new(k, name)}
+    class << self
+      def hash(name, value)
+        list = []
+        value.each do|k,v|
+          v.times {list << Component.new(k, name)}
+        end
+        array(name, list)
       end
-      array(name, list)
-    end
 
-    def self.array(name, value)
-      value
-    end
+      def array(name, value)
+        value
+      end
 
-    def self.fixnum(name, value)
-      list = []
-      value.times {list << Component.new(name)}
-      array(name, list)
-    end
+      def fixnum(name, value)
+        list = []
+        value.times {list << Component.new(name)}
+        array(name, list)
+      end
 
-    @@actions = {}
-    def self.define_action(name, proc)
-      @@actions[name] = proc
+      @@actions = {}
+      def define_action(name, proc)
+        @@actions[name] = proc
+      end
     end
-
+     
     def initialize(name, kind = nil)
       @name = name
       @kind = kind || name
