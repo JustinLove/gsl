@@ -725,7 +725,7 @@ class Player
   end
   
   def to_s
-    "#{@color} player"
+    @color.to_s
   end
   
 end
@@ -772,12 +772,12 @@ class Speculate
   
   def method_missing(method, *args, &proc)
     if @player.has_resource? method
-      p "#{@player} has #{method}"
+      d "has #{method}"
       return @player.__send__ method, *args, &proc
     elsif @player.respond_to? method
-      p 'skipping ' + method.to_s
+      d 'skipping ' + method.to_s
     else
-      p "#{@player} punts #{method}"
+      d "punts #{method}"
       super
     end
   end
