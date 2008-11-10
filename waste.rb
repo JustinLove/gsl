@@ -164,7 +164,7 @@ to :play_the_cards do
            Acted
          else
            puts "#{self} discards #{card.to_s}"
-           card.discard
+           discard card
            Acted
          end
        }
@@ -238,7 +238,7 @@ card :advisor do
   choose :repay_loan => Action{pay(10, :money); must_lose(10, :loans)},
     :double => Action{
       must_have {held_cards.count > 0}
-      use_twice = Action{use card; use card;}
+      use_twice = Action{execute card; use card;}
       choose :held_cards do |card|
         case card.name
         when :material_sale: use card;

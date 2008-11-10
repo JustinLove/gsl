@@ -374,16 +374,8 @@ class Component
     @home.discard self
   end
   
-  def execute(player)
-    proc = @@actions[self.name]
-    if (proc)
-      player.instance_eval &proc
-    end
-  end
-  
-  def use(player)
-    execute player
-    discard
+  def to_proc
+    @@actions[self.name]
   end
 end
 
@@ -659,7 +651,7 @@ class Player
   end
   
   def judge(card)
-    good = Speculate.new(self).go {card.execute self}
+    good = Speculate.new(self, "judge #{card.to_s}").go {execute card}
     if (good)
       :good
     else
@@ -690,9 +682,10 @@ class Player
     end
     if (card)
       puts "#{self.to_s} plays #{card.to_s}" 
-      good = Speculate.new(self).go {card.execute self}
+      good = Speculate.new(self, "use #{card.to_s}").go {execute card}
       if (good)
-        card.use self
+        execute card
+        discard card
       else
         p 'USE FAILED'
       end
@@ -700,6 +693,14 @@ class Player
     else
       Passed
     end
+  end
+  
+  def execute(action)
+    instance_eval(&(action.to_proc))
+  end
+  
+  def discard(card)
+    card.discard
   end
   
   def each_player_from_left(&proc)
@@ -725,31 +726,42 @@ class Speculate
     end
   end
   
-  def initialize(player)
+  def initialize(player, on = '?')
     @player = player
+    @on = on
   end
   
+  def d(s)
+    puts "#{'*' * @@level} #{@player} on #{@on}: " + s
+  end
+  
+  @@level = 0
   def go(&proc)
     begin
-      #p 'block ' + proc.inspect
+      @@level += 1
+      d 'block ' + proc.inspect
       instance_eval &proc
     rescue InsufficientResources, FailedPrecondition => e
-      p 'speculate: ' + e.inspect
+      d e.inspect
       return Passed
     rescue Exception => e
       raise e
     else
-      #p 'speculate succeeded'
+      d 'succeeded'
       return Acted
+    ensure
+      @@level -= 1
     end
   end
   
   def method_missing(method, *args, &proc)
     if @player.has_resource? method
+      p "#{@player} has #{method}"
       return @player.__send__ method, *args, &proc
     elsif @player.respond_to? method
-      #p 'skipping ' + method.to_s
+      p 'skipping ' + method.to_s
     else
+      p "#{@player} punts #{method}"
       super
     end
   end
