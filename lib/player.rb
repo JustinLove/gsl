@@ -13,7 +13,7 @@ module GSL
       end
     
       def what_if(on = '?', &proc)
-        Speculate.new(speculator, on).go(&proc)
+        Speculate.new(speculator, on).go(&proc) #.tap {|v| p v}
       end
     
       def rate(action)
