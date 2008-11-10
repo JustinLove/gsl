@@ -211,7 +211,7 @@ class Game
   end
 
   def go(players)
-    puts self
+    puts description
     resource_init
     @players = Array.new(players) {Player.new(self)}
     puts "#{@players.size} players"
@@ -316,8 +316,12 @@ class Game
     Component.define_action name, proc
   end
     
-  def to_s
+  def description
     "#{@title} by #{@author}, #{@number_of_players} players"
+  end
+  
+  def to_s
+    "The Game"
   end
     
 end
@@ -703,6 +707,8 @@ class Player
 end
 
 class Speculate
+  include Prototype
+  
   def self.forward(what, to = nil)
     define_method what do |*args, &proc|
       @player.__send__ to || what, *args, &proc
@@ -717,8 +723,10 @@ class Speculate
     begin
       #p 'block ' + proc.inspect
       instance_eval &proc
+    rescue NameError, RuntimeError => e
+      raise e
     rescue Exception => e
-      #p 'speculate: ' + e.inspect
+      p 'speculate: ' + e.inspect
       return Passed
     else
       #p 'speculate succeeded'
@@ -729,8 +737,11 @@ class Speculate
   def method_missing(method, *args, &proc)
     if @player.has_resource? method
       return @player.__send__ method, *args, &proc
+    elsif @player.respond_to? method
+      #p 'skipping ' + method.to_s
+    else
+      super
     end
-    #p 'skipping ' + method.to_s
   end
 
   forward :during
