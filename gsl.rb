@@ -278,10 +278,9 @@ class Game
   end
   
   def each_player_until_pass(&proc)
-    acted = true
-    while acted
-      acted = false
-      @players.each {|pl| acted ||= pl.instance_eval &proc;}
+    active = @players.size
+    while active > 0
+      active = @players.find_all {|pl| pl.instance_eval(&proc)}.count
     end
   end
   
