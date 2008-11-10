@@ -15,4 +15,6 @@
      require File.join(File.dirname(__FILE__), '../', lib)
    end
 
+[GSL].each {|constant| include constant}
+
 Game.new(ARGV.shift)
