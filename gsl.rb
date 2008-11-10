@@ -616,10 +616,15 @@ class Player
   include ResourceUser
   
   def forward_to; @game; end
+  def speculator; self; end
   
   module Common
     def execute(action)
       instance_eval(&(action.to_proc))
+    end
+    
+    def what_if(on = '?', &proc)
+      Speculate.new(speculator, on).go(&proc)
     end
   end
   include Common
@@ -658,7 +663,7 @@ class Player
   end
   
   def judge(card)
-    good = Speculate.new(self, "judge #{card.to_s}").go {execute card}
+    good = what_if("judge #{card.to_s}") {execute card}
     if (good)
       :good
     else
@@ -689,7 +694,7 @@ class Player
     end
     if (card)
       puts "#{self.to_s} plays #{card.to_s}" 
-      good = Speculate.new(self, "use #{card.to_s}").go {execute card}
+      good = what_if("use #{card.to_s}") {execute card}
       if (good)
         execute card
         discard card
@@ -723,6 +728,8 @@ end
 class Speculate
   include Prototype
   include Player::Common
+  
+  def speculator; @player; end
   
   def self.forward(what, to = nil)
     define_method what do |*args, &proc|
