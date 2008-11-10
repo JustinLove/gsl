@@ -38,3 +38,14 @@ def deep_copy(obj)
   Marshal::load(Marshal.dump(obj))
 end
 
+module GSL
+  class FailedPrecondition < RuntimeError
+    def initialize(message = nil)
+      @message = message
+    end
+
+    def to_s
+      "Precondition '#{@message}' Failed"
+    end
+  end
+end

@@ -85,14 +85,4 @@ module GSL
       "Insufficient #{@resource}, #{@has} < #{@req}"
     end
   end
-
-  class FailedPrecondition < RuntimeError
-    def initialize(message = nil)
-      @message = message
-    end
-  
-    def to_s
-      "Precondition '#{@message}' Failed"
-    end
-  end
 end
