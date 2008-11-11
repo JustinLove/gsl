@@ -167,7 +167,7 @@ to :play_the_cards do
           use card
           Acted
         else
-          puts "#{self} discards #{card.to_s}"
+          note "#{self} discards #{card.to_s}"
           discard card
           Acted
         end

@@ -11,7 +11,7 @@ module GSL
       def choose(from, &doing)
         best = best_rated(choose_from_what(from), &doing)
         if (best)
-          p "choose #{best.to_s} from #{from}"
+          #p "choose #{best.to_s} from #{from}"
           execute best, &doing
         end
       end
@@ -136,7 +136,7 @@ module GSL
         return use(card)
       end
       if (card)
-        puts "#{self.to_s} plays #{card.to_s}" 
+        note "#{self.to_s} plays #{card.to_s}" 
         if (legal?(card))
           execute card
           discard card
@@ -160,6 +160,10 @@ module GSL
   
     def other_players(&proc)
       @game.each_player :except => self, &proc
+    end
+    
+    def note(what)
+      puts what
     end
   
     def to_s
