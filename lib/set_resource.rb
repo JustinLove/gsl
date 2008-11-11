@@ -96,7 +96,7 @@ module GSL
       end
 
       def reshuffle
-        @value.concat (@discards || [])
+        @value.concat(@discards || [])
         @discards = []
         @value.shuffle!
       end

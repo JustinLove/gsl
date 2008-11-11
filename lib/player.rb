@@ -8,51 +8,58 @@ module GSL
     def speculator; self; end
   
     module Common
-      def choose(from)
-        #p "choosing from #{from.class} #{from.to_s}"
+      def choose(from, &doing)
+        best = best_rated(choose_from_what(from), &doing)
+        execute best, &doing
+      end
+
+      def choose_from_what(from)
         case from.class.to_s.to_sym
         when :Array:
-          from.random
+          from
         when :Hash:
-          best_rated(from.values)
+          from.values
         when :Symbol:
-          choose __send__(from)
+          __send__(from)
         else
           if (from.kind_of? Resource)
-            best_rated(from)
+            from
           else
             throw "can't choose from a #{from.class}"
           end
         end
       end
       
-      def best_rated(from)
-        from.sort_by {|c| -rate(c)}.first
+      def best_rated(from, &doing)
+        from.sort_by {|c| -rate(c, &doing)}.first
       end
       
-      def execute(action)
-        instance_eval(&(action.to_proc))
+      def execute(*args, &proc)
+        if proc
+          instance_exec(*args, &proc)
+        elsif (args && args.first.respond_to?(:to_proc))
+          action = args.shift
+          instance_exec(*args, &(action.to_proc))
+        else
+          nil
+        end
       end
     
       def what_if(on = '?', &proc)
         Speculate.new(speculator, on).go(&proc) #.tap {|v| p v}
       end
     
-      def rate(action)
+      def rate(action, &doing)
         if (action.respond_to? :in)
-          action.in.without(action) {rate_action action}
+          action.in.without(action) {rate_action action, &doing}
         else
-          rate_action(action)
+          rate_action(action, &doing)
         end
       end
 
-      def rate_action(action)
-        if (action.respond_to? :to_proc)
-          good = what_if("rates #{action.to_s}") {execute action}
-          if good then 1 else 0 end
-        else
-          0
-        end
+      def rate_action(action, &doing)
+        good = what_if("rates #{action.to_s}") {execute action, &doing}
+        if good then 1 else 0 end
       end
 
       def judge(action)

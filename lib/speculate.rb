@@ -26,7 +26,7 @@ module GSL
         @@level += 1
         d 'block ' + proc.inspect
         instance_eval &proc
-      rescue Resource::Insufficient, FailedPrecondition => e
+      rescue GamePlayException => e
         d e.inspect
         #puts e.backtrace.join("\n")
         return Passed

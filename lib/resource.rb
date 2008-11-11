@@ -73,7 +73,7 @@ module GSL
     end
   
 
-    class Insufficient < RuntimeError
+    class Insufficient < GamePlayException
       def initialize(r, has = 0, req = 0)
         @resource = r
         @has = has

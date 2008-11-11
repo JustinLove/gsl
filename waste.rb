@@ -216,7 +216,9 @@ end
 
 card :innovation do
   pay 5, :money
-  lose 1, [:rationalization, :materials_required, :waste_reduction].random
+  choose [:rationalization, :materials_required, :waste_reduction] do |choice|
+    lose 1, choice
+  end
 end
 
 card :waste_disposal do
@@ -248,7 +250,7 @@ card :advisor do
         when :waste_disposal: use_twice.call;
         when :waste_removal: use_twice.call;
         when :order: gain(5, :money) if use(card);
-        else Error("can't double #{card}") 
+        else raise NotAllowed, "can't double #{card}"
         end
       end
     }
