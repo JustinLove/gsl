@@ -12,7 +12,7 @@ class Array
   end
   
   def to_s
-    '[' + join(" ") + ']'
+    '[' + (map {|i| i.to_s}).join(" ") + ']'
   end
 end
 
