@@ -23,7 +23,7 @@ module GSL
           n = @value
         end
         possible = @value - n
-        if @value.include?(n) && self.class.range.include?(possible.size)
+        if possible.size == @value.size - n.size && self.class.range.include?(possible.size)
           return possible
         else
           raise Insufficient.new(name, @value, n)
@@ -81,6 +81,8 @@ module GSL
         if @discards.include? card
           raise "attempt to discard #{card.to_s} twice"
         end
+        card.in.lose [card] if card.in
+        card.in = self
         @discards << card
       end
 

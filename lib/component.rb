@@ -49,8 +49,6 @@ module GSL
     end
 
     def discard
-      @in.lose self if @in
-      @in = @home
       @home.discard self
     end
 
