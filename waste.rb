@@ -143,9 +143,10 @@ end
 
 to :choose_card_combinations do
   each_player do
-    gain choose_best(:combinations), :held_cards
+    gain take_best(:combinations), :held_cards
   end
   combinations.each do |pile|
+    p "discard leftover #{pile.to_s}"
     pile.each do |card|
       discard card
     end
