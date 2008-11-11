@@ -143,7 +143,7 @@ end
 
 to :choose_card_combinations do
   each_player do
-    gain take_best(:combinations), :held_cards
+    take(:combinations) {|choice| gain(choice, :held_cards);}
   end
   combinations.each do |pile|
     p "discard leftover #{pile.to_s}"
@@ -162,8 +162,10 @@ to :play_the_cards do
         Acted
       when :bad:
         if held_cards.count <= 1
+          #note "#{self} saves #{card.to_s}"
           Passed
         elsif card.name == :material_sale 
+          #note "#{self} forced to use #{card.to_s}"
           use card
           Acted
         else

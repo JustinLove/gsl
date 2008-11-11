@@ -11,8 +11,10 @@ module GSL
       def choose(from, &doing)
         best = best_rated(choose_from_what(from), &doing)
         if (best)
-          #p "choose #{best.to_s} from #{from}"
-          execute best, &doing
+          #note "choose #{best.to_s} from #{from}"
+          return execute best, &doing
+        else
+          return best
         end
       end
 
@@ -110,26 +112,18 @@ module GSL
     def pick_color(*choices)
       @color = (choices - @game.players.map {|pl| pl.color}).random
     end
-    
-    def take_best(from)
-      choices = __send__(from)
-      best = choose_best(from)
-      choices.must_lose([best])
-      best
-    end
-  
-    def choose_best(from, actions = nil)
-      choices = __send__(from)
-      best = choices.sort_by! {|c| -rate(c)}.first
-      if (best != Empty && !actions.nil?)
-        kind = judge(best)
-        if (actions[kind].call(best) == Passed)
-          return Empty
-        end
+
+    def take(from, &doing)
+      best = best_rated(choose_from_what(from), &doing)
+      if (best)
+        note "take #{best.to_s} from #{from}"
+        must_lose [best], from
+        return execute best, &doing
+      else
+        return best
       end
-      return best
     end
-  
+    
     def use(card, from = nil)
       if card.kind_of?(Symbol) && from
         card = from.find{|c| c.name == card}
