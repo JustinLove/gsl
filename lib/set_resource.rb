@@ -131,6 +131,14 @@ module GSL
         @value = @value.sort_by(&proc) if @value
         return self
       end
+      
+      def without(item)
+        #p "without #{item.to_s}"
+        @value.delete item
+        result = yield item
+        @value << item
+        return result
+      end
   
       def to_s
         @value ||= []

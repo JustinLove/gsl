@@ -8,6 +8,28 @@ module GSL
     def speculator; self; end
   
     module Common
+      def choose(from)
+        #p "choosing from #{from.class} #{from.to_s}"
+        case from.class.to_s.to_sym
+        when :Array:
+          from.random
+        when :Hash:
+          best_rated(from.values)
+        when :Symbol:
+          choose __send__(from)
+        else
+          if (from.kind_of? Resource)
+            best_rated(from)
+          else
+            throw "can't choose from a #{from.class}"
+          end
+        end
+      end
+      
+      def best_rated(from)
+        from.sort_by {|c| -rate(c)}.first
+      end
+      
       def execute(action)
         instance_eval(&(action.to_proc))
       end
@@ -17,6 +39,14 @@ module GSL
       end
     
       def rate(action)
+        if (action.respond_to? :in)
+          action.in.without(action) {rate_action action}
+        else
+          rate_action(action)
+        end
+      end
+
+      def rate_action(action)
         if (action.respond_to? :to_proc)
           good = what_if("rates #{action.to_s}") {execute action}
           if good then 1 else 0 end
@@ -24,7 +54,7 @@ module GSL
           0
         end
       end
-    
+
       def judge(action)
         if rate(action) > 0 then :good else :bad end
       end
