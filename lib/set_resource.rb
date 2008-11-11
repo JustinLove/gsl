@@ -10,7 +10,7 @@ module GSL
       end
   
       def if_gain(n)
-        possible = @value + n
+        possible = @value + wrap(n)
         if self.class.range.include?(possible.size)
           return possible
         else
@@ -19,9 +19,7 @@ module GSL
       end
 
       def if_lose(n = :all)
-        if (n == :all)
-          n = @value
-        end
+        n = wrap(n)
         possible = @value - n
         if possible.size == @value.size - n.size && self.class.range.include?(possible.size)
           return possible
@@ -44,11 +42,8 @@ module GSL
       end
   
       def lose(n = :all)
-        n = @value if n == :all
-        if !n.kind_of? Array
-          n = [n]
-        end
-        possible = @value - forfeit(n)
+        n = forfeit(n)
+        possible = @value - n
         miss = self.class.range.first - possible.size
         old = @value
         if (miss > 0)
@@ -59,7 +54,17 @@ module GSL
         return old - @value
       end
       
+      def wrap(n)
+        n = @value if n == :all
+        if !n.kind_of? Array
+          n = [n]
+        else
+          n
+        end
+      end
+      
       def own(n)
+        n = wrap(n)
         if (n && n.first.respond_to?(:in))
           n.each {|c| c.in = self}
         else
@@ -68,6 +73,7 @@ module GSL
       end
       
       def forfeit(n)
+        n = wrap(n)
         if (n && n.first.respond_to?(:in))
           n.each {|c| c.in = nil}
         else
@@ -90,7 +96,7 @@ module GSL
       end
 
       def reshuffle
-        @value.concat @discards || []
+        @value.concat (@discards || [])
         @discards = []
         @value.shuffle!
       end
@@ -127,6 +133,7 @@ module GSL
       end
   
       def to_s
+        @value ||= []
         @discards ||= []
         "#{name}:#{@value.count}/#{@discards.count}(#{@value.count + @discards.count})"
       end
