@@ -155,20 +155,24 @@ end
 
 to :play_the_cards do
   each_player_until_pass do
-    choose_best :held_cards,
-     :good => Action{|card| use card; Acted},
-     :bad => Action{|card|
-       if held_cards.count <= 1
-         Passed
-       elsif card.name == :material_sale 
-         use card
-         Acted
-       else
-         puts "#{self} discards #{card.to_s}"
-         discard card
-         Acted
-       end
-     }
+    choose :held_cards do |card|
+      case judge(card)
+      when :good:
+        use card
+        Acted
+      when :bad:
+        if held_cards.count <= 1
+          Passed
+        elsif card.name == :material_sale 
+          use card
+          Acted
+        else
+          puts "#{self} discards #{card.to_s}"
+          discard card
+          Acted
+        end
+      end
+    end
   end
 end
 
@@ -241,8 +245,8 @@ card :advisor do
   choose :repay_loan => Action{pay(10, :money); must_lose(10, :loans)},
     :double => Action{
       must_have {held_cards.count > 0}
-      use_twice = Action{execute card; use card;}
       choose :held_cards do |card|
+        use_twice = Action{execute card; use card;}
         case card.name
         when :material_sale: use card;
         when :growth: use_twice.call;

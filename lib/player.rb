@@ -10,7 +10,10 @@ module GSL
     module Common
       def choose(from, &doing)
         best = best_rated(choose_from_what(from), &doing)
-        execute best, &doing
+        if (best)
+          p "choose #{best.to_s} from #{from}"
+          execute best, &doing
+        end
       end
 
       def choose_from_what(from)
@@ -31,7 +34,8 @@ module GSL
       end
       
       def best_rated(from, &doing)
-        from.sort_by {|c| -rate(c, &doing)}.first
+        # concat: operate on a copy so changes don't mess us up
+        from.concat([]).sort_by {|c| -rate(c, 'best', &doing)}.first
       end
       
       def execute(*args, &proc)
@@ -49,21 +53,22 @@ module GSL
         Speculate.new(speculator, on).go(&proc) #.tap {|v| p v}
       end
     
-      def rate(action, &doing)
+      def rate(action, why = 'rates', &doing)
+        raise if !action
         if (action.respond_to? :in)
-          action.in.without(action) {rate_action action, &doing}
+          action.in.without(action) {rate_action action, why, &doing}
         else
-          rate_action(action, &doing)
+          rate_action(action, why, &doing)
         end
       end
 
-      def rate_action(action, &doing)
-        good = what_if("rates #{action.to_s}") {execute action, &doing}
+      def rate_action(action, why = 'rates', &doing)
+        good = what_if("#{why} #{action.to_s}") {execute action, &doing}
         if good then 1 else 0 end
       end
 
       def judge(action)
-        if rate(action) > 0 then :good else :bad end
+        if rate(action, 'judges') > 0 then :good else :bad end
       end
     
       def legal?(action)
