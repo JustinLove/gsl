@@ -62,7 +62,6 @@ module GSL
       def own(n)
         if (n && n.first.respond_to?(:in))
           n.each {|c| c.in = self}
-          n
         else
           n
         end
