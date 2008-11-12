@@ -276,13 +276,16 @@ to :change_the_starting_player do
   end
 end
 
-=begin
-
-Scoring:
-  - +growth
-  - +[rationalization, materials-required, waste-reduction]
-  - +money/2 round down
-  - +loans (negative)
-  - tiebreaker: money
-
-=end
+to :score do
+  each_player do
+    score = growth.value
+    [:rationalization, :materials_required, :waste_reduction].each do |tech|
+      score += triangle (6 - resource(tech).value)
+    end
+    score += money.value/2
+    score -= loans
+    tiebreaker = money.value
+    puts report
+    puts score
+  end
+end

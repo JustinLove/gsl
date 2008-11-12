@@ -68,6 +68,10 @@ module GSL
     def has_resource?(resource)
       @resources.keys.include? resource
     end
+    
+    def resource(resource)
+      @resources[resource]
+    end
   
     def must_have(&condition)
       if !(instance_eval &condition)

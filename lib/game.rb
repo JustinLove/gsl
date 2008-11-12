@@ -155,6 +155,12 @@ module GSL
       Component.define_action name, proc
     end
     
+    def triangle(x)
+      y = 0
+      x.times{|i| y += i + 1}
+      y
+    end
+    
     def description
       "#{@title} by #{@author}, #{@number_of_players} players"
     end
