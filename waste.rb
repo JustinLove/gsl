@@ -268,15 +268,15 @@ to :pay_basic_costs do
   end
 end
 
+to :change_the_starting_player do
+  p "----- rotate"
+  players.rotate
+  if action_cards.discarded :accident
+    reshuffle :action_cards
+  end
+end
+
 =begin
-
-change starting player:
-  - pass starting-player to left
-  - if accident was drawn, reshuffle cards
-  - check for game-over flag
-
-Game over:
-  - process accident as above
 
 Scoring:
   - +growth

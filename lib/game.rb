@@ -106,7 +106,7 @@ module GSL
     end
   
     def each_player(options = {}, &proc)
-      order = @players
+      order = [].concat @players
       from = options[:left_of]
       except = options[:except]
       if (from)

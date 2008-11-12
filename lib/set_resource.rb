@@ -132,6 +132,22 @@ module GSL
         return self
       end
       
+      def contains(card)
+        if card.kind_of?(Symbol)
+          return @value.find{|c| c.name == card}
+        else
+          return card if @value.include? card
+        end
+      end
+
+      def discarded(card)
+        if card.kind_of?(Symbol)
+          return @discards.find{|c| c.name == card}
+        else
+          return card if @discards.include? card
+        end
+      end
+      
       def without(item)
         #p "without #{item.to_s}"
         @value.delete item
