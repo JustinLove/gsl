@@ -37,7 +37,7 @@ module GSL
       
       def best_rated(from, &doing)
         # concat: operate on a copy so changes don't mess us up
-        from.concat([]).sort_by {|c| -rate(c, 'best', &doing)}.first
+        [].concat(from).sort_by {|c| -rate(c, 'best', &doing)}.first
       end
       
       def execute(*args, &proc)
