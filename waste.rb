@@ -262,9 +262,13 @@ card :advisor do
     }
 end
 
-=begin
+to :pay_basic_costs do
+  each_player do
+    pay co_workers.value, :money
+  end
+end
 
-pay the basic costs: each player pays money = co-workers
+=begin
 
 change starting player:
   - pass starting-player to left
