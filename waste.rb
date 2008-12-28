@@ -280,7 +280,7 @@ to :score do
   each_player do
     score = growth.value
     [:rationalization, :materials_required, :waste_reduction].each do |tech|
-      score += triangle (6 - resource(tech).value)
+      score += triangle(6 - resource(tech).value)
     end
     score += money.value/2
     score -= loans
