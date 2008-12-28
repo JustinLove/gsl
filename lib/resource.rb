@@ -30,6 +30,10 @@ module GSL
     def name
       self.class.name
     end
+    
+    def initialize(owner)
+      @owner = owner
+    end
 
     def method_missing(method, *args, &proc)
       if @value.respond_to? method

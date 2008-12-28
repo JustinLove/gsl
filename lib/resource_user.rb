@@ -36,7 +36,7 @@ module GSL
 
     def resource_init
       @resources = Hash.new do |hash, key|
-        hash[key] = Resource.define(key).new
+        hash[key] = Resource.define(key).new(self)
         if (cv.components.keys.include? key)
           hash[key].set deep_copy(cv.components[key])
         end
