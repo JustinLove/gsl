@@ -80,15 +80,18 @@ module GSL
           n
         end
       end
+      
+      def discards
+        @discards ||= []
+      end
   
       def discard(card)
-        @discards ||= []
-        if @discards.include? card
+        if discards.include? card
           raise "attempt to discard #{card.to_s} twice"
         end
         card.in.lose [card] if card.in
         card.in = self
-        @discards << card
+        discards << card
       end
 
       def shuffle
@@ -96,8 +99,8 @@ module GSL
       end
 
       def reshuffle
-        @value.concat(@discards || [])
-        @discards = []
+        @value.concat(discards)
+        discards = []
         @value.shuffle!
       end
   
@@ -142,9 +145,9 @@ module GSL
 
       def discarded(card)
         if card.kind_of?(Symbol)
-          return @discards.find{|c| c.name == card}
+          return discards.find{|c| c.name == card}
         else
-          return card if @discards.include? card
+          return card if discards.include? card
         end
       end
       
@@ -158,12 +161,11 @@ module GSL
   
       def to_s
         @value ||= []
-        @discards ||= []
-        "#{name}:#{@value.count}/#{@discards.count}(#{@value.count + @discards.count})"
+        "#{name}:#{@value.count}/#{discards.count}(#{@value.count + discards.count})"
       end
   
       def to_a
-        [@value.to_s, @discards.to_s]
+        [@value.to_s, discards.to_s]
       end
     end
   end
