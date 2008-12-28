@@ -30,24 +30,12 @@ module GSL
       end
     end
   
-    def create_resource(name, range = 0..Infinity, option = nil, &proc)
-      r = Resource.define(name)
-      r.range = range
-      r.option = option
-      if (!proc.nil?)
-        r.__send__ :include, Module.new(&proc)
-      end
-      r
-    end
-
     def common_resource(name, range = 0..Infinity, option = nil, &proc)
-      create_resource(name, range, option, &proc)
-      Game.make_resource(name)
+      Game.make_resource(name, range, option, &proc)
     end
 
     def player_resource(name, range = 0..Infinity, option = nil, &proc)
-      create_resource(name, range, option, &proc)
-      Player.make_resource(name)
+      Player.make_resource(name, range, option, &proc)
     end
 
     def go(players)

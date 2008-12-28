@@ -29,8 +29,15 @@ module GSL
         cv.components[name] = Component.send(value.class.name.downcase, name, value)
       end
 
-      def make_resource(name)
+      def make_resource(name, range = 0..Infinity, option = nil, &proc)
         cv.resources << name
+        r = Resource.define(name)
+        r.range = range
+        r.option = option
+        if (!proc.nil?)
+          r.__send__ :include, Module.new(&proc)
+        end
+        r
       end
     end
 
