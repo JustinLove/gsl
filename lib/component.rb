@@ -42,7 +42,7 @@ module GSL
     end
 
     def discard_to(where)
-      if (where.class.name == @kind)
+      if (@home.nil?)
         @home = where
       end
       return self

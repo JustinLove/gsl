@@ -100,7 +100,7 @@ module GSL
 
       def reshuffle
         @value.concat(discards)
-        discards = []
+        discards.replace([])
         @value.shuffle!
       end
   
