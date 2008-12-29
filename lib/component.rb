@@ -50,7 +50,11 @@ module GSL
 
     def discard(deck = nil)
       deck ||= @home
-      deck.discard self
+      if deck.include? self
+        raise "attempt to discard #{self.to_s} twice"
+      end
+      @in.lose [self] if @in
+      deck.gain [self]
     end
 
     def to_proc

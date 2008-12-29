@@ -82,32 +82,31 @@ module GSL
       end
       
       def discards
-        @discards ||= []
+        if @discards.nil?
+          @discards =
+            self.class.option[:discard_to] ||
+            (name.to_s + '_discard').to_sym
+          if !@owner.respond_to?(@discards)
+            @owner.class.make_resource(@discards)
+            @owner.set_to [], @discards #type as set
+          end
+        end
+        @owner.__send__(@discards)
       end
   
-      def discard(card)
-        if discards.include? card
-          raise "attempt to discard #{card.to_s} twice"
-        end
-        card.in.lose [card] if card.in
-        card.in = self
-        discards << card
-      end
-
       def shuffle
         @value.shuffle!
       end
 
       def reshuffle
-        @value.concat(discards)
-        discards.replace([])
+        gain(discards.lose(:all))
         @value.shuffle!
       end
   
       def primitive_draw
         card = @value.shift
         if (card.respond_to? :discard_to)
-          card.discard_to self
+          card.discard_to discards
           card.in = nil
         end
         card
@@ -125,7 +124,7 @@ module GSL
       def first
         card = @value.first
         if (card.respond_to? :discard_to)
-          card.discard_to self
+          card.discard_to discards
         end
         card
       end

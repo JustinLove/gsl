@@ -33,7 +33,7 @@ module GSL
         cv.resources << name
         r = Resource.define(name)
         r.range = range
-        r.option = option
+        r.option = option if option
         if (!proc.nil?)
           r.__send__ :include, Module.new(&proc)
         end

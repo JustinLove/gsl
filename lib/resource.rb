@@ -18,7 +18,7 @@ module GSL
         return const_set(const_name, Class.new(self) do
           @name = name
           @range = 0..Infinity
-          @option = nil
+          @option = {}
         end)
       end
     end
