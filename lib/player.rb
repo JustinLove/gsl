@@ -94,21 +94,6 @@ module GSL
       resource_init
     end
     
-    def method_missing(method, *args, &block)
-      if @resources.keys.include? method
-        #puts 'player ' + method.to_s
-        return @resources[method]
-      end
-      if @game.resources.keys.include? method
-        #puts 'game ' + method.to_s
-        return @game.__send__(method, *args, &block)
-      end
-      if @game.respond_to? method
-        return @game.__send__(method, *args, &block)
-      end
-      super
-    end
-
     def pick_color(*choices)
       @color = (choices - @game.players.map {|pl| pl.color}).random
     end

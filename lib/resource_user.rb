@@ -15,7 +15,7 @@ module GSL
             #puts "#{self.to_s} #{method} #{n} #{resource}"
           end
           @resources[resource].__send__ method, n
-        elsif respond_to? :forward_to
+        elsif forward_to
           #puts "#{self.to_s} #{method} #{n} #{resource}"
           forward_to.__send__ method, n, resource
         else
@@ -51,10 +51,21 @@ module GSL
       end
     end
 
+    def respond_to?(method)
+      if (@resources && @resources.keys.include?(method))
+        return true
+      elsif (forward_to)
+        return forward_to.respond_to?(method) || super
+      end
+      super
+    end
+
     def method_missing(method, *args, &block)
       if (@resources && @resources.keys.include?(method))
         #puts 'returning ' + method.to_s
         return @resources[method]
+      elsif (forward_to && forward_to.respond_to?(method))
+        return forward_to.__send__(method, *args, &block)
       end
       super
     end
@@ -62,7 +73,11 @@ module GSL
     def set_to(n, *resources)
       resources.each {|r| set n, r }
     end
-  
+
+    #expected to be overridden, but having a checkable value
+    #  beats calling respond_to?
+    def forward_to; false; end
+
     forward :set
     forward :gain
     forward :lose
