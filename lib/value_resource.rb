@@ -33,11 +33,6 @@ module GSL
         m = @value
         -self.gain(-wrap(n))
       end
-      
-      def wrap(n)
-        n = @value if n == :all
-        return n.value
-      end
     end
   end
 end

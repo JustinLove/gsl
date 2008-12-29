@@ -55,8 +55,7 @@ module GSL
       end
       
       def wrap(n)
-        n = @value if n == :all
-        n = n.value
+        n = super
         if !n.kind_of? Array
           n = [n]
         else

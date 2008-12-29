@@ -76,6 +76,10 @@ module GSL
       must_lose(n)
     end
   
+    def wrap(n)
+      n = @value if n == :all
+      return n.value
+    end
 
     class Insufficient < GamePlayException
       def initialize(r, has = 0, req = 0)
