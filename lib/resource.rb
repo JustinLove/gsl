@@ -78,6 +78,9 @@ module GSL
   
     def wrap(n)
       n = @value if n == :all
+      if (n.kind_of?(Symbol) && @owner.respond_to?(n))
+        return @owner.__send__(n).value
+      end
       return n.value
     end
 
