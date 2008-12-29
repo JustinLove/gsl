@@ -48,8 +48,9 @@ module GSL
       return self
     end
 
-    def discard
-      @home.discard self
+    def discard(deck = nil)
+      deck ||= @home
+      deck.discard self
     end
 
     def to_proc

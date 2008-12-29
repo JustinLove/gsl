@@ -85,8 +85,7 @@ module GSL
     end
   
     def discard(card, deck = nil)
-      @deck = deck || @deck
-      @resources[@deck].discard card
+      card.discard deck
     end
   
     def number_playing?
