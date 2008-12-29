@@ -11,6 +11,10 @@ class Array
     self.push self.shift
   end
   
+  def value
+    return self
+  end
+  
   def to_s
     '[' + (map {|i| i.to_s}).join(" ") + ']'
   end
@@ -31,6 +35,10 @@ end
 class Fixnum
   def piles
     Array.new(self) {[]}
+  end
+  
+  def value
+    return self
   end
 end
 

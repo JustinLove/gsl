@@ -200,9 +200,9 @@ end
 
 card :order do
   must_have {co_workers >= rationalization}
-  pay materials_required.value, :raw_materials
-  must_gain waste_reduction.value, :waste_disposal
-  gain growth.value, :money
+  pay materials_required, :raw_materials
+  must_gain waste_reduction, :waste_disposal
+  gain growth, :money
 end
 
 card :growth do
@@ -264,7 +264,7 @@ end
 
 to :pay_basic_costs do
   each_player do
-    pay co_workers.value, :money
+    pay co_workers, :money
   end
 end
 

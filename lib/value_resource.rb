@@ -2,6 +2,7 @@ module GSL
   class Resource
     module Value
       def set(n)
+        n = wrap(n)
         if self.class.range.include?(n)
           @value = n
         else
@@ -10,6 +11,7 @@ module GSL
       end
 
       def if_gain(n)
+        n = wrap(n)
         if self.class.range.include?(@value+n)
           return @value + n
         else
@@ -18,22 +20,23 @@ module GSL
       end
   
       def if_lose(n = :all)
-        if (n == :all)
-          n = @value
-        end
-        self.if_gain(-n)
+        self.if_gain(-wrap(n))
       end
   
       def gain(n)
         old = @value
-        @value = self.class.range.bound(@value+n)
+        @value = self.class.range.bound(@value+wrap(n))
         return @value - old
       end
   
       def lose(n = :all)
-        n = @value if n == :all
         m = @value
-        -self.gain(-n)
+        -self.gain(-wrap(n))
+      end
+      
+      def wrap(n)
+        n = @value if n == :all
+        return n.value
       end
     end
   end
