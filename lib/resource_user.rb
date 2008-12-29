@@ -27,10 +27,11 @@ module GSL
     module Class
       def make_components(name, value)
         cv.components[name] = Component.send(value.class.name.downcase, name, value)
+        cv.resources << name if !cv.resources.include?(name)
       end
 
       def make_resource(name, range = 0..Infinity, option = nil, &proc)
-        cv.resources << name
+        cv.resources << name if !cv.resources.include?(name)
         r = Resource.define(name)
         r.range = range
         r.option = option if option
@@ -52,7 +53,7 @@ module GSL
     end
 
     def respond_to?(method)
-      if (@resources && @resources.keys.include?(method))
+      if (cv.resources.include?(method))
         return true
       elsif (forward_to)
         return forward_to.respond_to?(method) || super
@@ -61,7 +62,7 @@ module GSL
     end
 
     def method_missing(method, *args, &block)
-      if (@resources && @resources.keys.include?(method))
+      if (cv.resources.include?(method))
         #puts 'returning ' + method.to_s
         return @resources[method]
       elsif (forward_to && forward_to.respond_to?(method))
