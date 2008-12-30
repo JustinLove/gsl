@@ -1,4 +1,4 @@
-require 'gsl/lib/gsl.rb'
+require File.join(File.dirname(__FILE__), '../lib/gsl')
 
 describe "ClassVars" do
   
