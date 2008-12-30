@@ -35,5 +35,26 @@ describe "ClassVars" do
       lambda {@class.cv.fred = 1}.should_not raise_error
       @class.cv.fred.should == 1
     end
+    
+    describe "instance" do
+      before do
+        @class.psuedo_class_var :billy
+        @inst = @class.new
+      end
+      
+      it "should have the var" do
+        @inst.cv.should be_respond_to(:billy)
+      end
+      
+      it "should share values" do
+        @class.cv.billy = 1
+        @inst.cv.billy.should == 1
+      end
+      
+      it "should share between instances" do
+        @inst.cv.billy = 2
+        @class.new.cv.billy.should == 2
+      end
+    end
   end
 end
