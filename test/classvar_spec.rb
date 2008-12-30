@@ -29,5 +29,11 @@ describe "ClassVars" do
       @class.psuedo_class_var :barney
       @class.cv.should be_respond_to(:barney)
     end
+    
+    it "should read and assign" do
+      @class.psuedo_class_var :fred
+      lambda {@class.cv.fred = 1}.should_not raise_error
+      @class.cv.fred.should == 1
+    end
   end
 end
