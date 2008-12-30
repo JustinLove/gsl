@@ -1,29 +1,5 @@
 require File.join(File.dirname(__FILE__), '../lib/classvar')
 
-describe Object do
-  before :all do
-    @obj = Object.new
-  end
-
-  it "should not have cv" do
-    @obj.should_not be_respond_to(:cv)
-  end
-end
-
-describe Class do
-  before :all do
-    @class = Class.new
-  end
-
-  it "should not have cv" do
-    @class.should_not be_respond_to(:cv)
-  end
-  
-  it "should not have psuedo_class_var" do
-    @class.should_not be_respond_to(:psuedo_class_var)
-  end
-end
-
 describe "extended", :shared => true do
   describe Class do
     it "should have cv" do
@@ -100,5 +76,29 @@ describe ClassVars do
     end
     
     it_should_behave_like "extended"
+  end
+end
+
+describe Object do
+  before :all do
+    @obj = Object.new
+  end
+
+  it "should not have cv" do
+    @obj.should_not be_respond_to(:cv)
+  end
+end
+
+describe Class do
+  before :all do
+    @class = Class.new
+  end
+
+  it "should not have cv" do
+    @class.should_not be_respond_to(:cv)
+  end
+  
+  it "should not have psuedo_class_var" do
+    @class.should_not be_respond_to(:psuedo_class_var)
   end
 end
