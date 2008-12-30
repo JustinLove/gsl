@@ -17,4 +17,4 @@
 
 [GSL].each {|constant| include constant}
 
-Game.new(ARGV.shift)
+Game.new(ARGV.shift) if ARGV.length > 0
