@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '../lib/gsl')
+require File.join(File.dirname(__FILE__), '../lib/classvar')
 
 describe Object do
   before do
@@ -26,7 +26,7 @@ end
 
 describe Class::Vars do
   before do
-    @class = Class.new
+    @class = class Rat; self; end
     @class.extend Class::Vars
   end
 
