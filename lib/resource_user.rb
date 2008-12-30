@@ -1,6 +1,7 @@
 module GSL
   module ResourceUser
     def self.included(base)
+      puts base.name
       base.extend ResourceUser::Class
       base.psuedo_class_var :components
       base.psuedo_class_var :resources
@@ -25,6 +26,7 @@ module GSL
     end
 
     module Class
+      include Object::Class::Vars
       def make_components(name, value)
         cv.components[name] = Component.send(value.class.name.downcase, name, value)
         cv.resources << name if !cv.resources.include?(name)

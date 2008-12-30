@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), '../lib/classvar')
 
 describe Object do
-  before do
+  before :all do
     @obj = Object.new
   end
 
@@ -11,7 +11,7 @@ describe Object do
 end
 
 describe Class do
-  before do
+  before :all do
     @class = Class.new
   end
 
@@ -24,12 +24,7 @@ describe Class do
   end
 end
 
-describe Class::Vars do
-  before do
-    @class = class Rat; self; end
-    @class.extend Class::Vars
-  end
-
+describe "extended classes", :shared => true do
   it "should have cv" do
     @class.should be_respond_to(:cv)
   end
@@ -50,7 +45,7 @@ describe Class::Vars do
   end
   
   describe "instance" do
-    before do
+    before :all do
       @class.psuedo_class_var :billy
       @inst = @class.new
     end
@@ -72,5 +67,36 @@ describe Class::Vars do
       @inst.cv.billy = 2
       @class.new.cv.billy.should == 2
     end
+  end
+end
+
+describe Class::Vars do
+  describe "directly extended" do
+    before :all do
+      @class = class Rat; self; end
+      @class.extend Class::Vars
+    end
+    
+    it_should_behave_like "extended classes"
+  end
+
+
+  describe "indirectly extended" do
+    before :all do
+      @mod = module Needle; include Class::Vars; self; end
+      @class = class LabRat; extend Needle; self; end
+    end
+    
+    describe "Module" do
+      it "should be extendable" do
+        @mod.should be_respond_to(:extended)
+      end
+
+      it "should be includable" do
+        @mod.should be_respond_to(:included)
+      end
+    end
+    
+    it_should_behave_like "extended classes"
   end
 end
