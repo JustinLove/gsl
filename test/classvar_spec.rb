@@ -70,11 +70,11 @@ describe "extended classes", :shared => true do
   end
 end
 
-describe Class::Vars do
+describe ClassVars do
   describe "directly extended" do
     before :all do
       @class = class Rat; self; end
-      @class.extend Class::Vars
+      @class.extend ClassVars::Class
     end
     
     it_should_behave_like "extended classes"
@@ -83,7 +83,7 @@ describe Class::Vars do
 
   describe "indirectly extended" do
     before :all do
-      @mod = module Needle; include Class::Vars; self; end
+      @mod = module Needle; include ClassVars::Class; self; end
       @class = class LabRat; extend Needle; self; end
     end
     

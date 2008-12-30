@@ -1,26 +1,27 @@
-class Class
-  module Vars
-    module Object
-      def cv; self.class; end
-    end
+module ClassVars
+  module Object
+    def cv; self.class; end
+  end
 
-    module Triggers
-      def included(base)
-        #puts "ClassVar included #{base.name}"
-        base.extend Triggers
-      end
+  module SuperClass
+    def included(base)
+      #puts "ClassVar included #{base.name}"
+      base.extend SuperClass
+    end
+  
+    def extended(base)
+      #puts "ClassVar extend #{base.name}"
+      base.__send__ :include, ClassVars::Object
+    end
+  end
+
+  module Class
+    extend SuperClass
     
-      def extended(base)
-        #puts "ClassVar extend #{base.name}"
-        base.__send__ :include, Class::Vars::Object
-      end
-    end
-    extend Triggers
-
     def cv; self; end
+    
     def psuedo_class_var(var)
       self.class.__send__ :attr_accessor, "#{var}"
     end
-    
   end
 end
