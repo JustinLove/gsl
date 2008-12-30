@@ -24,27 +24,29 @@ describe Class do
   end
 end
 
-describe "extended classes", :shared => true do
-  it "should have cv" do
-    @class.should be_respond_to(:cv)
-  end
+describe "extended", :shared => true do
+  describe Class do
+    it "should have cv" do
+      @class.should be_respond_to(:cv)
+    end
   
-  it "should have psuedo_class_var" do
-    @class.should be_respond_to(:psuedo_class_var)
-  end
+    it "should have psuedo_class_var" do
+      @class.should be_respond_to(:psuedo_class_var)
+    end
   
-  it "should create variables" do
-    @class.psuedo_class_var :barney
-    @class.cv.should be_respond_to(:barney)
-  end
+    it "should create variables" do
+      @class.psuedo_class_var :barney
+      @class.cv.should be_respond_to(:barney)
+    end
   
-  it "should read and assign" do
-    @class.psuedo_class_var :fred
-    lambda {@class.cv.fred = 1}.should_not raise_error
-    @class.cv.fred.should == 1
+    it "should read and assign" do
+      @class.psuedo_class_var :fred
+      lambda {@class.cv.fred = 1}.should_not raise_error
+      @class.cv.fred.should == 1
+    end
   end
-  
-  describe "instance" do
+
+  describe Object do
     before :all do
       @class.psuedo_class_var :billy
       @inst = @class.new
@@ -53,23 +55,23 @@ describe "extended classes", :shared => true do
     it "should have cv" do
       @inst.should be_respond_to(:cv)
     end
-    
+  
     it "should have the var" do
       @inst.cv.should be_respond_to(:billy)
     end
-    
+  
     it "should share values" do
       @class.cv.billy = 1
       @inst.cv.billy.should == 1
     end
-    
+  
     it "should share between instances" do
       @inst.cv.billy = 2
       @class.new.cv.billy.should == 2
     end
   end
 end
-
+  
 describe ClassVars do
   describe "directly extended" do
     before :all do
@@ -77,7 +79,7 @@ describe ClassVars do
       @class.extend ClassVars::Class
     end
     
-    it_should_behave_like "extended classes"
+    it_should_behave_like "extended"
   end
 
 
@@ -97,6 +99,6 @@ describe ClassVars do
       end
     end
     
-    it_should_behave_like "extended classes"
+    it_should_behave_like "extended"
   end
 end
