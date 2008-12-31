@@ -1,4 +1,5 @@
-require File.join(File.dirname(__FILE__), '../lib/classvar')
+require File.join(File.dirname(__FILE__), 'test_helper')
+libs %w{classvar}
 
 describe "extended", :shared => true do
   describe Class do
