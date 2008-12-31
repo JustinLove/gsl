@@ -9,7 +9,7 @@ class User
 end
 
 describe GSL::Resource do
-  before do
+  before :all do
     @user = User.new()
     @user.resource_init
   end
@@ -77,6 +77,10 @@ describe GSL::Resource do
       @object.lose([:king])
       @object.value.should_not include(:king)
     end
+    
+    it "loses all" do
+      @object.lose(:all).should == @initial_value
+    end
 
     it "wraps scalars" do
       @object.gain(:jack)
@@ -95,6 +99,13 @@ describe GSL::Resource do
     
     it "has discards" do
       @object.discards.should be_kind_of(GSL::Resource::Set)
+    end
+    
+    it "reshuffles" do
+      @object.discards.gain([:jack])
+      @object.reshuffle
+      @object.discards.value.should == []
+      @object.value.should include(:jack)
     end
   end
 end
