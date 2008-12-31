@@ -142,4 +142,29 @@ describe GSL::Resource do
       @object.should include(:king)
     end
   end
+  
+  describe "with discard option" do
+    before do
+      @class = GSL::Resource.define(:fruit)
+      @class.option.merge! :discard_to => :compost_heap
+      @object = @class.new(@user)
+      @initial_value = [:apple, :pear, :banana]
+      @object.set(@initial_value)
+    end
+    
+    it "has discards" do
+      @object.discards.should be_kind_of(GSL::Resource::Set)
+    end
+
+    it "has specified discards" do
+      @object.discards.name.should == :compost_heap
+    end
+
+    it "reshuffles" do
+      @object.discards.gain([:jack])
+      @object.reshuffle
+      @object.discards.value.should == []
+      @object.value.should include(:jack)
+    end
+  end
 end
