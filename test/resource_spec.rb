@@ -63,6 +63,10 @@ describe GSL::Resource do
     it "has a value" do
       @object.value.should == @initial_value
     end
+
+    it "should not reference the initializer" do
+      @object.value.should_not equal(@initial_value)
+    end
     
     it "gains" do
       @object.gain([:jack])
@@ -77,6 +81,16 @@ describe GSL::Resource do
     it "wraps scalars" do
       @object.gain(:jack)
       @object.value.should include(:jack)
+    end
+    
+    it "shuffles" do
+      different = 0
+      3.times do
+        @object.shuffle
+        different += 1 unless(@object.value == @initial_value)
+        @initial_value.permutation.should include(@object.value)
+      end
+      different.should > 0
     end
     
     it "has discards" do

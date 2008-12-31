@@ -3,7 +3,7 @@ module GSL
     module Set
       def set(n)
         if self.class.range.include?(n.size)
-          @value = own(n)
+          @value = own(n).dup
         else
           raise 'resource out of range'
         end
