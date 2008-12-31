@@ -1,11 +1,23 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
-libs %w{prototype misc resource set_resource value_resource}
+libs %w{
+  prototype classvar misc
+  resource set_resource value_resource
+  resource_user}
+
+class User
+  include GSL::ResourceUser
+end
 
 describe GSL::Resource do
+  before do
+    @user = User.new()
+    @user.resource_init
+  end
+
   describe "before typing" do
     before do
       @class = GSL::Resource.define(:fudge)
-      @object = @class.new(self)
+      @object = @class.new(@user)
     end
     
     it "class has a name" do
@@ -20,7 +32,7 @@ describe GSL::Resource do
   describe "typed as value" do
     before do
       @class = GSL::Resource.define(:fudge)
-      @object = @class.new(self)
+      @object = @class.new(@user)
       @initial_value = 8
       @object.set(@initial_value)
     end
@@ -43,7 +55,7 @@ describe GSL::Resource do
   describe "typed as set" do
     before do
       @class = GSL::Resource.define(:cards)
-      @object = @class.new(self)
+      @object = @class.new(@user)
       @initial_value = [:ace, :queen, :king]
       @object.set(@initial_value)
     end
@@ -65,6 +77,10 @@ describe GSL::Resource do
     it "wraps scalars" do
       @object.gain(:jack)
       @object.value.should include(:jack)
+    end
+    
+    it "has discards" do
+      @object.discards.should be_kind_of(GSL::Resource::Set)
     end
   end
 end
