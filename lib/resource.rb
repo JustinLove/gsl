@@ -78,9 +78,13 @@ module GSL
     def wrap(n)
       n = @value if n == :all
       if (n.kind_of?(Symbol) && @owner.respond_to?(n))
-        return @owner.__send__(n).value
+        n = @owner.__send__(n)
       end
-      return n.value
+      if (n.kind_of?(Resource))
+        return n.value
+      else
+        return n
+      end
     end
 
     class Insufficient < GamePlayException
