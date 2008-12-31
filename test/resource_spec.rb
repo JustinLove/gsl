@@ -8,11 +8,11 @@ describe GSL::Resource do
       @object = @class.new(self)
     end
     
-    it "class should have a name" do
+    it "class has a name" do
       @class.name.should be_kind_of(Symbol)
     end
 
-    it "object should have a name" do
+    it "object has a name" do
       @object.name.should be_kind_of(Symbol)
     end
   end
