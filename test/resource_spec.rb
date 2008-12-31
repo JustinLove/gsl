@@ -68,6 +68,10 @@ describe GSL::Resource do
       @object.value.should_not equal(@initial_value)
     end
     
+    it "forwards unknown messages" do
+      lambda{@object.uniq}.should_not raise_error
+    end
+    
     it "gains" do
       @object.gain([:jack])
       @object.value.should include(:jack)
@@ -128,5 +132,9 @@ describe GSL::Resource do
       @object.draw.should == :jack
     end
 
+    it "checks includes" do
+      @object.should include(:king)
+      @object.should_not include(:jack)
+    end
   end
 end

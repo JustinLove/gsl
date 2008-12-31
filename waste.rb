@@ -271,7 +271,7 @@ end
 to :change_the_starting_player do
   p "----- rotate"
   players.rotate
-  if action_cards.discarded :accident
+  if action_cards.discards.include? :accident
     reshuffle :action_cards
   end
 end
