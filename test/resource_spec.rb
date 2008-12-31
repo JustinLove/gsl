@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
-libs %w{prototype properties misc resource set_resource value_resource}
+libs %w{prototype misc resource set_resource value_resource}
 
 describe GSL::Resource do
   describe "before typing" do

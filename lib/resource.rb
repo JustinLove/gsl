@@ -24,7 +24,6 @@ module GSL
     end
 
     include Prototype
-    extend Properties
 
     attr_accessor :value
     def name
