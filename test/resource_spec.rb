@@ -39,4 +39,27 @@ describe GSL::Resource do
       @object.value.should < @initial_value
     end
   end
+  
+  describe "typed as set" do
+    before do
+      @class = GSL::Resource.define(:cards)
+      @object = @class.new(self)
+      @initial_value = [:ace, :queen, :king]
+      @object.set(@initial_value)
+    end
+    
+    it "has a value" do
+      @object.value.should == @initial_value
+    end
+    
+    it "gains" do
+      @object.gain([:jack])
+      @object.value.should include(:jack)
+    end
+    
+    it "loses" do
+      @object.lose([:king])
+      @object.value.should_not include(:king)
+    end
+  end
 end
