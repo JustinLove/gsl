@@ -30,7 +30,6 @@ module GSL
       end
   
       def lose(n = :all)
-        m = @value
         -self.gain(-wrap(n))
       end
     end
