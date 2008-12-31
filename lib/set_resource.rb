@@ -55,11 +55,10 @@ module GSL
       end
       
       def wrap(n)
-        n = super
         if !n.kind_of? Array
-          n = [n]
+          super([n])
         else
-          n
+          super(n)
         end
       end
       

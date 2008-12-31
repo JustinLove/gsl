@@ -61,5 +61,10 @@ describe GSL::Resource do
       @object.lose([:king])
       @object.value.should_not include(:king)
     end
+
+    it "wraps scalars" do
+      @object.gain(:jack)
+      @object.value.should include(:jack)
+    end
   end
 end
