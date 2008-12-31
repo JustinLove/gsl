@@ -107,5 +107,26 @@ describe GSL::Resource do
       @object.discards.value.should == []
       @object.value.should include(:jack)
     end
+    
+    it "draws" do
+      @initial_value.each do |c|
+        @object.draw.should == c
+      end
+    end
+
+    it "calls the draw filter" do
+      called = false
+      @object.draw{|c| called = c}.should == called
+    end
+
+    it "filter can change the value" do
+      @object.draw{:jack}.should == :jack
+    end
+    
+    it "remembers it's filter" do
+      @object.draw{:jack}
+      @object.draw.should == :jack
+    end
+
   end
 end
