@@ -21,11 +21,22 @@ describe GSL::Resource do
     before do
       @class = GSL::Resource.define(:fudge)
       @object = @class.new(self)
-      @object.set(8)
+      @initial_value = 8
+      @object.set(@initial_value)
     end
     
-    it "should have a value" do
-      @object.value.should == 8
+    it "has a value" do
+      @object.value.should == @initial_value
+    end
+    
+    it "gains" do
+      @object.gain(1)
+      @object.value.should > @initial_value
+    end
+    
+    it "loses" do
+      @object.lose(1)
+      @object.value.should < @initial_value
     end
   end
 end
