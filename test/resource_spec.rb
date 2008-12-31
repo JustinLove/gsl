@@ -136,5 +136,10 @@ describe GSL::Resource do
       @object.should include(:king)
       @object.should_not include(:jack)
     end
+    
+    it "can temporarily remove something" do
+      @object.without(:king) {@object.should_not include(:king)}
+      @object.should include(:king)
+    end
   end
 end
