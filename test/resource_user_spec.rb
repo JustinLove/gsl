@@ -48,4 +48,11 @@ describe GSL::ResourceUser do
       @user.spoons.value.should <= 7
     end
   end
+
+  it "makes resources with options" do
+    @user.class.make_resource(:fruit, 0..Infinity, :discard_to => :compost)
+    @user.set_to [:apple, :pear], :fruit
+    @user.fruit.discards.name.should == :compost
+  end
+  
 end
