@@ -82,10 +82,20 @@ describe GSL::ResourceUser do
     @user.stones.value.should include(:ruby)
   end
   
-  it "query resources" do
+  it "querys resources" do
     @user.has_resource?(:pebbles).should be_false
     @user.class.make_resource(:pebbles)
     @user.set_to 1, :pebbles
     @user.has_resource?(:pebbles).should be_true
+  end
+
+  it "supports resource method" do
+    @user.class.make_resource(:money)
+    @user.set_to 1, :money
+    @user.resource(:money).should be_kind_of(GSL::Resource)
+  end
+  
+  it "creates resources through resource method" do
+    @user.resource(:cheese).should be_kind_of(GSL::Resource)
   end
 end
