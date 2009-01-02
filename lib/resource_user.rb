@@ -12,9 +12,7 @@ module GSL
     def self.forward(method)
       define_method method do |n,resource|
         if cv.resources.include? resource
-          if (!method.to_s.match(/^if/))
-            #puts "#{self.to_s} #{method} #{n} #{resource}"
-          end
+          #puts "#{self.to_s} #{method} #{n} #{resource}" unless (method.to_s.match(/^if/))
           @resources[resource].__send__ method, n
         elsif forward_to
           #puts "#{self.to_s} #{method} #{n} #{resource}"
