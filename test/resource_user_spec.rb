@@ -65,4 +65,9 @@ describe GSL::ResourceUser do
     @user.bits.ground.should == @user.bits
   end
   
+  it "uses components to make resources" do
+    @user.class.make_components(:stones, [:ruby, :emerald])
+    @user.stones.value.should include(:ruby)
+  end
+  
 end
