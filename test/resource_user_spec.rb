@@ -32,6 +32,12 @@ describe GSL::ResourceUser do
     @user.set_to 5, :score
     @user.score.value.should == 5
   end
+  
+  it "responds to resource names" do
+    @user.should_not respond_to(:tickles)
+    @user.class.make_resource(:tickles)
+    @user.should respond_to(:tickles)
+  end
 
   describe "make resources with bounds" do
     before do
