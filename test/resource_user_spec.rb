@@ -39,6 +39,12 @@ describe GSL::ResourceUser do
     @user.should respond_to(:tickles)
   end
 
+  it "has methods for resource names" do
+    lambda {@user.giggles}.should raise_error
+    @user.class.make_resource(:giggles)
+    lambda {@user.giggles}.should_not raise_error
+  end
+
   describe "make resources with bounds" do
     before do
       @user.class.make_resource(:spoons, 1..7)
