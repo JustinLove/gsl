@@ -82,4 +82,10 @@ describe GSL::ResourceUser do
     @user.stones.value.should include(:ruby)
   end
   
+  it "query resources" do
+    @user.has_resource?(:pebbles).should be_false
+    @user.class.make_resource(:pebbles)
+    @user.set_to 1, :pebbles
+    @user.has_resource?(:pebbles).should be_true
+  end
 end
