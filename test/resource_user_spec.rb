@@ -8,6 +8,14 @@ class User
   include GSL::ResourceUser
 end
 
+class Front
+  include GSL::ResourceUser
+  def initialize(target)
+    @target = target
+  end
+  def forward_to; @target; end
+end
+
 describe GSL::ResourceUser do
   before do
     @user = User.new()
@@ -97,5 +105,36 @@ describe GSL::ResourceUser do
   
   it "creates resources through resource method" do
     @user.resource(:cheese).should be_kind_of(GSL::Resource)
+  end
+  
+  it "supports forward_to" do
+    @user.forward_to.should be_false
+  end
+  
+  describe "forwards to another user" do
+    before do
+      @front = Front.new(@user)
+      @front.resource_init
+    end
+    
+    it "forwards_to user" do
+      @front.forward_to.should == @user
+    end
+    
+    it "forwards resource names" do
+      @front.respond_to?(:red_tape).should be_false
+      @user.class.make_resource(:red_tape)
+      @user.set_to 100, :red_tape
+      @front.respond_to?(:red_tape).should be_true
+      @front.has_resource?(:red_tape).should be_false
+      @front.red_tape.should == @user.red_tape
+    end
+
+    it "forwards resource methods" do
+      @user.class.make_resource(:blue_tape)
+      @user.set_to 100, :blue_tape
+      @front.gain 5, :blue_tape
+      @user.blue_tape.value.should == 105
+    end
   end
 end
