@@ -55,4 +55,14 @@ describe GSL::ResourceUser do
     @user.fruit.discards.name.should == :compost
   end
   
+  it "makes resources with procs" do
+    @user.class.make_resource(:bits) do
+      def ground
+        self
+      end
+    end
+    @user.bits.should respond_to(:ground)
+    @user.bits.ground.should == @user.bits
+  end
+  
 end
