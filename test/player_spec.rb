@@ -11,6 +11,7 @@ describe GSL::Player do
     @game.create_players(3)
     @object = @game.players.first
     @colors = [:red, :green, :blue]
+    @sort_colors = @colors.map {|c| c.to_s}.sort
   end
 
   it_should_behave_like "well behaved objects"
@@ -35,11 +36,21 @@ describe GSL::Player do
         player.pick_color(*@colors)
       end
       @other_colors = @colors - [@object.color]
+      @sort_other_colors = @other_colors.map {|c| c.to_s}.sort
     end
 
     it "doesn't duplicate colors" do
       @game.players.map {|player| player.color.to_s}.sort.
-        should == @colors.map {|c| c.to_s}.sort
+        should == @sort_colors
+    end
+    
+    it "iterates other players" do
+      seen = []
+      @object.other_players do |player|
+        player.should_not == @object
+        seen << player.color.to_s
+      end
+      seen.sort.should == @sort_other_colors
     end
   end
 end
