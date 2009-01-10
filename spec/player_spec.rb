@@ -116,5 +116,19 @@ describe GSL::Player do
         @object.marbles.value.should == 5
       end
     end
+    
+    describe "chooses" do
+      before do
+        @object.class.make_resource(:keys)
+        @object.set_to 1, :keys
+        @good = lambda{gain 1, :keys}
+        @bad = lambda{pay 3, :keys}
+      end
+      
+      it "from an array" do
+        @object.choose([@bad, @good, @bad])
+        @object.keys.value.should == 2
+      end
+    end
   end
 end
