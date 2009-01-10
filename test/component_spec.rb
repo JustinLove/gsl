@@ -1,5 +1,10 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 libs %w{component}
+libs %w{resource resource_user}
+
+class User
+  include GSL::ResourceUser
+end
 
 describe GSL::Component do
   before do
@@ -90,6 +95,25 @@ describe GSL::Component do
     
     it "has a name" do
       @list.first.name.should == "cubes"
+    end
+  end
+  
+  describe "tracks location" do
+    before :all do
+      @user = User.new()
+      @user.resource_init
+    end
+    
+    before do
+      @class = GSL::Resource.define(:cards)
+      @resource = @class.new(@user)
+      @initial_value = GSL::Component.array(:cards, [:ace, :queen, :king])
+      @object = @initial_value.first
+      @resource.set(@initial_value)
+    end
+    
+    it "should be in the deck" do
+      @object.in.should == @resource
     end
   end
 end
