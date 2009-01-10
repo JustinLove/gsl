@@ -30,6 +30,24 @@ describe GSL::Component do
   end
 
   describe "from hash" do
+    before do
+      @list = GSL::Component.hash("cards", :king => 1, :jack => 2, :queen => 3)
+    end
+    
+    it "made something" do
+      @list.should_not be_nil
+    end
+    
+    it "expands quantity" do
+      @list.length.should == 6
+    end
+    
+    it "includes all items" do
+      names = @list.map {|i| i.name}
+      names.should include(:king)
+      names.should include(:jack)
+      names.should include(:queen)
+    end
   end
   
   describe "from array" do
