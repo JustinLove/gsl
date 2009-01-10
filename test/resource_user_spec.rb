@@ -1,8 +1,7 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 libs %w{
-  prototype classvar misc
-  resource set_resource value_resource
-  component resource_user}
+  set_resource value_resource
+  resource_user}
 
 class User
   include GSL::ResourceUser
