@@ -108,12 +108,37 @@ describe GSL::Component do
       @class = GSL::Resource.define(:cards)
       @resource = @class.new(@user)
       @initial_value = GSL::Component.array(:cards, [:ace, :queen, :king])
-      @object = @initial_value.first
       @resource.set(@initial_value)
+      @object = @resource.first
     end
     
     it "should be in the deck" do
       @object.in.should == @resource
+    end
+
+    it "leaves it's deck" do
+      @object.discard
+      
+      @object.in.should_not == @resource
+      @resource.should_not include(@object)
+    end
+    
+    it "goes to the discard pile" do
+      @object.discard
+      
+      @object.in.should == @resource.discards
+      @resource.discards.should include(@object)
+    end
+    
+    it "goes to a different discard pile" do
+      alt = GSL::Resource.define(:floor).new(@user)
+      alt.set([])
+      @object.discard(alt)
+      
+      @object.in.should_not == @resource.discards
+      @resource.discards.should_not include(@object)
+      @object.in.should == alt
+      alt.should include(@object)
     end
   end
 end
