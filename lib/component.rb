@@ -13,17 +13,17 @@ module GSL
         value.each do|k,v|
           v.times {list << Component.new(k, name)}
         end
-        array(name, list)
+        list
       end
 
       def array(name, value)
-        value
+        value.map {|v| Component.new(v, name)}
       end
 
       def fixnum(name, value)
         list = []
         value.times {list << Component.new(name)}
-        array(name, list)
+        list
       end
 
       @@actions = {}

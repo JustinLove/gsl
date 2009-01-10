@@ -51,6 +51,24 @@ describe GSL::Component do
   end
   
   describe "from array" do
+    before do
+      @list = GSL::Component.array("cards", [:king, :queen, :jack])
+    end
+    
+    it "made something" do
+      @list.should_not be_nil
+    end
+    
+    it "has the same quantity" do
+      @list.length.should == 3
+    end
+    
+    it "includes all items" do
+      names = @list.map {|i| i.name}
+      names.should include(:king)
+      names.should include(:jack)
+      names.should include(:queen)
+    end
   end
   
   describe "from fixnum" do
