@@ -52,5 +52,14 @@ describe GSL::Player do
       end
       seen.sort.should == @sort_other_colors
     end
+    
+    it "iterates each player from left" do
+      seen = []
+      @object.each_player_from_left do |player|
+        seen << player.color.to_s
+      end
+      seen.last.should == @object.color.to_s
+      seen.sort.should == @sort_colors
+    end
   end
 end

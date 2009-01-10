@@ -109,6 +109,7 @@ module GSL
         while order.first != from
           order.rotate
         end
+        order.rotate
       end
       order.each {|pl| pl.instance_eval(&proc) if pl != except}
     end
