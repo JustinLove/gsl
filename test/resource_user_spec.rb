@@ -1,6 +1,10 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 libs %w{resource_user}
 
+module GSL::ResourceUser
+  include Tattler
+end
+
 class User
   include GSL::ResourceUser
 end
@@ -16,9 +20,11 @@ end
 
 describe GSL::ResourceUser do
   before do
-    @user = User.new()
+    @object = @user = User.new()
   end
   
+  it_should_behave_like "well behaved objects"
+
   it "has classvars" do
     @user.cv.resources.should be_kind_of(Array)
     @user.cv.components.should be_kind_of(Hash)

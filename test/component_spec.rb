@@ -2,6 +2,10 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 libs %w{component}
 libs %w{resource resource_user}
 
+class GSL::Component
+  include Tattler
+end
+
 class User
   include GSL::ResourceUser
 end
@@ -11,6 +15,8 @@ describe GSL::Component do
     @object = GSL::Component.new("widget")
   end
   
+  it_should_behave_like "well behaved objects"
+
   it "gets created" do
     @object.should be_kind_of(GSL::Component)
   end

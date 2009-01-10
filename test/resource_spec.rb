@@ -1,6 +1,10 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 libs %w{resource resource_user}
 
+class GSL::Resource
+  include Tattler
+end
+
 class User
   include GSL::ResourceUser
 end
@@ -15,6 +19,8 @@ describe GSL::Resource do
       @class = GSL::Resource.define(:fudge)
       @object = @class.new(@user)
     end
+
+    it_should_behave_like "well behaved objects"
     
     it "class has a name" do
       @class.name.should be_kind_of(Symbol)

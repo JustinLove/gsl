@@ -9,3 +9,5 @@ def tests(args)
     require File.join(File.dirname(__FILE__), file)
   end
 end
+
+tests 'shared_spec'
