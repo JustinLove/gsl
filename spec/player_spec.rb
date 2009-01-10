@@ -89,5 +89,23 @@ describe GSL::Player do
     it "doesn't catch other exceptions" do
       lambda {@object.judge(lambda{raise "hell"})}.should raise_error("hell")
     end
+    
+    describe "side effects" do
+      before do
+        @object.class.make_resource(:marbles)
+        @object.set_to 5, :marbles
+        @action = lambda {pay 3, :marbles}
+      end
+      
+      it "execute has effects" do
+        @object.execute(@action)
+        @object.marbles.value.should == 2
+      end
+      
+      it "judge is idempotent" do
+        @object.judge(@action)
+        @object.marbles.value.should == 5
+      end
+    end
   end
 end
