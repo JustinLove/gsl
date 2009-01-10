@@ -64,6 +64,20 @@ describe GSL::Player do
   end
   
   describe "common" do
+    it "executes procs" do
+      context = nil
+      @object.execute(lambda{context = self})
+      context.should == @object
+    end
+
+    it "executes components" do
+      context = nil
+      card = GSL::Component.new(:card)
+      GSL::Component.define_action(:card, lambda{context = self})
+      @object.execute(card)
+      context.should == @object
+    end
+    
     it "judges good actions" do
       @object.judge(lambda{}).should == :good
     end
