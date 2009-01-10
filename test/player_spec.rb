@@ -28,4 +28,12 @@ describe GSL::Player do
     [:red, :green, :blue].should include(@object.color)
   end
   
+  it "doesn't duplicate colors" do
+    @game.players.each do |player|
+      player.pick_color :red, :green, :blue
+    end
+    @game.players.map {|player| player.color.to_s}.sort.
+      should == ['red', 'green', 'blue'].sort
+  end
+  
 end
