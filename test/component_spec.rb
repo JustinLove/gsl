@@ -140,5 +140,10 @@ describe GSL::Component do
       @object.in.should == alt
       alt.should include(@object)
     end
+    
+    it "complains about double discard" do
+      @object.discard
+      lambda {@object.discard}.should raise_error
+    end
   end
 end
