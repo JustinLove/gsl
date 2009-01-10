@@ -1,7 +1,5 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
-libs %w{
-  resource set_resource value_resource
-  resource_user}
+libs %w{resource resource_user}
 
 class User
   include GSL::ResourceUser
