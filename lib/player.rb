@@ -77,7 +77,11 @@ module GSL
     end
   
     def to_s
-      @color.to_s
+      if @color
+        @color.to_s
+      else
+        super
+      end
     end
   
   end

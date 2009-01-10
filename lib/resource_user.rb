@@ -55,6 +55,10 @@ module GSL
         hash[key]
       end
     end
+    
+    def to_s
+      "#{self.class} with #{@resources.keys}"
+    end
 
     def respond_to?(method)
       if (cv.resources.include?(method))

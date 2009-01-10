@@ -5,6 +5,7 @@ module Tattler
   end
 
   def initialize
+    super()
     @@bell = self
   end
 end
