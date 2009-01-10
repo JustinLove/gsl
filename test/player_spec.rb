@@ -12,4 +12,13 @@ describe GSL::Player do
   end
 
   it_should_behave_like "well behaved objects"
+  
+  describe "Player class" do
+    it "should define any time actions" do
+      GSL::Player.at_any_time(:test, lambda {$ran = true})
+      $ran = false
+      @object.test
+      $ran.should be_true
+    end
+  end
 end
