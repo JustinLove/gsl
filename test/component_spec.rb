@@ -40,7 +40,7 @@ describe GSL::Component do
 
   describe "from hash" do
     before do
-      @list = GSL::Component.hash("cards", :king => 1, :jack => 2, :queen => 3)
+      @list = GSL::Component.hash(:hash, :king => 1, :jack => 2, :queen => 3)
     end
     
     it "made something" do
@@ -61,7 +61,7 @@ describe GSL::Component do
   
   describe "from array" do
     before do
-      @list = GSL::Component.array("cards", [:king, :queen, :jack])
+      @list = GSL::Component.array(:array, [:king, :queen, :jack])
     end
     
     it "made something" do
@@ -82,7 +82,7 @@ describe GSL::Component do
   
   describe "from fixnum" do
     before do
-      @list = GSL::Component.fixnum("cubes", 5)
+      @list = GSL::Component.fixnum(:cubes, 5)
     end
     
     it "made something" do
@@ -94,7 +94,7 @@ describe GSL::Component do
     end
     
     it "has a name" do
-      @list.first.name.should == "cubes"
+      @list.first.name.should == :cubes
     end
   end
   
@@ -105,9 +105,9 @@ describe GSL::Component do
     end
     
     before do
-      @class = GSL::Resource.define(:cards)
+      @class = GSL::Resource.define(:location)
       @resource = @class.new(@user)
-      @initial_value = GSL::Component.array(:cards, [:ace, :queen, :king])
+      @initial_value = GSL::Component.array(:location, [:ace, :queen, :king])
       @resource.set(@initial_value)
       @object = @resource.first
     end
