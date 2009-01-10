@@ -6,6 +6,7 @@ module GSL
     include Prototype
     extend Prototype
     attr_reader :name
+    attr_accessor :in
 
     class << self
       def hash(name, value)
@@ -31,8 +32,6 @@ module GSL
         @@actions[name] = proc
       end
     end
-     
-    attr_accessor :in
      
     def initialize(name, kind = nil)
       @name = name

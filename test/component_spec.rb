@@ -13,6 +13,10 @@ describe GSL::Component do
   it "has a string rep" do
     @object.to_s.should be_kind_of(String)
   end
+
+  it "has a name" do
+    @object.name.should == "widget"
+  end
   
   it "responds to :in" do
     @object.should be_respond_to(:in)
