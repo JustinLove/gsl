@@ -21,8 +21,8 @@ module GSL
     end
   
     def initialize(game)
+      super()
       @game = game
-      resource_init
     end
     
     def pick_color(*choices)

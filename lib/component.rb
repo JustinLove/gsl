@@ -34,6 +34,7 @@ module GSL
     end
      
     def initialize(name, kind = nil)
+      super()
       @name = name
       @kind = kind || name
       @in = nil

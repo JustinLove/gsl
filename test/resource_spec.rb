@@ -8,7 +8,6 @@ end
 describe GSL::Resource do
   before :all do
     @user = User.new()
-    @user.resource_init
   end
 
   describe "before typing" do

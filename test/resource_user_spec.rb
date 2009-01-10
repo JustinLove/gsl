@@ -8,6 +8,7 @@ end
 class Front
   include GSL::ResourceUser
   def initialize(target)
+    super()
     @target = target
   end
   def forward_to; @target; end
@@ -16,7 +17,6 @@ end
 describe GSL::ResourceUser do
   before do
     @user = User.new()
-    @user.resource_init
   end
   
   it "has classvars" do
@@ -111,7 +111,6 @@ describe GSL::ResourceUser do
   describe "forwards to another user" do
     before do
       @front = Front.new(@user)
-      @front.resource_init
     end
     
     it "forwards_to user" do

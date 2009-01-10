@@ -45,7 +45,8 @@ module GSL
       end
     end
 
-    def resource_init
+    def initialize
+      super()
       @resources = Hash.new do |hash, key|
         hash[key] = Resource.define(key).new(self)
         if (cv.components.keys.include? key)

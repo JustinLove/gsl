@@ -101,7 +101,6 @@ describe GSL::Component do
   describe "tracks location" do
     before :all do
       @user = User.new()
-      @user.resource_init
     end
     
     before do

@@ -15,6 +15,7 @@ module GSL
     end
   
     def initialize(player, on = '?')
+      super()
       @player = player
       @on = on
     end

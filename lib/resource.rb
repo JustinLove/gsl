@@ -34,6 +34,7 @@ module GSL
     end
     
     def initialize(owner)
+      super()
       @owner = owner
     end
 
@@ -92,6 +93,7 @@ module GSL
 
     class Insufficient < GamePlayException
       def initialize(r, has = 0, req = 0)
+        super()
         @resource = r
         @has = has
         @req = req

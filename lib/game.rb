@@ -15,6 +15,7 @@ module GSL
     as_property :number_of_players
 
     def initialize(file = nil)
+      super()
       @context = []
       if (file)
         # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
@@ -45,7 +46,6 @@ module GSL
 
     def go(players)
       puts description
-      resource_init
       @players = Array.new(players) {Player.new(self)}
       puts "#{@players.size} players"
       play
