@@ -1,3 +1,6 @@
+require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
+GSL::depends_on %w{prototype player_common}
+
 module GSL
   class Speculate
     include Prototype
