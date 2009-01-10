@@ -62,4 +62,18 @@ describe GSL::Player do
       seen.sort.should == @sort_colors
     end
   end
+  
+  describe "common" do
+    it "judges good actions" do
+      @object.judge(lambda{}).should == :good
+    end
+
+    it "judges bad actions" do
+      @object.judge(lambda{raise GSL::GamePlayException}).should == :bad
+    end
+
+    it "doesn't catch other exceptions" do
+      lambda {@object.judge(lambda{raise "hell"})}.should raise_error("hell")
+    end
+  end
 end
