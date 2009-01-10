@@ -14,11 +14,13 @@ module GSL
     as_property :author
     as_property :number_of_players
 
-    def initialize(file)
+    def initialize(file = nil)
       @context = []
-      # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
-      self.instance_eval(File.read(file), file)
-      self.go(@number_of_players.random)
+      if (file)
+        # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
+        self.instance_eval(File.read(file), file)
+        self.go(@number_of_players.random)
+      end
     end
   
     def common_components(list)
