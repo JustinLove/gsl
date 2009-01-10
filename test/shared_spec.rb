@@ -1,12 +1,12 @@
 module Tattler
-  @@bell = nil
-  def self.bell
-    @@bell
+  @@callers = []
+  def self.callers
+    @@callers
   end
 
   def initialize
     super()
-    @@bell = self
+    @@callers << self
   end
 end
 
@@ -19,6 +19,6 @@ shared_examples_for "well behaved objects" do
   end
   
   it "initialize calls super" do
-    Tattler.bell.should == @object
+    Tattler.callers.should include(@object)
   end
 end
