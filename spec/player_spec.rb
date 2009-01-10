@@ -78,6 +78,15 @@ describe GSL::Player do
       context.should == @object
     end
     
+    it "executes through a filter" do
+      context = nil
+      @object.execute(:blarg) do |a|
+        a.should == :blarg
+        context = self
+      end
+      context.should == @object
+    end
+    
     it "judges good actions" do
       @object.judge(lambda{}).should == :good
     end
