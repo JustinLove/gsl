@@ -72,5 +72,20 @@ describe GSL::Component do
   end
   
   describe "from fixnum" do
+    before do
+      @list = GSL::Component.fixnum("cubes", 5)
+    end
+    
+    it "made something" do
+      @list.should_not be_nil
+    end
+    
+    it "has the same quantity" do
+      @list.length.should == 5
+    end
+    
+    it "has a name" do
+      @list.first.name.should == "cubes"
+    end
   end
 end
