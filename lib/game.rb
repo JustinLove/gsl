@@ -43,10 +43,14 @@ module GSL
     def player_resource(name, range = 0..Infinity, option = nil, &proc)
       Player.make_resource(name, range, option, &proc)
     end
+    
+    def create_players(players)
+      @players = Array.new(players) {Player.new(self)}
+    end
 
     def go(players)
       puts description
-      @players = Array.new(players) {Player.new(self)}
+      create_players(players)
       puts "#{@players.size} players"
       play
     end

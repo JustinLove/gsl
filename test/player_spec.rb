@@ -8,7 +8,8 @@ end
 describe GSL::Player do
   before do
     @game = GSL::Game.new()
-    @object = GSL::Player.new(@game)
+    @game.create_players(3)
+    @object = @game.players.first
   end
 
   it_should_behave_like "well behaved objects"
@@ -21,4 +22,10 @@ describe GSL::Player do
       $ran.should be_true
     end
   end
+  
+  it "picks a color" do
+    @object.pick_color :red, :green, :blue
+    [:red, :green, :blue].should include(@object.color)
+  end
+  
 end
