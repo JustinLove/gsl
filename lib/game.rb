@@ -131,8 +131,9 @@ module GSL
     def to(name, &proc)
       self.class.__send__ :define_method, name do |*args, &block|
         enter name
-        proc.call(*args, &block)
+        result = proc.call(*args, &block)
         leave name
+        result
       end
     end
   

@@ -46,4 +46,19 @@ describe GSL::Game do
     @object.player_resource :seeds
     GSL::Player.cv.resources.should include(:seeds)
   end
+  
+  it "defines steps with to" do
+    @object.to :dig do; :dirt; end
+    @object.dig.should == :dirt
+  end
+
+  it "defines steps with every" do
+    @object.every :full_moon do; :howl; end
+    @object.full_moon.should == :howl
+  end
+  
+  it "defines steps with at_any_time" do
+    @object.at_any_time :scream do; :yell; end
+    GSL::Player.new(@game).scream.should == :yell
+  end
 end
