@@ -62,6 +62,22 @@ describe GSL::Game do
     GSL::Player.new(@game).scream.should == :yell
   end
   
+  it "check context" do
+    @object.during(:grunt).should be_false
+    @object.to :grunt do
+      during(:grunt).should be_true
+      during(:groan).should be_false
+    end
+    @object.during(:grunt).should be_false
+  end
+  
+  it "asserts context" do
+    @object.to :groan do
+      lambda{only_during(:groan)}.should_not raise_error
+      lambda{only_during(:grunt)}.should raise_error
+    end
+  end
+  
   it "defines cards" do
     @object.card :joker do; :wild; end
     GSL::Component.new(:joker).to_proc.call.should == :wild
