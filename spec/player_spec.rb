@@ -129,6 +129,26 @@ describe GSL::Player do
         @object.choose([@bad, @good, @bad])
         @object.keys.value.should == 2
       end
+      
+      it "from a hash" do
+        @object.choose(:fee => @bad, :fie => @good, :fo => @bad)
+        @object.keys.value.should == 2
+      end
+      
+      it "from a resource" do
+        @object.class.make_resource(:choices)
+        @object.set_to [@bad, @good, @bad], :choices
+        @object.choose(:choices)
+        @object.keys.value.should == 2
+      end
+      
+      it "through a filter" do
+        @object.choose([@bad, @good, @bad]) do |choice|
+          execute choice
+          execute choice
+        end
+        @object.keys.value.should == 3
+      end
     end
   end
 end
