@@ -149,6 +149,28 @@ describe GSL::Player do
         end
         @object.keys.value.should == 3
       end
+
+      describe "takes" do
+        before do
+          @game.class.make_resource(:pebbles)
+          @game.set_to [@bad, @good, @bad], :pebbles
+        end
+        
+        it "something" do
+          @object.take(:pebbles)
+          @object.keys.value.should == 2
+          @game.pebbles.value.should_not include(@good)
+        end
+        
+        it "through a filter" do
+          @object.take(:pebbles) do |it|
+            execute it
+            execute it
+          end
+          @object.keys.value.should == 3
+          @game.pebbles.value.should_not include(@good)
+        end
+      end
     end
   end
 end
