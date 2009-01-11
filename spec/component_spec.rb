@@ -145,6 +145,16 @@ describe GSL::Component do
       @object.in.should == alt
       alt.should include(@object)
     end
+
+    it "goes to the discard pile even if not drawn" do
+      not_drawn = @resource.value[1]
+      not_drawn.discard
+      
+      not_drawn.in.should_not == @resource
+      @resource.should_not include(not_drawn)
+      not_drawn.in.should == @resource.discards
+      @resource.discards.should include(not_drawn)
+    end
     
     it "complains about double discard" do
       @object.discard

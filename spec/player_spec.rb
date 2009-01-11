@@ -171,6 +171,27 @@ describe GSL::Player do
           @game.pebbles.value.should_not include(@good)
         end
       end
+      
+      describe "uses" do
+        before do
+          @game.class.make_components(:twigs, [:good])
+          GSL::Component.define_action(:good, @good)
+          @object.class.make_resource(:twigs)
+          @object.class.make_resource(:twigs_discard)
+          @object.set_to [GSL::Component.new(:good)], :twigs
+          @object.set_to [], :twigs_discard
+        end
+        
+        it "from nowhere" do
+          @object.use(@object.draw(:twigs))
+          @object.keys.value.should == 2
+        end
+
+        it "from a resource" do
+          @object.use(:good, @object.twigs)
+          @object.keys.value.should == 2
+        end
+      end
     end
   end
 end

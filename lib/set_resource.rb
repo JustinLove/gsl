@@ -66,7 +66,7 @@ module GSL
       def own(n)
         n = wrap(n)
         if (n && n.first.respond_to?(:in))
-          n.each {|c| c.in = self}
+          n.each {|c| c.in = self; c.discard_to(discards)}
         else
           n
         end
