@@ -61,4 +61,9 @@ describe GSL::Game do
     @object.at_any_time :scream do; :yell; end
     GSL::Player.new(@game).scream.should == :yell
   end
+  
+  it "defines cards" do
+    @object.card :joker do; :wild; end
+    GSL::Component.new(:joker).to_proc.call.should == :wild
+  end
 end
