@@ -25,7 +25,7 @@ describe Properties do
   
   it "gets a proprety" do
     @object.title "Larry"
-    @object.title.should == "Larry"
+    @object.title().should == "Larry"
   end
   
   it "sets a proc" do
@@ -37,8 +37,8 @@ describe Properties do
 
   it "runs a proc" do
     @object.wiggle do
-      self
+      "blarg"
     end
-    @object.wiggle.should == @object
+    @object.wiggle.should == "blarg"
   end
 end
