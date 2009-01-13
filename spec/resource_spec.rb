@@ -157,7 +157,7 @@ describe GSL::Resource do
       @object.names.should == @object.value.map {|c| c.name}
     end
   end
-  
+
   describe "with discard option" do
     before do
       @class = GSL::Resource.define(:fruit)
@@ -180,6 +180,31 @@ describe GSL::Resource do
       @object.reshuffle
       @object.discards.value.should == []
       @object.value.should include(:jack)
+    end
+  end
+
+  describe "with deleted discard" do
+    before do
+      @user = User.new();
+      @class = GSL::Resource.define(:vegitable)
+      @object = @class.new(@user)
+      @initial_value = [:carrot, :celery, :lettuce]
+      @object.set(@initial_value)
+    end
+    
+    it "has discards" do
+      @object.discards.should be_kind_of(GSL::Resource::Set)
+    end
+
+    it "reshuffles" do
+      @object.discards.gain([:jack])
+      @object.reshuffle
+      @object.discards.value.should == []
+      @object.value.should include(:jack)
+    end
+
+    it "still has discards" do
+      @object.discards.should be_kind_of(GSL::Resource::Set)
     end
   end
 end

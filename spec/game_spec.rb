@@ -108,5 +108,15 @@ describe GSL::Game do
       end
       different.should > 0
     end
+    
+    it "reshuffles" do
+      old_count = @object.playing_cards.count
+      old_count.times do
+        @object.draw(:playing_cards).discard
+      end
+      @object.playing_cards.count.should == 0
+      @object.reshuffle
+      @object.playing_cards.count.should == old_count
+    end
   end
 end

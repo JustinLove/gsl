@@ -88,6 +88,8 @@ module GSL
             (name.to_s + '_discard').to_sym
           if !@owner.respond_to?(@discards)
             @owner.class.make_resource(@discards)
+          end
+          if !@owner.__send__(@discards).kind_of?(GSL::Resource::Set)
             @owner.set_to [], @discards #type as set
           end
         end
