@@ -5,7 +5,7 @@ module GSL
   class Resource
     class << self
       alias :class_name :name
-      attr_accessor :name, :range, :option
+      attr_accessor :name, :option
       def to_s
         if @name then
           "#{@name} #{@range}"
@@ -13,16 +13,25 @@ module GSL
           super
         end
       end
-      def define(name)
+      def define(name, option = {}, &proc)
         const_name = name.to_s.capitalize
         if (const_defined?(const_name))
           return const_get(const_name)
         end
         return const_set(const_name, Class.new(self) do
           @name = name
-          @range = 0..Infinity
-          @option = {}
+          @option = option || {}
+          if (!proc.nil?)
+            include(Module.new(&proc))
+          end
         end)
+      end
+      def range
+        if @option[:range]
+          @option[:range]
+        else
+          0..Infinity
+        end
       end
     end
 

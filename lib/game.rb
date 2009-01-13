@@ -36,12 +36,12 @@ module GSL
       end
     end
   
-    def common_resource(name, range = 0..Infinity, option = nil, &proc)
-      Game.make_resource(name, range, option, &proc)
+    def common_resource(name, range = 0..Infinity, option = {}, &proc)
+      Game.make_resource(name, option.merge({:range => range}), &proc)
     end
 
-    def player_resource(name, range = 0..Infinity, option = nil, &proc)
-      Player.make_resource(name, range, option, &proc)
+    def player_resource(name, range = 0..Infinity, option = {}, &proc)
+      Player.make_resource(name, option.merge({:range => range}), &proc)
     end
     
     def create_players(players)

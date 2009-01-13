@@ -33,15 +33,9 @@ module GSL
         cv.resources << name if !cv.resources.include?(name)
       end
 
-      def make_resource(name, range = 0..Infinity, option = nil, &proc)
+      def make_resource(name, option = nil, &proc)
         cv.resources << name if !cv.resources.include?(name)
-        r = Resource.define(name)
-        r.range = range
-        r.option = option if option
-        if (!proc.nil?)
-          r.__send__ :include, Module.new(&proc)
-        end
-        r
+        r = Resource.define(name, option, &proc)
       end
     end
 
@@ -51,6 +45,8 @@ module GSL
         hash[key] = Resource.define(key).new(self)
         if (cv.components.keys.include? key)
           hash[key].set deep_copy(cv.components[key])
+        elsif (hash[key].class.option[:initial])
+          hash[key].set deep_copy(hash[key].class.option[:initial])
         end
         hash[key]
       end

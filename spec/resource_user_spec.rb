@@ -43,7 +43,12 @@ describe GSL::ResourceUser do
     @user.set_to 5, :score
     @user.score.value.should == 5
   end
-  
+
+  it "makes resources with default values" do
+    @user.class.make_resource(:dust_bunnies, :initial => 5)
+    @user.dust_bunnies.value.should == 5
+  end
+    
   it "responds to resource names" do
     @user.should_not respond_to(:tickles)
     @user.class.make_resource(:tickles)
@@ -56,9 +61,9 @@ describe GSL::ResourceUser do
     lambda {@user.giggles}.should_not raise_error
   end
 
-  describe "make resources with bounds" do
+  describe "make resources with range" do
     before do
-      @user.class.make_resource(:spoons, 1..7)
+      @user.class.make_resource(:spoons, :range => 1..7)
       @user.set_to 1, :spoons
     end
   
@@ -73,9 +78,9 @@ describe GSL::ResourceUser do
   end
 
   it "makes resources with options" do
-    @user.class.make_resource(:fruit, 0..Infinity, :discard_to => :compost)
-    @user.set_to [:apple, :pear], :fruit
-    @user.fruit.discards.name.should == :compost
+    @user.class.make_resource(:buttons, :discard_to => :bowl)
+    @user.set_to [:big, :small], :buttons
+    @user.buttons.discards.name.should == :bowl
   end
   
   it "makes resources with procs" do
