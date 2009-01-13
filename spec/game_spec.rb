@@ -82,4 +82,31 @@ describe GSL::Game do
     @object.card :joker do; :wild; end
     GSL::Component.new(:joker).to_proc.call.should == :wild
   end
+  
+  describe "with cards" do
+    before do
+      @object.common_components :playing_cards => {:jack => 4, :queen => 4, :king => 4}
+      @object.common_resource :playing_cards
+      @cards = [:jack, :queen, :king]
+    end
+    
+    it "draws a card" do
+      @cards.should include(@object.draw(:playing_cards).name)
+    end
+    
+    it "shuffles" do
+      same = 0
+      different = 0
+      3.times do
+        names = @object.playing_cards.value.map {|c| c.name}
+        @object.shuffle(:playing_cards)
+        if (names == @object.playing_cards.value.map {|c| c.name})
+          same += 1
+        else
+          different += 1
+        end
+      end
+      different.should > 0
+    end
+  end
 end
