@@ -98,9 +98,9 @@ describe GSL::Game do
       same = 0
       different = 0
       3.times do
-        names = @object.playing_cards.value.map {|c| c.name}
+        names = @object.playing_cards.names
         @object.shuffle(:playing_cards)
-        if (names == @object.playing_cards.value.map {|c| c.name})
+        if (names == @object.playing_cards.names)
           same += 1
         else
           different += 1

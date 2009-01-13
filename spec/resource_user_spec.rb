@@ -90,7 +90,7 @@ describe GSL::ResourceUser do
   
   it "uses components to make resources" do
     @user.class.make_components(:stones, [:ruby, :emerald])
-    @user.stones.value.map{|i| i.name}.should include(:ruby)
+    @user.stones.names.should include(:ruby)
   end
   
   it "querys resources" do

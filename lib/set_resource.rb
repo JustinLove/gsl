@@ -149,6 +149,10 @@ module GSL
         @value << item
         return result
       end
+      
+      def names
+        @value.map {|c| c.name}
+      end
   
       def to_s
         @value ||= []

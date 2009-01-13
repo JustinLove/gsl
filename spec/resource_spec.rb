@@ -145,6 +145,19 @@ describe GSL::Resource do
     end
   end
   
+  describe "holding components" do
+    before do
+      @class = GSL::Resource.define(:frogs)
+      @object = @class.new(@user)
+      @initial_value = [GSL::Component.new(:ed), GSL::Component.new(:george)]
+      @object.set(@initial_value)
+    end
+    
+    it "lists names" do
+      @object.names.should == @object.value.map {|c| c.name}
+    end
+  end
+  
   describe "with discard option" do
     before do
       @class = GSL::Resource.define(:fruit)
