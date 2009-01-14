@@ -163,4 +163,16 @@ describe GSL::Game do
       @object.alternate_cards.length.should == 1
     end
   end
+  
+  it "calculate triangular numbers" do
+    {
+      1 => 1,
+      2 => 3,
+      3 => 6,
+      4 => 10,
+      5 => 15
+    }.each_pair do |k,v|
+      @object.triangle(k).should == v
+    end
+  end
 end
