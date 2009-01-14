@@ -122,12 +122,12 @@ describe GSL::Game do
     
     it "discards" do
       @object.discard(@object.draw(:playing_cards))
-      @object.playing_cards_discard.length == 1
+      @object.playing_cards_discard.length.should == 1
     end
     
     it "discards to an alternate deck" do
       @object.discard(@object.draw(:playing_cards), @object.alternate_cards)
-      @object.alternate_cards.length == 1
+      @object.alternate_cards.length.should == 1
     end
   end
 end
