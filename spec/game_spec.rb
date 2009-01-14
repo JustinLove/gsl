@@ -95,6 +95,13 @@ describe GSL::Game do
       @cards.should include(@object.draw(:playing_cards).name)
     end
     
+    it "draw remembers the last deck" do
+      starting = @object.playing_cards.count
+      @object.draw(:playing_cards)
+      @object.draw
+      @object.playing_cards.count.should == starting - 2
+    end
+    
     it "shuffles" do
       same = 0
       different = 0
@@ -110,7 +117,33 @@ describe GSL::Game do
       different.should > 0
     end
     
+    it "shuffle remembers the last deck" do
+      @object.draw(:playing_cards)
+      same = 0
+      different = 0
+      3.times do
+        names = @object.playing_cards.names
+        @object.shuffle
+        if (names == @object.playing_cards.names)
+          same += 1
+        else
+          different += 1
+        end
+      end
+      different.should > 0
+    end
+    
     it "reshuffles" do
+      old_count = @object.playing_cards.count
+      old_count.times do
+        @object.draw(:playing_cards).discard
+      end
+      @object.playing_cards.count.should == 0
+      @object.reshuffle(:playing_cards)
+      @object.playing_cards.count.should == old_count
+    end
+
+    it "reshuffle remembers the last deck" do
       old_count = @object.playing_cards.count
       old_count.times do
         @object.draw(:playing_cards).discard
