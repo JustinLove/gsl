@@ -87,6 +87,7 @@ describe GSL::Game do
     before do
       @object.common_components :playing_cards => {:jack => 4, :queen => 4, :king => 4}
       @object.common_resource :playing_cards
+      @object.class.make_resource :alternate_cards, :initial => []
       @cards = [:jack, :queen, :king]
     end
     
@@ -117,6 +118,16 @@ describe GSL::Game do
       @object.playing_cards.count.should == 0
       @object.reshuffle
       @object.playing_cards.count.should == old_count
+    end
+    
+    it "discards" do
+      @object.discard(@object.draw(:playing_cards))
+      @object.playing_cards_discard.length == 1
+    end
+    
+    it "discards to an alternate deck" do
+      @object.discard(@object.draw(:playing_cards), @object.alternate_cards)
+      @object.alternate_cards.length == 1
     end
   end
 end
