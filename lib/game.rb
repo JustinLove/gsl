@@ -155,7 +155,7 @@ module GSL
     
     def triangle(x)
       y = 0
-      x.times{|i| y += i + 1}
+      1.upto(x) {|i| y += i}
       y
     end
     
