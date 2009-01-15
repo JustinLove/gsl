@@ -15,6 +15,11 @@ describe GSL::World::State do
   end
   
   it_should_behave_like "well behaved objects"
+  
+  it "implements []" do
+    @object[:blarg] = :bleep
+    @object[:blarg].should == :bleep
+  end
 end
 
 describe GSL::World::View do
