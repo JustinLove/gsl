@@ -37,6 +37,14 @@ module GSL
       def to_s
         "View"
       end
+      
+      def descend
+        @state = @state.derive
+      end
+      
+      def ascend
+        @state = @state.parent
+      end
     end
   end
 end

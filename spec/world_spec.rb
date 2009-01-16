@@ -71,4 +71,17 @@ describe GSL::World::View do
   it "has a state" do
     @object.state.should be_kind_of(GSL::World::State)
   end
+  
+  it "descends" do
+    @object.state[:blarg] = :bleep
+    @object.descend
+    @object.state[:blarg].should == :bleep
+  end
+  
+  it "ascends" do
+    @object.descend
+    @object.state[:larry] = :dead
+    @object.ascend
+    @object.state[:larry].should_not == :dead
+  end
 end
