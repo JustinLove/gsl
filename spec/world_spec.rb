@@ -67,4 +67,8 @@ describe GSL::World::View do
   end
 
   it_should_behave_like "well behaved objects"
+  
+  it "has a state" do
+    @object.state.should be_kind_of(GSL::World::State)
+  end
 end

@@ -27,6 +27,13 @@ module GSL
     end
     
     class View
+      attr_accessor :state
+      
+      def initialize
+        super
+        @state = State.new
+      end
+      
       def to_s
         "View"
       end
