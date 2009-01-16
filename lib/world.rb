@@ -14,7 +14,7 @@ module GSL
       end
       
       def to_s
-        "State #{object_id}"
+        "State #{object_id}(#{@d.keys.count})"
       end
       
       def [](k)
@@ -35,7 +35,7 @@ module GSL
       end
       
       def to_s
-        "View"
+        "View (#{@state})"
       end
       
       def [](k)
