@@ -16,7 +16,7 @@ module GSL
       end
       
       def [](k)
-        @d[k]
+        @d[k] || (@parent && @parent[k])
       end
       
       def []=(k, v)
