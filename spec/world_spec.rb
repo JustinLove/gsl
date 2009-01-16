@@ -94,4 +94,22 @@ describe GSL::World::View do
     @object.ascend
     @object[:larry].should_not == :dead
   end
+  
+  it "begins" do
+    @object[:blarg] = :bleep
+    @object.begin
+    @object[:blarg].should == :bleep
+  end
+  
+  it "aborts" do
+    @object.begin
+    @object[:larry] = :dead
+    @object.abort
+    @object[:larry].should_not == :dead
+  end
+  
+  it "doesn't ascend to nil" do
+    lambda {@object.ascend}.should raise_error
+    @object.state.should be_kind_of(GSL::World::State)
+  end
 end

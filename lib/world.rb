@@ -51,8 +51,12 @@ module GSL
       end
       
       def ascend
+        raise "Can't ascend past reality" if @state.parent.nil?
         @state = @state.parent
       end
+      
+      alias_method :begin, :descend
+      alias_method :abort, :ascend
     end
   end
 end
