@@ -20,6 +20,10 @@ describe GSL::World::State do
     @object[:blarg] = :bleep
     @object[:blarg].should == :bleep
   end
+  
+  it "derives new states" do
+    @object.derive.should be_kind_of(GSL::World::State)
+  end
 end
 
 describe GSL::World::View do
