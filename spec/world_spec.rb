@@ -112,4 +112,12 @@ describe GSL::World::View do
     lambda {@object.ascend}.should raise_error
     @object.state.should be_kind_of(GSL::World::State)
   end
+  
+  it "commits" do
+    @object.begin
+    @object[:cancer] = :cured
+    @object.commit
+    @object[:cancer].should == :cured
+    lambda {@object.ascend}.should raise_error
+  end
 end

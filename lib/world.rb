@@ -27,11 +27,12 @@ module GSL
     end
     
     class View
-      attr_accessor :state
+      attr_reader :state
+      attr_reader :reality
       
       def initialize
         super
-        @state = State.new
+        @state = @reality = State.new
       end
       
       def to_s
@@ -51,12 +52,16 @@ module GSL
       end
       
       def ascend
-        raise "Can't ascend past reality" if @state.parent.nil?
+        raise "Can't ascend past reality" if @state == @reality
         @state = @state.parent
       end
       
       alias_method :begin, :descend
       alias_method :abort, :ascend
+      
+      def commit
+        @reality = @state
+      end
     end
   end
 end
