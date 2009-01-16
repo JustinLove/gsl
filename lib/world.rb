@@ -14,7 +14,12 @@ module GSL
       end
       
       def to_s
-        "State #{object_id}(#{@d.keys.count})"
+        "State #{object_id}[#{@d.keys.count}] < #{@parent.object_id}"
+      end
+      
+      def pretty_print
+        puts self
+        puts @parent.pretty_print if @parent
       end
       
       def [](k)
@@ -56,6 +61,10 @@ module GSL
         "View (#{@state})"
       end
       
+      def pretty_print
+        @state.pretty_print
+      end
+      
       def [](k)
         @state[k]
       end
@@ -77,7 +86,12 @@ module GSL
       alias_method :abort, :ascend
       
       def commit
-        @state = @state.merge_down!
+        raise "Can't commit past reality" if @state == @reality
+        if (@state.parent == @reality)
+          @reality = @state = @state.merge
+        else
+          @state = @state.merge
+        end
       end
       
       def checkpoint

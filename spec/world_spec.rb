@@ -181,4 +181,11 @@ describe GSL::World::View do
     @object.state.parent.should_not be_nil
     lambda {@objet.ascend}.should raise_error
   end
+  
+  it "doesn't commit to nil" do
+    @object.checkpoint
+    lambda {@object.commit}.should raise_error
+    @object.state.should be_kind_of(GSL::World::State)
+  end
+  
 end
