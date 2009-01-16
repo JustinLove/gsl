@@ -72,16 +72,26 @@ describe GSL::World::View do
     @object.state.should be_kind_of(GSL::World::State)
   end
   
-  it "descends" do
+  it "forwards []" do
     @object.state[:blarg] = :bleep
-    @object.descend
+    @object[:blarg].should == :bleep
+  end
+  
+  it "forwards []=" do
+    @object[:blarg] = :bleep
     @object.state[:blarg].should == :bleep
+  end
+  
+  it "descends" do
+    @object[:blarg] = :bleep
+    @object.descend
+    @object[:blarg].should == :bleep
   end
   
   it "ascends" do
     @object.descend
-    @object.state[:larry] = :dead
+    @object[:larry] = :dead
     @object.ascend
-    @object.state[:larry].should_not == :dead
+    @object[:larry].should_not == :dead
   end
 end

@@ -38,6 +38,14 @@ module GSL
         "View"
       end
       
+      def [](k)
+        @state[k]
+      end
+      
+      def []=(k, v)
+        @state[k] = v
+      end
+      
       def descend
         @state = @state.derive
       end
