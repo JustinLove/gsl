@@ -26,7 +26,7 @@ module GSL
       end
       
       def merge
-        State.new(@parent.parent).merge!(@parent).merge!(self)
+        @parent.clone.merge_data!(@d)
       end
       
       def merge!(state)
@@ -37,13 +37,17 @@ module GSL
         state.merge_data!(@d)
       end
       
+      def merge_down!
+        @parent.merge_data!(@d)
+      end
+      
+      def clone
+        State.new(@parent).merge_data!(@d)
+      end
+      
       def merge_data!(hash)
         @d.merge!(hash)
         self
-      end
-      
-      def merge_down!
-        @parent.merge_data!(@d)
       end
     end
     

@@ -58,6 +58,14 @@ describe GSL::World::State do
       @top[:parent].should == :parent
     end
     
+    it "clones" do
+      @betty = @object.clone
+      @betty[:child].should == :child
+      @betty[:parent].should == :parent
+      @betty[:child] = :dennis
+      @object[:child].should == :child
+    end
+    
     it "merge_into" do
       @object.merge_into(@top).should == @top
       @top[:child].should == :child
