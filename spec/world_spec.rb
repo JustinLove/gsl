@@ -39,6 +39,10 @@ describe GSL::World::State do
 
     it_should_behave_like "state objects"
     
+    it "has a parent" do
+      @object.parent.should == @top
+    end
+    
     it "retrieves parent values" do
       @top[:parent] = :parent
       @object[:parent].should == :parent

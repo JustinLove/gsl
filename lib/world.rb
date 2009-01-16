@@ -1,6 +1,8 @@
 module GSL
   module World
     class State
+      attr_reader :parent
+      
       def initialize(_parent = nil)
         super()
         @d = {}
