@@ -35,6 +35,8 @@ describe GSL::World::State do
   describe "derived" do
     before do
       @object = @object.derive
+      @top[:parent] = :parent
+      @object[:child] = :child
     end
 
     it_should_behave_like "state objects"
@@ -44,31 +46,51 @@ describe GSL::World::State do
     end
     
     it "retrieves parent values" do
-      @top[:parent] = :parent
       @object[:parent].should == :parent
     end
     
     it "does not create parent values" do
-      @object[:child] = :child
       @top[:child].should be_nil
     end
 
     it "does not change parent values" do
-      @top[:parent] = :parent
       @object[:parent] = :child
       @top[:parent].should == :parent
     end
     
+    it "merge_into" do
+      @object.merge_into(@top).should == @top
+      @top[:child].should == :child
+    end
+
+    it "merge!" do
+      @top.merge!(@object).should == @top
+      @top[:child].should == :child
+    end
+    
     it "merges down" do
-      @object[:child] = :child
       @object[:color] = :red
-      @top[:parent] = :parent
       @top[:color] = :blue
-      @object.merge_down!
+      @object.merge_down!.should == @top
       @top[:parent].should == :parent
       @top[:child].should == :child
       @top[:color].should == :red
     end
+    
+    it "merges" do
+      @object[:color] = :red
+      @top[:color] = :blue
+      @new_state = @object.merge
+      @new_state.should_not == @object
+      @new_state.should_not == @top
+      @new_state[:parent].should == :parent
+      @new_state[:child].should == :child
+      @new_state[:color].should == :red
+      @top[:parent].should == :parent
+      @top[:child].should be_nil
+      @top[:color].should == :blue
+    end
+    
   end
 end
 

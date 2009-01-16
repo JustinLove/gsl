@@ -25,13 +25,25 @@ module GSL
         @d[k] = v
       end
       
-      def merge!(hash)
+      def merge
+        State.new(@parent.parent).merge!(@parent).merge!(self)
+      end
+      
+      def merge!(state)
+        state.merge_into(self)
+      end
+      
+      def merge_into(state)
+        state.merge_data!(@d)
+      end
+      
+      def merge_data!(hash)
         @d.merge!(hash)
         self
       end
       
       def merge_down!
-        @parent.merge!(@d)
+        @parent.merge_data!(@d)
       end
     end
     
