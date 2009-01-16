@@ -24,6 +24,15 @@ module GSL
       def []=(k, v)
         @d[k] = v
       end
+      
+      def merge!(hash)
+        @d.merge!(hash)
+        self
+      end
+      
+      def merge_down!
+        @parent.merge!(@d)
+      end
     end
     
     class View
@@ -60,7 +69,11 @@ module GSL
       alias_method :abort, :ascend
       
       def commit
-        @reality = @state
+        @state = @state.merge_down!
+      end
+      
+      def checkpoint
+        @reality = descend
       end
     end
   end

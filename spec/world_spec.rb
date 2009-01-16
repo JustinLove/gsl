@@ -58,6 +58,17 @@ describe GSL::World::State do
       @object[:parent] = :child
       @top[:parent].should == :parent
     end
+    
+    it "merges down" do
+      @object[:child] = :child
+      @object[:color] = :red
+      @top[:parent] = :parent
+      @top[:color] = :blue
+      @object.merge_down!
+      @top[:parent].should == :parent
+      @top[:child].should == :child
+      @top[:color].should == :red
+    end
   end
 end
 
@@ -119,5 +130,35 @@ describe GSL::World::View do
     @object.commit
     @object[:cancer].should == :cured
     lambda {@object.ascend}.should raise_error
+  end
+  
+  it "abort-commit" do
+    @object[:something] = :strange
+    @object.begin
+    @object.begin
+    @object[:something] = :foul
+    @object.abort
+    @object[:something].should_not == :foul
+    @object[:something] = :fair
+    @object.commit
+    @object[:something].should == :fair
+  end
+
+  it "commit-abort" do
+    @object[:something] = :strange
+    @object.begin
+    @object.begin
+    @object[:something] = :fair
+    @object.commit
+    @object[:something].should == :fair
+    @object[:something] = :foul
+    lambda {@object.abort}.should_not raise_error
+    @object[:something].should == :strange
+  end
+
+  it "checkpoints" do
+    @object.checkpoint
+    @object.state.parent.should_not be_nil
+    lambda {@objet.ascend}.should raise_error
   end
 end
