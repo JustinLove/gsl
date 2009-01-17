@@ -187,4 +187,9 @@ describe GSL::World::View do
     w[:blarg].should == :arg
     @object[:blarg].should == :bleep
   end
+  
+  it "switches" do
+    @object.switch(@object.branch {@object[:leaf] = :green})
+    @object[:leaf].should == :green
+  end
 end

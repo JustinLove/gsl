@@ -102,6 +102,10 @@ module GSL
         @state = hidden
         return b
       end
+      
+      def switch(w)
+        @reality = @state = w
+      end
     end
   end
 end
