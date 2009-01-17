@@ -93,6 +93,15 @@ module GSL
       def checkpoint
         @reality = descend
       end
+      
+      def branch
+        hidden = @state
+        descend
+        yield
+        b = @state
+        @state = hidden
+        return b
+      end
     end
   end
 end

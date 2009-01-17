@@ -179,4 +179,12 @@ describe GSL::World::View do
     @object.state.should be_kind_of(GSL::World::State)
   end
   
+  it "branches" do
+    @object[:blarg] = :bleep
+    w = @object.branch do
+      @object[:blarg] = :arg
+    end
+    w[:blarg].should == :arg
+    @object[:blarg].should == :bleep
+  end
 end
