@@ -114,6 +114,15 @@ module GSL
           "Citizen #{object_id} of #{@world}"
         end
         alias_method :citizen_s, :to_s
+        
+        def w(var, v = nil)
+          key = self.object_id.to_s + var.to_s
+          if (v)
+            @world[key] = v
+          else
+            @world[key]
+          end
+        end
       end
 
       module SuperClass
@@ -130,14 +139,22 @@ module GSL
 
       module Class
         extend SuperClass
-
-        def attr_versioned(var)
+        
+        def ver_writer(var)
           self.__send__ :define_method, "#{var}=" do |v|
             @world[self.object_id.to_s + var.to_s] = v
           end
+        end
+        
+        def ver_reader(var)
           self.__send__ :define_method, var do
             @world[self.object_id.to_s + var.to_s]
           end
+        end
+        
+        def ver_accessor(var)
+          ver_reader(var)
+          ver_writer(var)
         end
       end
     end

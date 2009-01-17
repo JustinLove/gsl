@@ -16,8 +16,10 @@ end
 class Kane
   include Tattler
   extend GSL::World::Citizen::Class
-  attr_versioned :blarg
-  attr_versioned :larry
+  ver_accessor :blarg
+  ver_accessor :larry
+  ver_reader :china
+  ver_writer :sewer
   
   def initialize(_world)
     super()
@@ -222,6 +224,23 @@ describe GSL::World::Citizen do
   it "has attributes" do
     @object.blarg = :bleep
     @object.blarg.should == :bleep
+  end
+  
+  it "has readables" do
+    @object.should respond_to(:china)
+    @object.should_not respond_to(:china=)
+  end
+
+  it "has writeables" do
+    @object.should_not respond_to(:sewer)
+    @object.should respond_to(:sewer=)
+  end
+  
+  it "has internal access" do
+    @object.w(:china, :bejing)
+    @object.china.should == :bejing
+    @object.sewer = :rain
+    @object.w(:sewer).should == :rain
   end
   
   it "stores attributes in the world" do
