@@ -7,6 +7,7 @@ module GSL
     extend Properties
     include ResourceUser
     extend World::Citizen::Class
+    attr_reader :world
 
     attr_reader :players
     attr_reader :resources
