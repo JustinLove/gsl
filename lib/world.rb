@@ -132,11 +132,11 @@ module GSL
         extend SuperClass
 
         def attr_versioned(var)
-          self.class.__send__ :define_method, "#{var}=" do |v|
-            @world[self.object_id.to_s + var] = v
+          self.__send__ :define_method, "#{var}=" do |v|
+            @world[self.object_id.to_s + var.to_s] = v
           end
-          self.class.__send__ :define_method, var do
-            @world[self.object_id.to_s + var]
+          self.__send__ :define_method, var do
+            @world[self.object_id.to_s + var.to_s]
           end
         end
       end

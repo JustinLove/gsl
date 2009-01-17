@@ -217,4 +217,9 @@ describe GSL::World::Citizen do
   end
 
   it_should_behave_like "well behaved objects"
+  
+  it "has attributes" do
+    @object.blarg = :bleep
+    @object.blarg.should == :bleep
+  end
 end
