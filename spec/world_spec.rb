@@ -17,6 +17,7 @@ class Kane
   include Tattler
   extend GSL::World::Citizen::Class
   attr_versioned :blarg
+  attr_versioned :larry
   
   def initialize(_world)
     super()
@@ -221,5 +222,26 @@ describe GSL::World::Citizen do
   it "has attributes" do
     @object.blarg = :bleep
     @object.blarg.should == :bleep
+  end
+  
+  it "stores attributes in the world" do
+    @world.begin
+    @object.larry = :dead
+    @world.abort
+    @object.larry.should_not == :dead
+  end
+  
+  it "stores attributes independently" do
+    @object.blarg = :bleep
+    @object.larry = :happy
+    @object.blarg.should == :bleep
+    @object.larry.should == :happy
+  end
+  
+  it "stores objects independently" do
+    @object.larry = :happy
+    @other.larry = :sad
+    @object.larry.should == :happy
+    @other.larry.should == :sad
   end
 end
