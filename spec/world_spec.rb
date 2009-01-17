@@ -66,15 +66,6 @@ describe GSL::World::State do
       @object[:child].should == :child
     end
     
-    it "merges down" do
-      @object[:color] = :red
-      @top[:color] = :blue
-      @object.merge_down!.should == @top
-      @top[:parent].should == :parent
-      @top[:child].should == :child
-      @top[:color].should == :red
-    end
-    
     it "merges" do
       @object[:color] = :red
       @top[:color] = :blue

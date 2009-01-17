@@ -38,10 +38,6 @@ module GSL
         @parent.clone.merge_data!(@d)
       end
       
-      def merge_down!
-        @parent.merge_data!(@d)
-      end
-      
       def merge_data!(hash)
         @d.merge!(hash)
         self
