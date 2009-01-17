@@ -107,5 +107,39 @@ module GSL
         @reality = @state = w
       end
     end
+    
+    module Citizen
+      module Object
+        def to_s
+          "Citizen #{object_id} of #{@world}"
+        end
+        alias_method :citizen_s, :to_s
+      end
+
+      module SuperClass
+        def included(base)
+          #puts "Citizen included #{base.name}"
+          base.extend SuperClass
+        end
+
+        def extended(base)
+          #puts "Citizen extend #{base.name}"
+          base.__send__ :include, Citizen::Object
+        end
+      end
+
+      module Class
+        extend SuperClass
+
+        def attr_versioned(var)
+          self.class.__send__ :define_method, "#{var}=" do |v|
+            @world[self.object_id.to_s + var] = v
+          end
+          self.class.__send__ :define_method, var do
+            @world[self.object_id.to_s + var]
+          end
+        end
+      end
+    end
   end
 end

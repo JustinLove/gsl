@@ -9,6 +9,21 @@ class GSL::World::View
   include Tattler
 end
 
+module GSL::World::Citizen
+  include Tattler
+end
+
+class Kane
+  include Tattler
+  extend GSL::World::Citizen::Class
+  attr_versioned :blarg
+  
+  def initialize(_world)
+    super()
+    @world = _world
+  end
+end
+
 shared_examples_for "state objects" do
   it "implements []" do
     @object[:blarg] = :bleep
@@ -192,4 +207,14 @@ describe GSL::World::View do
     @object.switch(@object.branch {@object[:leaf] = :green})
     @object[:leaf].should == :green
   end
+end
+
+describe GSL::World::Citizen do
+  before do
+    @world = GSL::World::View.new
+    @object = Kane.new(@world)
+    @other = Kane.new(@world)
+  end
+
+  it_should_behave_like "well behaved objects"
 end
