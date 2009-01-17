@@ -1,11 +1,12 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{random prototype properties resource_user player}
+GSL::depends_on %w{random prototype properties resource_user player world}
 
 module GSL
   class Game
     include Prototype
     extend Properties
     include ResourceUser
+    extend World::Citizen::Class
 
     attr_reader :players
     attr_reader :resources
@@ -16,6 +17,7 @@ module GSL
 
     def initialize(file = nil)
       super()
+      @world = World::View.new
       @context = []
       if (file)
         # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
