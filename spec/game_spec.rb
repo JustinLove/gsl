@@ -59,7 +59,7 @@ describe GSL::Game do
   
   it "defines steps with at_any_time" do
     @object.at_any_time :scream do; :yell; end
-    GSL::Player.new(@game).scream.should == :yell
+    GSL::Player.new(@object).scream.should == :yell
   end
   
   it "check context" do
