@@ -13,6 +13,10 @@ module GSL
         State.new(self)
       end
       
+      def clone
+        State.new(@parent).merge_data!(@d)
+      end
+      
       def to_s
         "State #{object_id}[#{@d.keys.count}] < #{@parent.object_id}"
       end
@@ -36,10 +40,6 @@ module GSL
       
       def merge_down!
         @parent.merge_data!(@d)
-      end
-      
-      def clone
-        State.new(@parent).merge_data!(@d)
       end
       
       def merge_data!(hash)
