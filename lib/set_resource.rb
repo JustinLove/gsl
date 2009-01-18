@@ -145,7 +145,7 @@ module GSL
         result = yield item
         self.value = (self.value.dup << item)
         if (result.kind_of?(World::State))
-          result[id_card(:value)] = (result[id_card(:value)].dup << item)
+          result.update(id_card(:value)) {|v| v << item}
         end
         return result
       end

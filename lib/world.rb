@@ -38,6 +38,12 @@ module GSL
         @d[k] = v.freeze
       end
       
+      def update(k, &proc)
+        v = self[k]
+        v = v.dup if v.frozen?
+        self[k] = proc.call(v)
+      end
+      
       def merge
         @parent.clone.merge_data!(@d)
       end

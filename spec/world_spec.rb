@@ -50,6 +50,18 @@ shared_examples_for "state objects" do
     lambda {slippery[0][0] = 42}.should_not raise_error
     @object[:slope].should == [[42, 2, 3]]
   end
+  
+  it "Updates immutable values" do
+    @object[:blarg] = :bleep
+    @object.update(:blarg) {|v| (v.to_s * 2).to_sym}
+    @object[:blarg].should == :bleepbleep
+  end
+
+  it "Updates mutable values" do
+    @object[:blarg] = [1, 2, 3]
+    @object.update(:blarg) {|v| v << 4}
+    @object[:blarg].should == [1, 2, 3, 4]
+  end
 end
 
 describe GSL::World::State do
@@ -88,6 +100,11 @@ describe GSL::World::State do
     it "does not change parent values" do
       @object[:parent] = :child
       @top[:parent].should == :parent
+    end
+    
+    it "Updates derived values" do
+      @object.update(:parent) {|v| (v.to_s * 2).to_sym}
+      @object[:parent].should == :parentparent
     end
     
     it "clones" do
