@@ -143,7 +143,10 @@ module GSL
         mod.delete item
         self.value = mod
         result = yield item
-        self.value = self.value.dup << item
+        self.value = (self.value.dup << item)
+        if (result.kind_of?(World::State))
+          result[id_card(:value)] = (result[id_card(:value)].dup << item)
+        end
         return result
       end
       

@@ -125,12 +125,15 @@ module GSL
         end
         alias_method :citizen_s, :to_s
         
+        def id_card(var)
+          self.object_id.to_s + var.to_s
+        end
+        
         def w(var, v = nil)
-          key = self.object_id.to_s + var.to_s
           if (v)
-            @world[key] = v
+            @world[id_card(var)] = v
           else
-            @world[key]
+            @world[id_card(var)]
           end
         end
       end

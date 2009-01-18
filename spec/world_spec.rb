@@ -254,6 +254,10 @@ describe GSL::World::Citizen do
     @object.should respond_to(:sewer=)
   end
   
+  it "has key generator" do
+    @object.id_card(:blarg).should be_kind_of(String)
+  end
+  
   it "has internal access" do
     @object.w(:china, :bejing)
     @object.china.should == :bejing

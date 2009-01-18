@@ -153,6 +153,7 @@ describe "all tests", :shared => true do
       it "when not modified" do
         alt = @object.without(:king) do
           @user.world.branch do
+            @object.should_not include(:king)
           end
         end
         @user.world.switch(alt)
@@ -160,17 +161,15 @@ describe "all tests", :shared => true do
       end
 
       it "when modified" do
-        pending "location based set resources?" do
-          alt = @object.without(:king) do
-            @user.world.branch do
-              @object.lose :queen
-            end
+        alt = @object.without(:king) do
+          @user.world.branch do
+            @object.lose :queen
           end
-          @object.should include(:queen)
-          @user.world.switch(alt)
-          @object.should_not include(:queen)
-          @object.should include(:king)
         end
+        @object.should include(:queen)
+        @user.world.switch(alt)
+        @object.should_not include(:queen)
+        @object.should include(:king)
       end
     end
   end
