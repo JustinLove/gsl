@@ -35,7 +35,7 @@ module GSL
       end
       
       def []=(k, v)
-        @d[k] = v
+        @d[k] = v.freeze
       end
       
       def merge

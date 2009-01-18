@@ -82,18 +82,19 @@ module GSL
       end
       
       def discards
-        if @discards.nil?
-          @discards =
+        _discards = w(:discards)
+        if _discards.nil?
+          _discards = w(:discards, 
             self.class.option[:discard_to] ||
-            (name.to_s + '_discard').to_sym
-          if !@owner.respond_to?(@discards)
-            @owner.class.make_resource(@discards)
+            (name.to_s + '_discard').to_sym)
+          if !@owner.respond_to?(_discards)
+            @owner.class.make_resource(_discards)
           end
-          if !@owner.__send__(@discards).kind_of?(GSL::Resource::Set)
-            @owner.set_to [], @discards #type as set
+          if !@owner.__send__(_discards).kind_of?(GSL::Resource::Set)
+            @owner.set_to [], _discards #type as set
           end
         end
-        @owner.__send__(@discards)
+        @owner.__send__(_discards)
       end
   
       def shuffle
@@ -115,9 +116,9 @@ module GSL
       end
   
       def draw(&filter)
-        @filter = filter || @filter
-        if @filter
-          @filter.call primitive_draw
+        w(:filter, filter ||= w(:filter))
+        if filter
+          filter.call primitive_draw
         else
           primitive_draw
         end
@@ -138,10 +139,11 @@ module GSL
 
       def without(item)
         #p "without #{item.to_s}"
-        self.value = self.value.dup
-        self.value.delete item
+        mod = self.value.dup
+        mod.delete item
+        self.value = mod
         result = yield item
-        self.value << item
+        self.value = self.value.dup << item
         return result
       end
       

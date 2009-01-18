@@ -10,7 +10,7 @@ class User
   attr_writer :world
 end
 
-describe GSL::Resource do
+describe "all tests", :shared => true do
   before :all do
     @user = User.new()
     @user.world = GSL::World::View.new
@@ -20,6 +20,7 @@ describe GSL::Resource do
     before do
       @class = GSL::Resource.define(:fudge)
       @object = @class.new(@user)
+      modify
     end
 
     it_should_behave_like "well behaved objects"
@@ -39,6 +40,7 @@ describe GSL::Resource do
       @object = @class.new(@user)
       @initial_value = 8
       @object.set(@initial_value)
+      modify
     end
     
     it "has a value" do
@@ -62,6 +64,7 @@ describe GSL::Resource do
       @object = @class.new(@user)
       @initial_value = [:ace, :queen, :king]
       @object.set(@initial_value)
+      modify
     end
     
     it "has a value" do
@@ -153,6 +156,7 @@ describe GSL::Resource do
       @object = @class.new(@user)
       @initial_value = [GSL::Component.new(:ed), GSL::Component.new(:george)]
       @object.set(@initial_value)
+      modify
     end
     
     it "lists names" do
@@ -167,6 +171,7 @@ describe GSL::Resource do
       @object = @class.new(@user)
       @initial_value = [:apple, :pear, :banana]
       @object.set(@initial_value)
+      modify
     end
     
     it "has discards" do
@@ -193,6 +198,7 @@ describe GSL::Resource do
       @object = @class.new(@user)
       @initial_value = [:carrot, :celery, :lettuce]
       @object.set(@initial_value)
+      modify
     end
     
     it "has discards" do
@@ -210,4 +216,18 @@ describe GSL::Resource do
       @object.discards.should be_kind_of(GSL::Resource::Set)
     end
   end
+end
+
+describe GSL::Resource do
+  def modify; end
+    
+  it_should_behave_like "all tests"
+end
+
+describe GSL::Resource, "frozen" do
+  def modify
+    @object.freeze
+  end
+    
+  it_should_behave_like "all tests"
 end
