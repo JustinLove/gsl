@@ -7,8 +7,6 @@ module GSL
     extend Prototype
     extend World::Citizen::Class
     attr_reader :name
-    attr_accessor :in
-    attr_writer :world
 
     class << self
       def hash(name, value)
@@ -40,11 +38,16 @@ module GSL
       @world = nil
       @name = name
       @kind = kind || name
-      self.in = nil
     end
 
     def to_s
       "#{@name}(#{self.in})"
+    end
+    
+    attr_reader :in
+    def in=(where)
+      discard_to(where.discards) if (where.respond_to? :discards)
+      @in = where
     end
 
     def discard_to(where)

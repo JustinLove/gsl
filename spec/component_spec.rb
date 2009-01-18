@@ -8,6 +8,7 @@ end
 
 class User
   include GSL::ResourceUser
+  attr_writer :world
 end
 
 describe GSL::Component do
@@ -107,6 +108,7 @@ describe GSL::Component do
   describe "tracks location" do
     before :all do
       @user = User.new()
+      @user.world = GSL::World::View.new
     end
     
     before do
