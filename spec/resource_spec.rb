@@ -148,18 +148,29 @@ describe "all tests", :shared => true do
       @object.without(:king) {@object.should_not include(:king)}
       @object.should include(:king)
     end
-    
-    it "without doesn't lose things in alterate realities" do
-      pending "location based set resources?" do
+
+    describe "without doesn't lose things in alterate realities" do
+      it "when not modified" do
         alt = @object.without(:king) do
           @user.world.branch do
-            @object.lose :queen
           end
         end
-        @object.should include(:queen)
         @user.world.switch(alt)
-        @object.should_not include(:queen)
         @object.should include(:king)
+      end
+
+      it "when modified" do
+        pending "location based set resources?" do
+          alt = @object.without(:king) do
+            @user.world.branch do
+              @object.lose :queen
+            end
+          end
+          @object.should include(:queen)
+          @user.world.switch(alt)
+          @object.should_not include(:queen)
+          @object.should include(:king)
+        end
       end
     end
   end
