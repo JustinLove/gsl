@@ -21,9 +21,13 @@ module GSL
         "State #{object_id}[#{@d.keys.count}] < #{@parent.object_id}"
       end
       
-      def pretty_print
-        puts self
-        puts @parent.pretty_print if @parent
+      def pretty_print(pp = nil)
+        if (pp)
+          super
+        else
+          puts self
+          puts @parent.pretty_print if @parent
+        end
       end
       
       def [](k)
@@ -57,8 +61,12 @@ module GSL
         "View (#{@state})"
       end
       
-      def pretty_print
-        @state.pretty_print
+      def pretty_print(pp = nil)
+        if (pp)
+          super
+        else
+          @state.pretty_print
+        end
       end
       
       def [](k)
