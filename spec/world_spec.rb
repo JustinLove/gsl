@@ -9,6 +9,10 @@ class GSL::World::View
   include Tattler
 end
 
+class GSL::World::Passport
+  include Tattler
+end
+
 module GSL::World::Citizen
   include Tattler
 end
@@ -240,6 +244,41 @@ describe GSL::World::View do
   it "switches" do
     @object.switch(@object.branch {@object[:leaf] = :green})
     @object[:leaf].should == :green
+  end
+end
+
+describe GSL::World::Passport do
+  before do
+    @world = GSL::World::View.new
+    @owner = Kane.new(@world)
+    @object = GSL::World::Passport.new(@owner)
+    @other = GSL::World::Passport.new(@owner)
+  end
+  
+  it_should_behave_like "well behaved objects"
+
+  it "stores values" do
+    @object[:blarg] = :bleep
+    @object[:blarg].should == :bleep
+  end
+  
+  it "forwards attributes" do
+    @object.blarg = :bleep
+    @object.blarg.should == :bleep
+  end
+  
+  it "stores attributes independently" do
+    @object.blarg = :bleep
+    @object.larry = :happy
+    @object.blarg.should == :bleep
+    @object.larry.should == :happy
+  end
+  
+  it "stores objects independently" do
+    @object.larry = :happy
+    @other.larry = :sad
+    @object.larry.should == :happy
+    @other.larry.should == :sad
   end
 end
 

@@ -122,6 +122,19 @@ module GSL
       end
     end
     
+    class Passport
+      def initialize(owner)
+        super()
+        @owner = owner
+        @oid = owner.object_id.to_s
+        @world = owner.world
+      end
+      
+      def to_s
+        "Passport #{@oid} for #{@owner}"
+      end
+    end
+    
     module Citizen
       module Object
         attr_reader :world
