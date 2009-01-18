@@ -50,6 +50,8 @@ module GSL
         @home = where.discards
       end
       @in = where
+      @world = where.world if (where)
+      w(:in, where)
     end
 
     def discard(deck = nil)
