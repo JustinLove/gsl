@@ -1,12 +1,14 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{prototype}
+GSL::depends_on %w{prototype world}
 
 module GSL
   class Component
     include Prototype
     extend Prototype
+    extend World::Citizen::Class
     attr_reader :name
     attr_accessor :in
+    attr_accessor :world
 
     class << self
       def hash(name, value)
@@ -35,13 +37,14 @@ module GSL
      
     def initialize(name, kind = nil)
       super()
+      @world = nil
       @name = name
       @kind = kind || name
-      @in = nil
+      self.in = nil
     end
 
     def to_s
-      "#{@name}(#{@in})"
+      "#{@name}(#{self.in})"
     end
 
     def discard_to(where)
@@ -56,7 +59,7 @@ module GSL
       if deck.include? self
         raise "attempt to discard #{self.to_s} twice"
       end
-      @in.lose [self] if @in
+      self.in.lose [self] if self.in
       deck.gain [self]
     end
 
