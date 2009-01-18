@@ -10,4 +10,8 @@ def tests(args)
   end
 end
 
+def file(arg)
+  File.join(File.dirname(__FILE__), '..', arg)
+end
+
 tests 'shared_spec'
