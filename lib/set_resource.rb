@@ -97,16 +97,17 @@ module GSL
       end
   
       def shuffle
-        self.value.shuffle!
+        self.value = self.value.shuffle
       end
 
       def reshuffle
         gain(discards.lose(:all))
-        self.value.shuffle!
+        shuffle
       end
   
       def primitive_draw
-        card = self.value.shift
+        card = self.value.first
+        self.value = self.value[1..-1]
         if (card.respond_to? :in=)
           card.in = nil
         end
@@ -137,6 +138,7 @@ module GSL
 
       def without(item)
         #p "without #{item.to_s}"
+        self.value = self.value.dup
         self.value.delete item
         result = yield item
         self.value << item

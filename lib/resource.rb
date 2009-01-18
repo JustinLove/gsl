@@ -38,7 +38,7 @@ module GSL
     include Prototype
     extend World::Citizen::Class
 
-    attr_accessor :value
+    ver_accessor :value
     def name
       self.class.name
     end
