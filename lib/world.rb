@@ -146,6 +146,10 @@ module GSL
         @world[id_card(k)] = v
       end
       
+      def update(k, &proc)
+        @world.state.update(id_card(k), &proc)
+      end
+      
       def method_missing(method, v = nil)
         if (method.to_s[-1,1] == '=')
           self[method.to_s.chop] = v

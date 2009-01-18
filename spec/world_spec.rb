@@ -267,6 +267,12 @@ describe GSL::World::Passport do
     @object.blarg.should == :bleep
   end
   
+  it "has update shorthand" do
+    @object.blarg = :bleep
+    @object.update(:blarg) {|v| v.to_s.upcase.to_sym}
+    @object.blarg.should == :BLEEP
+  end
+  
   it "stores attributes independently" do
     @object.blarg = :bleep
     @object.larry = :happy
