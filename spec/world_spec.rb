@@ -25,10 +25,11 @@ class Kane
   ver_accessor :larry
   ver_reader :china
   ver_writer :sewer
+  attr_accessor :w
   
   def initialize(_world)
-    super()
     @world = _world
+    super()
   end
 end
 
@@ -257,6 +258,10 @@ describe GSL::World::Passport do
   
   it_should_behave_like "well behaved objects"
 
+  it "has key generator" do
+    @object.id_card(:blarg).should be_kind_of(String)
+  end
+  
   it "stores values" do
     @object[:blarg] = :bleep
     @object[:blarg].should == :bleep
@@ -266,6 +271,13 @@ describe GSL::World::Passport do
     @object[:blarg] = :bleep
     @object.update(:blarg) {|v| v.to_s.upcase.to_sym}
     @object[:blarg].should == :BLEEP
+  end
+
+  it "stores attributes in the world" do
+    @world.begin
+    @object[:larry] = :dead
+    @world.abort
+    @object[:larry].should_not == :dead
   end
   
   it "stores attributes independently" do
@@ -311,20 +323,16 @@ describe GSL::World::Citizen do
     @object.should respond_to(:sewer=)
   end
   
-  it "has key generator" do
-    @object.id_card(:blarg).should be_kind_of(String)
-  end
-  
   it "has internal access" do
-    @object.w(:china, :bejing)
+    @object.w[:china] = :bejing
     @object.china.should == :bejing
     @object.sewer = :rain
-    @object.w(:sewer).should == :rain
+    @object.w[:sewer].should == :rain
   end
   
   it "has update shorthand" do
     @object.blarg = :bleep
-    @object.w(:blarg) {|v| v.to_s.upcase.to_sym}
+    @object.w.update(:blarg) {|v| v.to_s.upcase.to_sym}
     @object.blarg.should == :BLEEP
   end
   

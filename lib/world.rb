@@ -155,24 +155,15 @@ module GSL
       module Object
         attr_reader :world
         
+        def initialize
+          super
+          @w = Passport.new(self)
+        end
+        
         def to_s
           "Citizen #{object_id} of #{@world}"
         end
         alias_method :citizen_s, :to_s
-        
-        def id_card(var)
-          self.object_id.to_s + var.to_s
-        end
-        
-        def w(var, v = nil, &proc)
-          if (proc)
-            @world.state.update(id_card(var), &proc)
-          elsif (v)
-            @world[id_card(var)] = v
-          else
-            @world[id_card(var)]
-          end
-        end
       end
 
       module SuperClass
