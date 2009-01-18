@@ -36,6 +36,13 @@ shared_examples_for "state objects" do
   it "returns nil for unknown keys" do
     @object[:foo].should be_nil
   end
+  
+  it "freezes values" do
+    slippery = [1, 2, 3]
+    @object[:slope] = slippery
+    lambda {slippery << 4}.should raise_error
+    @object[:slope].should == [1, 2, 3]
+  end
 end
 
 describe GSL::World::State do
