@@ -43,6 +43,13 @@ shared_examples_for "state objects" do
     lambda {slippery << 4}.should raise_error
     @object[:slope].should == [1, 2, 3]
   end
+  
+  it "WARNING - doesn't freeze nested values" do
+    slippery = [[1, 2, 3]]
+    @object[:slope] = slippery
+    lambda {slippery[0][0] = 42}.should_not raise_error
+    @object[:slope].should == [[42, 2, 3]]
+  end
 end
 
 describe GSL::World::State do
