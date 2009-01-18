@@ -53,6 +53,15 @@ class Object
       block.bind(self)[*arguments]
     end
   end
+  
+  def primitive?
+    begin
+      self.dup
+      false
+    rescue TypeError
+      true
+    end
+  end
 end
 
 def deep_copy(obj)
