@@ -61,19 +61,22 @@ module GSL
     end
 
     def set(n)
+      self_include(class_for(n))
+      self.set(n)
+    end
+    
+    def class_for(n)
       if (n.kind_of? Numeric)
-        class << self
-          include Resource::Value
-        end
-        self.set(n)
+        return Resource::Value
       elsif (n.kind_of? Enumerable)
-        class << self
-          include Resource::Set
-        end
-        self.set(n)
+        return Resource::Set
       else
         raise "can't have that kind of resource"
       end
+    end
+
+    def self_include(_class)
+      class << self; self; end.__send__(:include, _class)
     end
 
     def must_gain(n)
