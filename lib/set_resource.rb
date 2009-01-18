@@ -139,11 +139,9 @@ module GSL
 
       def without(item)
         #p "without #{item.to_s}"
-        mod = self.value.dup
-        mod.delete item
-        self.value = mod
+        w(:value) {|v| v.delete(item); v}
         result = yield item
-        self.value = (self.value.dup << item)
+        w(:value) {|v| v << item}
         if (result.kind_of?(World::State))
           result.update(id_card(:value)) {|v| v << item}
         end

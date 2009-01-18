@@ -282,6 +282,12 @@ describe GSL::World::Citizen do
     @object.w(:sewer).should == :rain
   end
   
+  it "has update shorthand" do
+    @object.blarg = :bleep
+    @object.w(:blarg) {|v| v.to_s.upcase.to_sym}
+    @object.blarg.should == :BLEEP
+  end
+  
   it "stores attributes in the world" do
     @world.begin
     @object.larry = :dead

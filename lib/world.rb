@@ -135,8 +135,10 @@ module GSL
           self.object_id.to_s + var.to_s
         end
         
-        def w(var, v = nil)
-          if (v)
+        def w(var, v = nil, &proc)
+          if (proc)
+            @world.state.update(id_card(var), &proc)
+          elsif (v)
             @world[id_card(var)] = v
           else
             @world[id_card(var)]
