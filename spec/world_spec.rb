@@ -1,5 +1,6 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 libs %w{world}
+require 'pp'
 
 class GSL::World::State
   include Tattler
@@ -250,9 +251,8 @@ end
 describe GSL::World::Passport do
   before do
     @world = GSL::World::View.new
-    @owner = Kane.new(@world)
-    @object = GSL::World::Passport.new(@owner)
-    @other = GSL::World::Passport.new(@owner)
+    @object = GSL::World::Passport.new(Kane.new(@world))
+    @other = GSL::World::Passport.new(Kane.new(@world))
   end
   
   it_should_behave_like "well behaved objects"
