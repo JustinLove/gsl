@@ -183,13 +183,13 @@ module GSL
         
         def ver_writer(var)
           self.__send__ :define_method, "#{var}=" do |v|
-            @world[self.object_id.to_s + var.to_s] = v
+            @w[var] = v
           end
         end
         
         def ver_reader(var)
           self.__send__ :define_method, var do
-            @world[self.object_id.to_s + var.to_s]
+            @w[var]
           end
         end
         
