@@ -41,15 +41,14 @@ module GSL
     end
 
     def to_s
-      "#{@name}(#{self.in})"
+      "#{@name}(#{@world && self.in})"
     end
     
-    attr_reader :in
+    ver_reader :in
     def in=(where)
       if (@home.nil? && where.respond_to?(:discards))
         @home = where.discards
       end
-      @in = where
       @world = where.world if (where)
       w(:in, where)
     end
