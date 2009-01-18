@@ -8,7 +8,7 @@ module GSL
     extend World::Citizen::Class
     attr_reader :name
     attr_accessor :in
-    attr_accessor :world
+    attr_writer :world
 
     class << self
       def hash(name, value)

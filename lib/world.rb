@@ -118,6 +118,8 @@ module GSL
     
     module Citizen
       module Object
+        attr_reader :world
+        
         def to_s
           "Citizen #{object_id} of #{@world}"
         end

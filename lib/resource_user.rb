@@ -4,7 +4,6 @@ GSL::depends_on %w{classvar resource component world}
 module GSL
   module ResourceUser
     extend World::Citizen::Class
-    attr_reader :world
     
     def self.included(base)
       #puts base.name
