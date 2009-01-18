@@ -65,7 +65,7 @@ module GSL
       
       def own(n)
         n = wrap(n)
-        if (n && n.first.respond_to?(:in))
+        if (n && n.first.respond_to?(:in=))
           n.each {|c| c.in = self; c.discard_to(discards)}
         else
           n
@@ -74,7 +74,7 @@ module GSL
       
       def forfeit(n)
         n = wrap(n)
-        if (n && n.first.respond_to?(:in))
+        if (n && n.first.respond_to?(:in=))
           n.each {|c| c.in = nil}
         else
           n
@@ -107,8 +107,7 @@ module GSL
   
       def primitive_draw
         card = @value.shift
-        if (card.respond_to? :discard_to)
-          card.discard_to discards
+        if (card.respond_to? :in=)
           card.in = nil
         end
         card
@@ -121,14 +120,6 @@ module GSL
         else
           primitive_draw
         end
-      end
-  
-      def first
-        card = @value.first
-        if (card.respond_to? :discard_to)
-          card.discard_to discards
-        end
-        card
       end
   
       def sort_by!(&proc)
