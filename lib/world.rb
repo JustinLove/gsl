@@ -133,6 +133,18 @@ module GSL
       def to_s
         "Passport #{@oid} for #{@owner}"
       end
+      
+      def id_card(key)
+        @oid + key.to_s
+      end
+      
+      def [](k)
+        @world[id_card(k)]
+      end
+      
+      def []=(k, v)
+        @world[id_card(k)] = v
+      end
     end
     
     module Citizen
