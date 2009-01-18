@@ -7,11 +7,13 @@ end
 
 class User
   include GSL::ResourceUser
+  attr_writer :world
 end
 
 describe GSL::Resource do
   before :all do
     @user = User.new()
+    @user.world = GSL::World::View.new
   end
 
   describe "before typing" do

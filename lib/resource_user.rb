@@ -1,8 +1,11 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{classvar resource component}
+GSL::depends_on %w{classvar resource component world}
 
 module GSL
   module ResourceUser
+    extend World::Citizen::Class
+    attr_reader :world
+    
     def self.included(base)
       #puts base.name
       base.extend ResourceUser::Class
