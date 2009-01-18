@@ -188,6 +188,7 @@ describe GSL::Resource do
   describe "with deleted discard" do
     before do
       @user = User.new();
+      @user.world = GSL::World::View.new
       @class = GSL::Resource.define(:vegitable)
       @object = @class.new(@user)
       @initial_value = [:carrot, :celery, :lettuce]
