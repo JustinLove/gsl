@@ -3,28 +3,28 @@ module GSL
     module Set
       def set(n)
         if self.class.range.include?(n.size)
-          @value = own(n).dup
+          self.value = own(n).dup
         else
           raise 'resource out of range'
         end
       end
   
       def if_gain(n)
-        possible = @value + wrap(n)
+        possible = self.value + wrap(n)
         if self.class.range.include?(possible.size)
           return possible
         else
-          raise Insufficient.new(name, @value, n)
+          raise Insufficient.new(name, self.value, n)
         end
       end
 
       def if_lose(n = :all)
         n = wrap(n)
-        possible = @value - n
-        if possible.size == @value.size - n.size && self.class.range.include?(possible.size)
+        possible = self.value - n
+        if possible.size == self.value.size - n.size && self.class.range.include?(possible.size)
           return possible
         else
-          raise Insufficient.new(name, @value, n)
+          raise Insufficient.new(name, self.value, n)
         end
       end
       
@@ -37,21 +37,21 @@ module GSL
       end
   
       def gain(n)
-        possible = @value + own(n)
-        @value = possible[0..(self.class.range.last-1)]
+        possible = self.value + own(n)
+        self.value = possible[0..(self.class.range.last-1)]
       end
   
       def lose(n = :all)
         n = forfeit(n)
-        possible = @value - n
+        possible = self.value - n
         miss = self.class.range.first - possible.size
-        old = @value
+        old = self.value
         if (miss > 0)
-          @value = possible + n[0..miss]
+          self.value = possible + n[0..miss]
         else
-          @value = possible
+          self.value = possible
         end
-        return old - @value
+        return old - self.value
       end
       
       def wrap(n)
@@ -97,16 +97,16 @@ module GSL
       end
   
       def shuffle
-        @value.shuffle!
+        self.value.shuffle!
       end
 
       def reshuffle
         gain(discards.lose(:all))
-        @value.shuffle!
+        self.value.shuffle!
       end
   
       def primitive_draw
-        card = @value.shift
+        card = self.value.shift
         if (card.respond_to? :in=)
           card.in = nil
         end
@@ -123,37 +123,37 @@ module GSL
       end
   
       def sort_by!(&proc)
-        @value = @value.sort_by(&proc) if @value
+        self.value = self.value.sort_by(&proc) if self.value
         return self
       end
       
       def include?(card)
-        if card.kind_of?(Symbol) && @value.first.respond_to?(:name)
-          return @value.find{|c| c.name == card}
+        if card.kind_of?(Symbol) && self.value.first.respond_to?(:name)
+          return self.value.find{|c| c.name == card}
         else
-          return @value.include? card
+          return self.value.include? card
         end
       end
 
       def without(item)
         #p "without #{item.to_s}"
-        @value.delete item
+        self.value.delete item
         result = yield item
-        @value << item
+        self.value << item
         return result
       end
       
       def names
-        @value.map {|c| c.name}
+        self.value.map {|c| c.name}
       end
   
       def to_s
-        @value ||= []
-        "#{name}:#{@value.count}/#{discards.count}(#{@value.count + discards.count})"
+        self.value ||= []
+        "#{name}:#{self.value.count}/#{discards.count}(#{self.value.count + discards.count})"
       end
   
       def to_a
-        [@value.to_s, discards.to_s]
+        [self.value.to_s, discards.to_s]
       end
     end
   end

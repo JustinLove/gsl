@@ -50,14 +50,14 @@ module GSL
     end
 
     def method_missing(method, *args, &proc)
-      if @value.respond_to? method
-        return @value.__send__ method, *args, &proc
+      if self.value.respond_to? method
+        return self.value.__send__ method, *args, &proc
       end
       super
     end
 
     def to_s
-       "#{name}:#{@value}"
+       "#{name}:#{self.value}"
     end
 
     def set(n)
@@ -80,13 +80,13 @@ module GSL
     end
 
     def must_gain(n)
-      @value = if_gain(n)
+      self.value = if_gain(n)
     end
 
     def must_lose(n)
-      old = @value
-      @value = if_lose(n)
-      return old - @value
+      old = self.value
+      self.value = if_lose(n)
+      return old - self.value
     end
   
     def pay(n = :all)
@@ -94,9 +94,9 @@ module GSL
     end
   
     def wrap(n)
-      n = @value if n == :all
+      n = self.value if n == :all
       if (n.kind_of?(Symbol) && @owner.respond_to?(n))
-        n = @owner.__send__(n)
+        n = owner.__send__(n)
       end
       if (n.kind_of?(Resource))
         return n.value

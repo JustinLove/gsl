@@ -4,7 +4,7 @@ module GSL
       def set(n)
         n = wrap(n)
         if self.class.range.include?(n)
-          @value = n
+          self.value = n
         else
           raise 'resource out of range'
         end
@@ -12,10 +12,10 @@ module GSL
 
       def if_gain(n)
         n = wrap(n)
-        if self.class.range.include?(@value+n)
-          return @value + n
+        if self.class.range.include?(self.value+n)
+          return self.value + n
         else
-          raise Insufficient.new(name, @value, n)
+          raise Insufficient.new(name, self.value, n)
         end
       end
   
@@ -24,9 +24,9 @@ module GSL
       end
   
       def gain(n)
-        old = @value
-        @value = self.class.range.bound(@value+wrap(n))
-        return @value - old
+        old = self.value
+        self.value = self.class.range.bound(self.value+wrap(n))
+        return self.value - old
       end
   
       def lose(n = :all)

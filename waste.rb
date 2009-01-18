@@ -77,7 +77,7 @@ player_resource :materials_required, 1..5
 player_resource :waste_reduction, 1..5
 player_resource :waste_disposal, 0..16 do
   def section
-    case @value
+    case value
     when 0..8 then :green
     when 9..12 then :yellow
     when 13..16 then :red
