@@ -46,15 +46,10 @@ module GSL
     
     attr_reader :in
     def in=(where)
-      discard_to(where.discards) if (where.respond_to? :discards)
-      @in = where
-    end
-
-    def discard_to(where)
-      if (@home.nil?)
-        @home = where
+      if (@home.nil? && where.respond_to?(:discards))
+        @home = where.discards
       end
-      return self
+      @in = where
     end
 
     def discard(deck = nil)
