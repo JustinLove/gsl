@@ -262,29 +262,24 @@ describe GSL::World::Passport do
     @object[:blarg].should == :bleep
   end
   
-  it "forwards attributes" do
-    @object.blarg = :bleep
-    @object.blarg.should == :bleep
-  end
-  
   it "has update shorthand" do
-    @object.blarg = :bleep
+    @object[:blarg] = :bleep
     @object.update(:blarg) {|v| v.to_s.upcase.to_sym}
-    @object.blarg.should == :BLEEP
+    @object[:blarg].should == :BLEEP
   end
   
   it "stores attributes independently" do
-    @object.blarg = :bleep
-    @object.larry = :happy
-    @object.blarg.should == :bleep
-    @object.larry.should == :happy
+    @object[:blarg] = :bleep
+    @object[:larry] = :happy
+    @object[:blarg].should == :bleep
+    @object[:larry].should == :happy
   end
   
   it "stores objects independently" do
-    @object.larry = :happy
-    @other.larry = :sad
-    @object.larry.should == :happy
-    @other.larry.should == :sad
+    @object[:larry] = :happy
+    @other[:larry] = :sad
+    @object[:larry].should == :happy
+    @other[:larry].should == :sad
   end
 end
 

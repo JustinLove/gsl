@@ -149,14 +149,6 @@ module GSL
       def update(k, &proc)
         @world.state.update(id_card(k), &proc)
       end
-      
-      def method_missing(method, v = nil)
-        if (method.to_s[-1,1] == '=')
-          self[method.to_s.chop] = v
-        else
-          self[method]
-        end
-      end
     end
     
     module Citizen
