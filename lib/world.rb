@@ -2,11 +2,14 @@ module GSL
   module World
     class State
       attr_reader :parent
+      attr_reader :depth
       
       def initialize(_parent = nil)
         super()
         @d = {}
         @parent = _parent
+        @depth = 1
+        @depth += _parent.depth if _parent
       end
       
       def derive
@@ -18,7 +21,7 @@ module GSL
       end
       
       def to_s
-        "State #{object_id}[#{@d.keys.count}] < #{@parent.object_id}"
+        "State(#{depth}) #{object_id}[#{@d.keys.count}] < #{@parent.object_id}"
       end
       
       def pretty_print(pp = nil)
@@ -84,11 +87,12 @@ module GSL
       end
       
       def descend
-        @state = @state.derive
+        @state = @state.derive #.tap {|s| puts "#{@state} + #{s}"}
       end
       
       def ascend
         raise "Can't ascend past reality" if @state == @reality
+        #puts "#{@state} - #{@state.parent}"
         @state = @state.parent
       end
       
