@@ -1,19 +1,7 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{prototype player_common}
 
 module GSL
   class Speculate
-    include Prototype
-    include Player::Common
-  
-    def speculator; @player; end
-  
-    def self.forward(what, to = nil)
-      define_method what do |*args, &proc|
-        @player.__send__ to || what, *args, &proc
-      end
-    end
-  
     def initialize(player, on = '?')
       super()
       @player = player
@@ -21,7 +9,7 @@ module GSL
     end
   
     def d(s)
-      #puts "#{'*' * @@level} #{@player} #{@on}: " + s
+      #puts "#{'.' * @@level} #{@player} #{@on}: " + s
     end
   
     @@level = 0
@@ -29,7 +17,7 @@ module GSL
       begin
         @@level += 1
         d 'block ' + proc.inspect
-        instance_eval &proc
+        @player.instance_eval &proc
       rescue GamePlayException => e
         d e.inspect
         #puts e.backtrace.join("\n")
@@ -43,26 +31,5 @@ module GSL
         @@level -= 1
       end
     end
-  
-    def method_missing(method, *args, &proc)
-      if @player.has_resource? method
-        d "has #{method}"
-        return @player.__send__ method, *args, &proc
-      elsif @player.respond_to? method
-        d 'skipping ' + method.to_s
-      else
-        d "punts #{method}"
-        super
-      end
-    end
-
-    forward :during
-    forward :only_during
-    forward :must_have
-    forward :must_gain, :if_gain
-    forward :must_lose, :if_lose
-    forward :gain, :if_gain
-    forward :lose, :if_lose
-    forward :pay, :if_lose
   end
 end
