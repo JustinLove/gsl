@@ -45,7 +45,7 @@ module GSL
       end
     
       def what_if(on = '?', &proc)
-        Speculate.new(speculator, on).succeed?(&proc) #.tap {|v| p v}
+        Speculate.new(self, on).succeed?(&proc) #.tap {|v| p v}
       end
     
       def rate(action, why = 'rates', &doing)

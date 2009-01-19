@@ -9,7 +9,6 @@ module GSL
     include Player::Common
   
     def forward_to; @game; end
-    def speculator; self; end
   
     attr_reader :color
   
