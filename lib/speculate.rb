@@ -11,6 +11,20 @@ module GSL
     def d(s)
       #puts "#{'.' * @@level} #{@player} #{@on}: " + s
     end
+    
+    def branch(&proc)
+      @player.world.branch do
+        go(&proc) #.tap {|v| p v}
+      end
+    end
+  
+    def succeed?(&proc)
+      ret = nil
+      @player.world.branch do
+        ret = go(&proc) #.tap {|v| p v}
+      end
+      ret
+    end
   
     @@level = 0
     def go(&proc)

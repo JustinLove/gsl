@@ -45,11 +45,7 @@ module GSL
       end
     
       def what_if(on = '?', &proc)
-        ret = nil
-        @world.branch do
-          ret = Speculate.new(speculator, on).go(&proc) #.tap {|v| p v}
-        end
-        ret
+        Speculate.new(speculator, on).succeed?(&proc) #.tap {|v| p v}
       end
     
       def rate(action, why = 'rates', &doing)
