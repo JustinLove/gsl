@@ -123,11 +123,13 @@ module GSL
     end
     
     class Passport
+      attr_accessor :world
+      
       def initialize(owner)
+        @world = owner.world
         super()
         @owner = owner
         @oid = owner.object_id.to_s
-        @world = owner.world
       end
       
       def to_s

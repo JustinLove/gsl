@@ -15,8 +15,8 @@ module GSL
     as_property :number_of_players
 
     def initialize(file = nil)
-      super()
       @world = World::View.new
+      super()
       @context = []
       if (file)
         # http://www.artima.com/rubycs/articles/ruby_as_dsl.html

@@ -44,9 +44,9 @@ module GSL
     end
     
     def initialize(owner)
+      @world = owner.world
       super()
       @owner = owner
-      @world = owner.world
     end
 
     def method_missing(method, *args, &proc)

@@ -82,11 +82,11 @@ module GSL
       end
       
       def discards
-        _discards = w(:discards)
+        _discards = @w[:discards]
         if _discards.nil?
-          _discards = w(:discards, 
+          _discards = @w[:discards] = 
             self.class.option[:discard_to] ||
-            (name.to_s + '_discard').to_sym)
+            (name.to_s + '_discard').to_sym
           if !@owner.respond_to?(_discards)
             @owner.class.make_resource(_discards)
           end
@@ -116,7 +116,7 @@ module GSL
       end
   
       def draw(&filter)
-        w(:filter, filter ||= w(:filter))
+        @w[:filter] = filter ||= @w[:filter]
         if filter
           filter.call primitive_draw
         else
@@ -139,11 +139,11 @@ module GSL
 
       def without(item)
         #p "without #{item.to_s}"
-        w(:value) {|v| v.delete(item); v}
+        @w.update(:value) {|v| v.delete(item); v}
         result = yield item
-        w(:value) {|v| v << item}
+        @w.update(:value) {|v| v << item}
         if (result.kind_of?(World::State))
-          result.update(id_card(:value)) {|v| v << item}
+          result.update(@w.id_card(:value)) {|v| v << item}
         end
         return result
       end
