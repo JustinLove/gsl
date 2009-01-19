@@ -56,7 +56,7 @@ at_any_time :take_a_loan do
 end
 
 at_any_time :report do
-  "#{self.to_s} " +
+  "%%%% #{self.to_s} " +
     "#{co_workers.value}/#{rationalization.value}p " +
     "#{raw_materials.value}/#{materials_required.value}m " +
     "#{waste_disposal.value}(#{waste_disposal.section})/#{waste_reduction.value}w " +
@@ -134,7 +134,12 @@ to :lay_out_card_combinations do
         case (card && card.name) || Empty
         when Empty: reshuffle; draw;
         when :accident: accident; discard card; reshuffle; draw;
-        else card
+        else
+          if pile.map{|c| c.name}.include?(card.name)
+            discard card; reshuffle; draw;
+          else
+            card
+          end
         end
       end
     end
@@ -155,6 +160,7 @@ end
 
 to :play_the_cards do
   each_player_until_pass do
+    puts report
     choose :held_cards do |card|
       case judge(card)
       when :good:
