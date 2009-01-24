@@ -73,7 +73,7 @@ module GSL
     end
     
     def note(what)
-      puts what
+      puts(@world[:speculate_on].to_s + what) if (!@world[:speculate_on])
     end
   
     def to_s

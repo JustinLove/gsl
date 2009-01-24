@@ -30,6 +30,7 @@ module GSL
     def go(&proc)
       begin
         @@level += 1
+        @player.world[:speculate_on] = ('.' * @@level) # + @on
         d 'block ' + proc.inspect
         @player.instance_eval &proc
       rescue GamePlayException => e
