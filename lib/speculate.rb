@@ -14,16 +14,12 @@ module GSL
     
     def branch(&proc)
       @player.world.branch do
-        go(&proc) #.tap {|v| p v}
+        @player.world[:legal] = go(&proc) #.tap {|v| p v}
       end
     end
   
     def succeed?(&proc)
-      ret = nil
-      @player.world.branch do
-        ret = go(&proc) #.tap {|v| p v}
-      end
-      ret
+      branch(&proc)[:legal]
     end
   
     @@level = 0
