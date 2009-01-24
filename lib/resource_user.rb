@@ -101,6 +101,10 @@ module GSL
     def resource(resource)
       @resources[resource]
     end
+    
+    def names(array)
+      array.map {|c| c.name}
+    end
   
     def must_have(&condition)
       if !(instance_eval &condition)

@@ -99,6 +99,12 @@ describe GSL::ResourceUser do
     @user.class.make_components(:stones, [:ruby, :emerald])
     @user.stones.names.should include(:ruby)
   end
+
+  it "lists names" do
+    @user.class.make_components(:blocks, [:big, :small])
+    list = @user.blocks.value
+    @user.names(list).should == [:big, :small]
+  end
   
   it "querys resources" do
     @user.has_resource?(:pebbles).should be_false

@@ -135,7 +135,7 @@ to :lay_out_card_combinations do
         when Empty: reshuffle; draw;
         when :accident: accident; discard card; reshuffle; draw;
         else
-          if pile.map{|c| c.name}.include?(card.name)
+          if names(pile).include?(card.name)
             discard card; reshuffle; draw;
           else
             card
