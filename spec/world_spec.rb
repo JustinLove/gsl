@@ -43,6 +43,13 @@ shared_examples_for "state objects" do
     @object[:foo].should be_nil
   end
   
+  it "returns false if false" do
+    @object[:true] = true
+    @object[:false] = false
+    @object[:true].should be_true
+    @object[:false].should be_false
+  end
+  
   it "freezes values" do
     slippery = [1, 2, 3]
     @object[:slope] = slippery

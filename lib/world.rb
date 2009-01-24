@@ -34,7 +34,11 @@ module GSL
       end
       
       def [](k)
-        @d[k] || (@parent && @parent[k])
+        if (@d[k].nil?)
+          (@parent && @parent[k])
+        else
+          @d[k]
+        end
       end
       
       def []=(k, v)
