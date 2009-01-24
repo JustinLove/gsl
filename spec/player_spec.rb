@@ -127,8 +127,8 @@ describe GSL::Player do
       
       describe "(internals)" do
         it "what_if" do
-          @object.what_if(&@good).should be_true
-          @object.what_if(&@bad).should be_false
+          @object.what_if(&@good)[:legal].should be_true
+          @object.what_if(&@bad)[:legal].should be_false
         end
         
         it "checks legality" do

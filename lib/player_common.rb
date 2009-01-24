@@ -45,7 +45,7 @@ module GSL
       end
     
       def what_if(on = '?', &proc)
-        Speculate.new(self, on).succeed?(&proc) #.tap {|v| p v}
+        Speculate.new(self, on).branch(&proc) #.tap {|v| p v}
       end
     
       def rate(action, why = 'rates', &doing)
@@ -59,7 +59,7 @@ module GSL
 
       def rate_action(action, why = 'rates', &doing)
         good = what_if("#{why} #{action.to_s}") {execute action, &doing}
-        if good then 1 else 0 end
+        if good[:legal] then 1 else 0 end
       end
 
       def judge(action)
@@ -67,7 +67,7 @@ module GSL
       end
     
       def legal?(action)
-        what_if("checks #{action.to_s}") {execute action}
+        what_if("checks #{action.to_s}") {execute action}[:legal]
       end
       
     end
