@@ -40,7 +40,7 @@ module GSL
           action = args.shift
           instance_exec(*args, &(action.to_proc))
         else
-          nil
+          raise "nothing executable"
         end
       end
     
