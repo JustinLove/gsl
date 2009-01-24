@@ -52,7 +52,7 @@ module GSL
           discard card
           return Acted
         else
-          p 'USE FAILED'
+          puts "USE FAILED #{card}"
           return Passed
         end
       else
