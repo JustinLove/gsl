@@ -125,6 +125,27 @@ describe GSL::Player do
         @bad = lambda{pay 3, :keys}
       end
       
+      describe "(internals)" do
+        it "what_if" do
+          @object.what_if(&@good).should be_true
+          @object.what_if(&@bad).should be_false
+        end
+        
+        it "rate_action" do
+          @object.rate_action(@good).should > @object.rate_action(@bad)
+        end
+        
+        it "rates" do
+          @object.rate(@good).should > @object.rate(@bad)
+        end
+        
+        it "best_rated" do
+          @object.best_rated([@good, @bad]).should == @good
+          @object.best_rated([@bad, @good]).should == @good
+        end
+        
+      end
+      
       it "from an array" do
         @object.choose([@bad, @good, @bad])
         @object.keys.value.should == 2
