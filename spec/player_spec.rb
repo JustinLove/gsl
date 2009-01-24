@@ -131,6 +131,11 @@ describe GSL::Player do
           @object.what_if(&@bad).should be_false
         end
         
+        it "checks legality" do
+          @object.legal?(@good).should be_true
+          @object.legal?(@bad).should be_false
+        end
+        
         it "rate_action" do
           @object.rate_action(@good).should > @object.rate_action(@bad)
         end
