@@ -164,6 +164,17 @@ describe GSL::Game do
     end
   end
   
+  it "checkpoints" do
+    @object.world[:log] = ["hidy ho"]
+    @object.checkpoint
+    @object.world[:log].should == []
+  end
+  
+  it "takes notes" do
+    @object.note("dear john")
+    @object.note_text.should match(/dear john/)
+  end
+  
   it "calculate triangular numbers" do
     {
       1 => 1,

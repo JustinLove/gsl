@@ -32,7 +32,7 @@ module GSL
     def take(from, &doing)
       best = best_rated(choose_from_what(from), &doing)
       if (best)
-        note "take #{best.to_s} from #{from}"
+        note "take #{best[:action].to_s} from #{from}"
         must_lose [best[:action]], from
         return execute best[:action], &doing
       else
@@ -72,10 +72,6 @@ module GSL
       @game.each_player :except => self, &proc
     end
     
-    def note(what)
-      puts(@world[:speculate_on].to_s + what) if (!@world[:speculate_on])
-    end
-  
     def to_s
       if @color
         @color.to_s

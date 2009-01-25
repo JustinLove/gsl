@@ -4,7 +4,7 @@ module GSL
       def choose(from, &doing)
         best = best_rated(choose_from_what(from), &doing)
         if (best)
-          #note "choose #{best.to_s} from #{from}"
+          #note "choose #{best[:action].to_s} from #{from}"
           return execute best[:action], &doing
         else
           return best

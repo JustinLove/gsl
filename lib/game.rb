@@ -18,6 +18,7 @@ module GSL
       @world = World::View.new
       super()
       @context = []
+      @world[:log] = []
       if (file)
         # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
         self.instance_eval(File.read(file), file)
@@ -152,6 +153,20 @@ module GSL
   
     def card(name, &proc)
       Component.define_action name, proc
+    end
+    
+    def checkpoint
+      puts note_text
+      @world.checkpoint
+      @world[:log] = []
+    end
+    
+    def note(what)
+      @world[:log] = @world[:log] + [@world[:speculate_on].to_s + what]
+    end
+    
+    def note_text
+      @world[:log].join("\n")
     end
     
     def triangle(x)
