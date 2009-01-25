@@ -151,10 +151,6 @@ describe GSL::Player do
             @object.rate_state(@object.what_if(&@bad))
         end
         
-        it "rate_action" do
-          @object.rate_action(@good).should > @object.rate_action(@bad)
-        end
-        
         it "rates actions" do
           @object.rate(@good).should > @object.rate(@bad)
         end

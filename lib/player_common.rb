@@ -41,10 +41,6 @@ module GSL
         rate_state(what_if_without(action, why, &doing))
       end
 
-      def rate_action(action, why = 'rates', &doing)
-        rate_state(what_if_action(action, why, &doing))
-      end
-      
       def rate_state(state)
         if (state[:legal]) then 1 else 0 end
       end
