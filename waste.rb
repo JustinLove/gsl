@@ -105,6 +105,7 @@ every :round do
   lay_out_card_combinations
   puts "left " + action_cards.to_s
   choose_card_combinations
+  checkpoint
   play_the_cards
   puts "after " + action_cards.to_s
   pay_basic_costs
@@ -151,7 +152,7 @@ to :choose_card_combinations do
     take(:combinations) {|choice| gain(choice, :held_cards);}
   end
   combinations.each do |pile|
-    p "discard leftover #{pile.to_s}"
+    note "discard leftover #{pile.to_s}"
     pile.each do |card|
       discard card
     end
@@ -160,8 +161,7 @@ end
 
 to :play_the_cards do
   each_player_until_pass do
-    puts report
-    choose :held_cards do |card|
+    acted = choose :held_cards do |card|
       case judge(card)
       when :good:
         use card
@@ -181,6 +181,9 @@ to :play_the_cards do
         end
       end
     end
+    note report
+    checkpoint
+    acted
   end
 end
 
