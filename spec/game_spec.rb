@@ -163,6 +163,32 @@ describe GSL::Game do
       @object.alternate_cards.length.should == 1
     end
   end
+
+  describe "with players" do
+    before do
+      @object.create_players(3)
+    end
+    
+    it "iterates players" do
+      count = 0
+      @object.each_player {count += 1}
+      count.should == 3
+    end
+
+    it "goes until pass" do
+      countdown = 10
+      @object.each_player_until_pass {countdown -= 1; countdown > 0; }
+      countdown.should <= 0
+    end
+
+    it "documents that return from block doesn't do what you expect" do
+      lambda {
+        @object.each_player_until_pass {
+          return nil;
+        };
+      }.should raise_error(LocalJumpError)
+    end
+  end
   
   it "checkpoints" do
     @object.world[:log] = ["hidy ho"]
