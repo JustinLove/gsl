@@ -232,7 +232,7 @@ describe GSL::World::View do
   it "checkpoints" do
     @object.checkpoint
     @object.state.parent.should_not be_nil
-    lambda {@objet.ascend}.should raise_error
+    lambda {@object.ascend}.should raise_error
   end
   
   it "doesn't commit to nil" do
