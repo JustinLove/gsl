@@ -152,12 +152,12 @@ describe GSL::Player do
         end
         
         it "rates actions" do
-          @object.rate(@good).should > @object.rate(@bad)
+          @object.rate(@good)[:rating].should > @object.rate(@bad)[:rating]
         end
         
         it "rates states" do
-          @object.rate(@object.what_if(&@good)).should >
-            @object.rate(@object.what_if(&@bad))
+          @object.rate(@object.what_if(&@good))[:rating].should >
+            @object.rate(@object.what_if(&@bad))[:rating]
         end
         
         it "best_rated" do

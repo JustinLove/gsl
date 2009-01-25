@@ -30,17 +30,17 @@ module GSL
       
       def best_rated(from, &doing)
         from.map {|c|
-          s = what_if_without(c, 'best', &doing)
-          {:action => c, :state => s, :rating => rate_state(s)}
+          rate(c, 'best', &doing)
         }.sort_by {|r| -r[:rating]}.first
       end
       
       def judge(action)
-        if rate(action, 'judges') > 0 then :good else :bad end
+        if rate(action, 'judges')[:rating] > 0 then :good else :bad end
       end
     
       def rate(action, why = 'rates', &doing)
-        rate_state(what_if_without(action, why, &doing))
+        s = what_if_without(action, why, &doing)
+        {:action => action, :state => s, :rating => rate_state(s)}
       end
 
       def rate_state(state)
