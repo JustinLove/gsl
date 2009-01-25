@@ -33,19 +33,8 @@ module GSL
         [].concat(from.concat []).sort_by {|c| -rate(c, 'best', &doing)}.first
       end
       
-      def execute(*args, &proc)
-        if proc
-          instance_exec(*args, &proc)
-        elsif (args && args.first.respond_to?(:to_proc))
-          action = args.shift
-          instance_exec(*args, &(action.to_proc))
-        else
-          raise "nothing executable"
-        end
-      end
-    
-      def what_if(on = '?', &proc)
-        Speculate.new(self, on).branch(&proc) #.tap {|v| p v}
+      def judge(action)
+        if rate(action, 'judges') > 0 then :good else :bad end
       end
     
       def rate(action, why = 'rates', &doing)
@@ -62,14 +51,24 @@ module GSL
         if good[:legal] then 1 else 0 end
       end
 
-      def judge(action)
-        if rate(action, 'judges') > 0 then :good else :bad end
-      end
-    
       def legal?(action)
         what_if("checks #{action.to_s}") {execute action}[:legal]
       end
       
+      def what_if(on = '?', &proc)
+        Speculate.new(self, on).branch(&proc) #.tap {|v| p v}
+      end
+
+      def execute(*args, &proc)
+        if proc
+          instance_exec(*args, &proc)
+        elsif (args && args.first.respond_to?(:to_proc))
+          action = args.shift
+          instance_exec(*args, &(action.to_proc))
+        else
+          raise "nothing executable"
+        end
+      end
     end
   end
 end
