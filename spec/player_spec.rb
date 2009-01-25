@@ -170,7 +170,10 @@ describe GSL::Player do
           g[:state][:legal].should be_true
           g[:rating].should_not be_nil
         end
-        
+
+        it "best_rated nothing" do
+          @object.best_rated([]).should be_nil
+        end
       end
       
       it "from an array" do
@@ -197,6 +200,10 @@ describe GSL::Player do
         end
         @object.keys.value.should == 3
       end
+      
+      it "from nothing" do
+        @object.choose([]).should be_nil
+      end
 
       describe "takes" do
         before do
@@ -217,6 +224,10 @@ describe GSL::Player do
           end
           @object.keys.value.should == 3
           @game.pebbles.value.should_not include(@good)
+        end
+        
+        it "nothing" do
+          @object.take([]).should be_nil
         end
       end
       

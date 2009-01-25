@@ -2,10 +2,10 @@ module GSL
   class Player
     module Common
       def choose(from, &doing)
-        best = best_rated(choose_from_what(from), &doing)[:action]
+        best = best_rated(choose_from_what(from), &doing)
         if (best)
           #note "choose #{best.to_s} from #{from}"
-          return execute best, &doing
+          return execute best[:action], &doing
         else
           return best
         end
