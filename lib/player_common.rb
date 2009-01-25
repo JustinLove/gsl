@@ -2,7 +2,7 @@ module GSL
   class Player
     module Common
       def choose(from, &doing)
-        best = best_rated(choose_from_what(from), &doing)
+        best = best_rated(choose_from_what(from), &doing)[:action]
         if (best)
           #note "choose #{best.to_s} from #{from}"
           return execute best, &doing
@@ -29,8 +29,10 @@ module GSL
       end
       
       def best_rated(from, &doing)
-        # concat: operate on a copy so changes don't mess us up
-        [].concat(from.concat []).sort_by {|c| -rate(c, 'best', &doing)}.first
+        from.map {|c|
+          s = what_if_without(c, 'best', &doing)
+          {:action => c, :state => s, :rating => rate_state(s)}
+        }.sort_by {|r| -r[:rating]}.first
       end
       
       def judge(action)

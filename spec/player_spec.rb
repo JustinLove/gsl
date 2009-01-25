@@ -161,8 +161,14 @@ describe GSL::Player do
         end
         
         it "best_rated" do
-          @object.best_rated([@good, @bad]).should == @good
-          @object.best_rated([@bad, @good]).should == @good
+          g = @object.best_rated([@good, @bad])
+          g[:action].should == @good
+          g[:state][:legal].should be_true
+          g[:rating].should_not be_nil
+          g = @object.best_rated([@bad, @good])
+          g[:action].should == @good
+          g[:state][:legal].should be_true
+          g[:rating].should_not be_nil
         end
         
       end

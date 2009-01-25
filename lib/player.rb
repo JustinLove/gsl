@@ -30,7 +30,7 @@ module GSL
     end
 
     def take(from, &doing)
-      best = best_rated(choose_from_what(from), &doing)
+      best = best_rated(choose_from_what(from), &doing)[:action]
       if (best)
         note "take #{best.to_s} from #{from}"
         must_lose [best], from
