@@ -39,7 +39,9 @@ module GSL
     
       def rate(action, why = 'rates', &doing)
         raise if !action
-        if (action.respond_to? :in)
+        if (action.kind_of?(World::State))
+          rate_state(action)
+        elsif (action.respond_to? :in)
           action.in.without(action) {rate_action action, why, &doing}
         else
           rate_action(action, why, &doing)
@@ -47,8 +49,11 @@ module GSL
       end
 
       def rate_action(action, why = 'rates', &doing)
-        good = what_if("#{why} #{action.to_s}") {execute action, &doing}
-        if good[:legal] then 1 else 0 end
+        rate_state(what_if("#{why} #{action.to_s}") {execute action, &doing})
+      end
+      
+      def rate_state(state)
+        if (state[:legal]) then 1 else 0 end
       end
 
       def legal?(action)

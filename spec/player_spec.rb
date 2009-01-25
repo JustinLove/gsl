@@ -136,12 +136,22 @@ describe GSL::Player do
           @object.legal?(@bad).should be_false
         end
         
+        it "rate_state" do
+          @object.rate_state(@object.what_if(&@good)).should > 
+            @object.rate_state(@object.what_if(&@bad))
+        end
+        
         it "rate_action" do
           @object.rate_action(@good).should > @object.rate_action(@bad)
         end
         
-        it "rates" do
+        it "rates actions" do
           @object.rate(@good).should > @object.rate(@bad)
+        end
+        
+        it "rates states" do
+          @object.rate(@object.what_if(&@good)).should >
+            @object.rate(@object.what_if(&@bad))
         end
         
         it "best_rated" do
