@@ -117,11 +117,11 @@ module GSL
       end
       
       def branch
-        hidden = @state
+        hidden = [@state, @reality]
         descend
         yield
         b = @state
-        @state = hidden
+        @state, @reality = hidden
         return b
       end
       

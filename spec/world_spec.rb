@@ -249,6 +249,14 @@ describe GSL::World::View do
     w[:blarg].should == :arg
     @object[:blarg].should == :bleep
   end
+
+  it "branches without changing reality" do
+    truth = @object.reality
+    w = @object.branch do
+      @object.switch(@object.branch{})
+    end
+    @object.reality.should == truth
+  end
   
   it "switches" do
     @object.switch(@object.branch {@object[:leaf] = :green})
