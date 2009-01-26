@@ -34,6 +34,10 @@ describe GSL::Speculation do
     @object.state[:stuff] == :ran
   end
   
+  it "provides [] for backwards compatibiltiy" do
+    @object[:action].should == @object.action
+  end
+  
   it "marks legal" do
     @legal.legal?.should be_true
     @illegal.legal?.should be_false

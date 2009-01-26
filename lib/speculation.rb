@@ -20,6 +20,8 @@ module GSL
     def to_s
       "Speculation on #{@text}"
     end
+    
+    alias_method :[], :__send__
   
     def d(s)
       #puts "#{'.' * @@level} #{@player} #{@text}: " + s
