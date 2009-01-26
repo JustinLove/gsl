@@ -39,7 +39,7 @@ module GSL
       end
     
       def rate(action, why = 'rates', &doing)
-        s = what_if_without(action, why, &doing)
+        s = what_if(action, why, &doing)
         s.rating = rate_state(s.state)
         s
       end
@@ -48,15 +48,6 @@ module GSL
         if (state[:legal]) then 1 else 0 end
       end
 
-      def what_if_without(action, why = '?', &doing)
-        raise if !action
-        if (action.respond_to? :in)
-          action.in.without(action) {what_if(action, why, &doing)}
-        else
-          what_if(action, why, &doing)
-        end
-      end
-      
       def what_if(action, why = '?', &doing)
         Speculation.new(self, action, why, &doing)
       end
