@@ -29,13 +29,15 @@ module GSL
     
     def branch
       @player.world.branch do
-        @player.world[:legal] = go(&@action) #.tap {|v| p v}
+        @player.world[:legal] = go #.tap {|v| p v}
       end
     end
   
     def legal?
       @state[:legal]
     end
+    
+    alias_method :legal, :legal?
   
     @@level = 0
     def go

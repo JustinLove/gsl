@@ -59,15 +59,15 @@ module GSL
       end
       
       def what_if_action(action, why = '?', &doing)
-        what_if("#{why} #{action.to_s}") {execute action, &doing}
+        what_if("#{why} #{action.to_s}") {execute action, &doing}.state
       end
       
       def legal?(action)
-        what_if("checks #{action.to_s}") {execute action}[:legal]
+        what_if("checks #{action.to_s}") {execute action}.legal?
       end
       
       def what_if(on = '?', &proc)
-        Speculation.new(self, proc, on).state #.tap {|v| p v}
+        Speculation.new(self, proc, on)
       end
 
       def execute(*args, &proc)
