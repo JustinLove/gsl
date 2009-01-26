@@ -5,14 +5,16 @@ module GSL
   class Speculation
     attr_reader :player
     attr_reader :action
+    attr_reader :doing
     attr_reader :state
     attr_reader :text
     attr_accessor :rating
     
-    def initialize(player, action, text = '?')
+    def initialize(player, action, text = '?', &doing)
       super()
       @player = player
       @action = action
+      @doing = doing
       s = action.to_s
       if (s[0,1] == '#')
         @text = text
@@ -49,8 +51,8 @@ module GSL
       begin
         @@level += 1
         @player.world[:speculate_on] = ('.' * @@level) # + @text
-        d 'block ' + @action.inspect
-        @player.instance_eval &@action
+        d 'block ' # takes forever + @action.inspect
+        @player.execute(@action, &@doing)
       rescue GamePlayException => e
         d e.inspect
         #puts e.backtrace.join("\n")

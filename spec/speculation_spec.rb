@@ -13,6 +13,10 @@ class Ground
     @world = GSL::World::View.new
     super
   end
+  
+  def execute(action, &doing)
+    instance_eval(&action)
+  end
 end
 
 describe GSL::Speculation do

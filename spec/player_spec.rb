@@ -131,11 +131,6 @@ describe GSL::Player do
           @object.what_if(@bad)[:legal].should be_false
         end
         
-        it "what_if_action" do
-          @object.what_if_action(@good)[:legal].should be_true
-          @object.what_if_action(@bad)[:legal].should be_false
-        end
-        
         it "what_if_without" do
           @object.what_if_without(@good)[:legal].should be_true
           @object.what_if_without(@bad)[:legal].should be_false

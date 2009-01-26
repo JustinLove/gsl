@@ -40,7 +40,8 @@ module GSL
     
       def rate(action, why = 'rates', &doing)
         s = what_if_without(action, why, &doing)
-        {:action => action, :state => s, :rating => rate_state(s)}
+        s.rating = rate_state(s.state)
+        s
       end
 
       def rate_state(state)
@@ -50,18 +51,14 @@ module GSL
       def what_if_without(action, why = '?', &doing)
         raise if !action
         if (action.respond_to? :in)
-          action.in.without(action) {what_if_action(action, why, &doing).state}
+          action.in.without(action) {what_if(action, why, &doing)}
         else
-          what_if_action(action, why, &doing).state
+          what_if(action, why, &doing)
         end
       end
       
-      def what_if_action(action, why = '?', &doing)
-        what_if(lambda{execute action, &doing}, why)
-      end
-      
-      def what_if(proc, on = '?')
-        Speculation.new(self, proc, on)
+      def what_if(action, why = '?', &doing)
+        Speculation.new(self, action, why, &doing)
       end
 
       def execute(*args, &proc)
