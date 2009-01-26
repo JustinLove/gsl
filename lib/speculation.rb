@@ -13,7 +13,12 @@ module GSL
       super()
       @player = player
       @action = action
-      @text = text
+      s = action.to_s
+      if (s[0,1] == '#')
+        @text = text
+      else
+        @text = "#{text} #{s}"
+      end
       @state = branch
     end
     
