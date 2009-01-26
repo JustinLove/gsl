@@ -21,4 +21,12 @@ describe GSL::Speculation do
   end
 
   it_should_behave_like "well behaved objects"
+  
+  it "has a state" do
+    @object.state.should_not be_nil
+  end
+  
+  it "marks legal" do
+    @object.state[:legal].should be_true
+  end
 end

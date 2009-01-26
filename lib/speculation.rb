@@ -1,12 +1,20 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
+GSL::depends_on %w{misc}
 
 module GSL
   class Speculation
+    attr_reader :player
+    attr_reader :action
+    attr_reader :state
+    attr_reader :text
+    attr_accessor :rating
+    
     def initialize(player, action, text = '?')
       super()
       @player = player
       @action = action
       @text = text
+      @state = branch
     end
     
     def to_s
