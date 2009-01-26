@@ -7,6 +7,7 @@ end
 
 class Ground
   extend GSL::World::Citizen::Class
+  ver_accessor :stuff
   
   def initialize
     @world = GSL::World::View.new
@@ -17,7 +18,10 @@ end
 describe GSL::Speculation do
   before do
     @ground = Ground.new
-    @object = GSL::Speculation.new(@ground, lambda{}, "nothing much")
+    @object = @legal = GSL::Speculation.new(@ground,
+      lambda{self.stuff = :ran}, "nothing much")
+    @illegal = GSL::Speculation.new(@ground,
+      lambda{raise GSL::GamePlayException}, "an error")
   end
 
   it_should_behave_like "well behaved objects"
@@ -27,6 +31,7 @@ describe GSL::Speculation do
   end
   
   it "marks legal" do
-    @object.state[:legal].should be_true
+    @legal.legal?.should be_true
+    @illegal.legal?.should be_false
   end
 end

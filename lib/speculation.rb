@@ -31,8 +31,8 @@ module GSL
       end
     end
   
-    def succeed?
-      branch[:legal]
+    def legal?
+      @state[:legal]
     end
   
     @@level = 0
