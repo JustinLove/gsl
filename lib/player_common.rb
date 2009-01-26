@@ -67,7 +67,7 @@ module GSL
       end
       
       def what_if(on = '?', &proc)
-        Speculate.new(self, on).branch(&proc) #.tap {|v| p v}
+        Speculation.new(self, on).branch(&proc) #.tap {|v| p v}
       end
 
       def execute(*args, &proc)

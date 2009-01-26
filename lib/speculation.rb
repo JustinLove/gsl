@@ -1,7 +1,7 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
 
 module GSL
-  class Speculate
+  class Speculation
     def initialize(player, on = '?')
       super()
       @player = player
