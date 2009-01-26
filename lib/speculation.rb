@@ -2,33 +2,34 @@ require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
 
 module GSL
   class Speculation
-    def initialize(player, on = '?')
+    def initialize(player, action, text = '?')
       super()
       @player = player
-      @on = on
+      @action = action
+      @text = text
     end
   
     def d(s)
-      #puts "#{'.' * @@level} #{@player} #{@on}: " + s
+      #puts "#{'.' * @@level} #{@player} #{@text}: " + s
     end
     
-    def branch(&proc)
+    def branch
       @player.world.branch do
-        @player.world[:legal] = go(&proc) #.tap {|v| p v}
+        @player.world[:legal] = go(&@action) #.tap {|v| p v}
       end
     end
   
-    def succeed?(&proc)
-      branch(&proc)[:legal]
+    def succeed?
+      branch[:legal]
     end
   
     @@level = 0
-    def go(&proc)
+    def go
       begin
         @@level += 1
-        @player.world[:speculate_on] = ('.' * @@level) # + @on
-        d 'block ' + proc.inspect
-        @player.instance_eval &proc
+        @player.world[:speculate_on] = ('.' * @@level) # + @text
+        d 'block ' + @action.inspect
+        @player.instance_eval &@action
       rescue GamePlayException => e
         d e.inspect
         #puts e.backtrace.join("\n")
