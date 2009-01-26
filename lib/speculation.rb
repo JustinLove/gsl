@@ -8,6 +8,10 @@ module GSL
       @action = action
       @text = text
     end
+    
+    def to_s
+      "Speculation on #{@text}"
+    end
   
     def d(s)
       #puts "#{'.' * @@level} #{@player} #{@text}: " + s
