@@ -30,6 +30,10 @@ describe GSL::Speculation do
     @object.state.should_not be_nil
   end
   
+  it "executes the method" do
+    @object.state[:stuff] == :ran
+  end
+  
   it "marks legal" do
     @legal.legal?.should be_true
     @illegal.legal?.should be_false
