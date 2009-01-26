@@ -127,8 +127,8 @@ describe GSL::Player do
       
       describe "(internals)" do
         it "what_if" do
-          @object.what_if(&@good)[:legal].should be_true
-          @object.what_if(&@bad)[:legal].should be_false
+          @object.what_if(@good)[:legal].should be_true
+          @object.what_if(@bad)[:legal].should be_false
         end
         
         it "what_if_action" do
@@ -141,23 +141,13 @@ describe GSL::Player do
           @object.what_if_without(@bad)[:legal].should be_false
         end
         
-        it "checks legality" do
-          @object.legal?(@good).should be_true
-          @object.legal?(@bad).should be_false
-        end
-        
         it "rate_state" do
-          @object.rate_state(@object.what_if(&@good).state).should > 
-            @object.rate_state(@object.what_if(&@bad).state)
+          @object.rate_state(@object.what_if(@good).state).should > 
+            @object.rate_state(@object.what_if(@bad).state)
         end
         
         it "rates actions" do
           @object.rate(@good)[:rating].should > @object.rate(@bad)[:rating]
-        end
-        
-        it "rates states" do
-          @object.rate(@object.what_if(&@good).state)[:rating].should >
-            @object.rate(@object.what_if(&@bad).state)[:rating]
         end
         
         it "best_rated" do

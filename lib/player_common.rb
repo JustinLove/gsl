@@ -49,24 +49,18 @@ module GSL
 
       def what_if_without(action, why = '?', &doing)
         raise if !action
-        if (action.kind_of?(World::State))
-          action
-        elsif (action.respond_to? :in)
-          action.in.without(action) {what_if_action action, why, &doing}
+        if (action.respond_to? :in)
+          action.in.without(action) {what_if_action(action, why, &doing).state}
         else
-          what_if_action(action, why, &doing)
+          what_if_action(action, why, &doing).state
         end
       end
       
       def what_if_action(action, why = '?', &doing)
-        what_if(why) {execute action, &doing}.state
+        what_if(lambda{execute action, &doing}, why)
       end
       
-      def legal?(action)
-        what_if("checks") {execute action}.legal?
-      end
-      
-      def what_if(on = '?', &proc)
+      def what_if(proc, on = '?')
         Speculation.new(self, proc, on)
       end
 

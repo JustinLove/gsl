@@ -47,7 +47,7 @@ module GSL
       end
       if (card)
         note "#{self.to_s} plays #{card.to_s}" 
-        if (legal?(card))
+        if (what_if_action(card).legal?)
           execute card
           discard card
           return Acted
