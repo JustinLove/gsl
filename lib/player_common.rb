@@ -4,8 +4,8 @@ module GSL
       def choose(from, &doing)
         best = best_rated(choose_from_what(from), &doing)
         if (best)
-          #note "choose #{best[:action].to_s} from #{from}"
-          return execute best[:action], &doing
+          #note "choose #{best.why} from #{from}"
+          return execute best.what, &doing
         else
           return best
         end
@@ -31,11 +31,11 @@ module GSL
       def best_rated(from, &doing)
         from.map {|c|
           rate(c, 'best', &doing)
-        }.sort_by {|r| -r[:rating]}.first
+        }.sort_by {|r| -r.rating}.first
       end
       
       def judge(action)
-        if rate(action, 'judges')[:rating] > 0 then :good else :bad end
+        if rate(action, 'judges').rating > 0 then :good else :bad end
       end
     
       def rate(action, why = 'rates', &doing)

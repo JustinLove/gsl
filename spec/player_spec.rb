@@ -127,13 +127,13 @@ describe GSL::Player do
       
       describe "(internals)" do
         it "what_if" do
-          @object.what_if(@good)[:legal].should be_true
-          @object.what_if(@bad)[:legal].should be_false
+          @object.what_if(@good).legal?.should be_true
+          @object.what_if(@bad).legal?.should be_false
         end
         
         it "what_if_without" do
-          @object.what_if_without(@good)[:legal].should be_true
-          @object.what_if_without(@bad)[:legal].should be_false
+          @object.what_if_without(@good).legal?.should be_true
+          @object.what_if_without(@bad).legal?.should be_false
         end
         
         it "rate_state" do
@@ -142,18 +142,16 @@ describe GSL::Player do
         end
         
         it "rates actions" do
-          @object.rate(@good)[:rating].should > @object.rate(@bad)[:rating]
+          @object.rate(@good).rating.should > @object.rate(@bad).rating
         end
         
         it "best_rated" do
           g = @object.best_rated([@good, @bad])
-          g[:action].should == @good
-          g[:state][:legal].should be_true
-          g[:rating].should_not be_nil
+          g.what.should == @good
+          g.legal?.should be_true
+          g.rating.should_not be_nil
           g = @object.best_rated([@bad, @good])
-          g[:action].should == @good
-          g[:state][:legal].should be_true
-          g[:rating].should_not be_nil
+          g.what.should == @good
         end
 
         it "best_rated nothing" do

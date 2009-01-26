@@ -3,40 +3,38 @@ GSL::depends_on %w{misc}
 
 module GSL
   class Speculation
-    attr_reader :player
-    attr_reader :action
-    attr_reader :doing
+    attr_reader :who
+    attr_reader :what
+    attr_reader :how
     attr_reader :state
-    attr_reader :text
+    attr_reader :why
     attr_accessor :rating
     
-    def initialize(player, action, text = '?', &doing)
+    def initialize(who, what, why = '?', &how)
       super()
-      @player = player
-      @action = action
-      @doing = doing
-      s = action.to_s
+      @who = who
+      @what = what
+      @how = how
+      s = what.to_s
       if (s[0,1] == '#')
-        @text = text
+        @why = why
       else
-        @text = "#{text} #{s}"
+        @why = "#{why} #{s}"
       end
       @state = branch
     end
     
     def to_s
-      "Speculation on #{@text}"
+      "Speculation on #{@why}"
     end
     
-    alias_method :[], :__send__
-  
     def d(s)
-      #puts "#{'.' * @@level} #{@player} #{@text}: " + s
+      #puts "#{'.' * @@level} #{@who} #{@why}: " + s
     end
     
     def branch
-      @player.world.branch do
-        @player.world[:legal] = go #.tap {|v| p v}
+      @who.world.branch do
+        @who.world[:legal] = go #.tap {|v| p v}
       end
     end
   
@@ -50,9 +48,9 @@ module GSL
     def go
       begin
         @@level += 1
-        @player.world[:speculate_on] = ('.' * @@level) # + @text
-        d 'block ' # takes forever + @action.inspect
-        @player.execute(@action, &@doing)
+        @who.world[:speculate_on] = ('.' * @@level) # + @why
+        d 'block ' # takes forever + @what.inspect
+        @who.execute(@what, &@how)
       rescue GamePlayException => e
         d e.inspect
         #puts e.backtrace.join("\n")
