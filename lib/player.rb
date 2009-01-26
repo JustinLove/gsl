@@ -1,5 +1,5 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{random prototype resource_user player_common speculate}
+GSL::depends_on %w{random prototype resource_user player_common speculation}
 
 module GSL
   class Player
