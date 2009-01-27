@@ -222,11 +222,9 @@ card :growth do
 end
 
 card :hiring_firing do
-  if (co_workers > rationalization)
-    lose 1, :co_workers
+  choose [1, -1] do |n|
+    gain n, :co_workers
   end
-  # +1?
-  #taking strategic advantage of this without speculative execution is tough...
 end
 
 card :innovation do
