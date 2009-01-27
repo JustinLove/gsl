@@ -87,16 +87,8 @@ describe GSL::Player do
       context.should == @object
     end
     
-    it "judges good actions" do
-      @object.judge(lambda{}).should == :good
-    end
-
-    it "judges bad actions" do
-      @object.judge(lambda{raise GSL::GamePlayException}).should == :bad
-    end
-
     it "doesn't catch other exceptions" do
-      lambda {@object.judge(lambda{raise "hell"})}.should raise_error("hell")
+      lambda {GSL::Speculation.new(@object, lambda{raise "hell"})}.should raise_error("hell")
     end
     
     describe "side effects" do
@@ -111,8 +103,8 @@ describe GSL::Player do
         @object.marbles.value.should == 2
       end
       
-      it "judge is idempotent" do
-        @object.judge(@action)
+      it "speculation is impotent" do
+        GSL::Speculation.new(@object, @action)
         @object.marbles.value.should == 5
       end
     end

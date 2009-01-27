@@ -34,10 +34,6 @@ module GSL
         }.sort_by {|r| -r.rating}.first
       end
       
-      def judge(action)
-        if rate(action, 'judges').rating > 0 then :good else :bad end
-      end
-    
       def rate(action, why = 'rates', &doing)
         s = Speculation.new(self, action, why, &doing)
         s.rating = rate_state(s.state)
