@@ -134,6 +134,11 @@ describe GSL::Player do
         it "rates actions" do
           @object.rate(@good).rating.should > @object.rate(@bad).rating
         end
+
+        #stopgap
+        it "randomizes ratings" do
+          Array.new(3) {@object.rate(@good)}.uniq.count.should > 1
+        end
         
         it "best_rated" do
           g = @object.best_rated([@good, @bad])

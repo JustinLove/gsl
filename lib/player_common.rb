@@ -45,7 +45,7 @@ module GSL
       end
 
       def rate_state(state)
-        if (state[:legal]) then 1 else 0 end
+        if (state[:legal]) then (1..100).random else 0 end
       end
 
       def execute(*args, &proc)
