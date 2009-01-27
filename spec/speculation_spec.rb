@@ -14,8 +14,8 @@ class Ground
     super
   end
   
-  def execute(action, &doing)
-    instance_eval(&action)
+  def execute(what, &doing)
+    instance_eval(&what)
   end
 end
 

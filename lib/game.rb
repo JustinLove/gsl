@@ -126,8 +126,8 @@ module GSL
     def starting_player_is(spec)
     end
   
-    def at_any_time(action, &proc)
-      Player.at_any_time(action, proc)
+    def at_any_time(name, &proc)
+      Player.at_any_time(name, proc)
     end
   
     def to(name, &proc)

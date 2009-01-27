@@ -162,15 +162,16 @@ end
 to :play_the_cards do
   each_player_until_pass do
     acted = choose :held_cards do |card|
-      choose :play => Action{
+      choose [
+        action(:play) {
           use card; Acted
         },
-        :save => Action{
+        action(:save) {
           must_have{held_cards.count <= 1};
           note "#{self} saves #{card.to_s}"
           Passed
         },
-        :discard => Action{
+        action(:discard) {
           if (card.name == :material_sale)
             note "#{self} forced to use #{card.to_s}"
             use card
@@ -180,6 +181,7 @@ to :play_the_cards do
           end
           Acted
         }
+      ]
     end
     note report
     checkpoint
@@ -251,11 +253,12 @@ card :bribery do
 end
 
 card :advisor do
-  choose :repay_loan => Action{pay(10, :money); must_lose(10, :loans)},
-    :double => Action{
+  choose [
+    action(:repay_loan) {pay(10, :money); must_lose(10, :loans)},
+    action(:double) {
       must_have {held_cards.count > 0}
       choose :held_cards do |card|
-        use_twice = Action{execute card; use card;}
+        use_twice = action{execute card; use card;}
         case card.name
         when :material_sale: use card;
         when :growth: use_twice.call;
@@ -267,6 +270,7 @@ card :advisor do
         end
       end
     }
+  ]
 end
 
 to :pay_basic_costs do

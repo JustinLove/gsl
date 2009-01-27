@@ -4,7 +4,6 @@ def Error(*args); raise *args; end
 Empty = nil
 Acted = true
 Passed = false
-alias :Action :lambda
 
 class Array
   def rotate

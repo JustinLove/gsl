@@ -64,6 +64,12 @@ describe GSL::Player do
   end
   
   describe "common" do
+    it "makes actions" do
+      act = @object.action(:blarg) {}
+      act.to_proc.should_not be_nil
+      act.name.should == :blarg
+    end
+    
     it "executes procs" do
       context = nil
       @object.execute(lambda{context = self})

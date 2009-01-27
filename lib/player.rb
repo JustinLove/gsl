@@ -14,9 +14,9 @@ module GSL
   
     @@any_time = []
   
-    def self.at_any_time(action, proc)
-      define_method(action, proc)
-      @@any_time << action
+    def self.at_any_time(name, proc)
+      define_method(name, proc)
+      @@any_time << name
     end
   
     def initialize(game)

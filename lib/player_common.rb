@@ -1,3 +1,6 @@
+require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
+GSL::depends_on %w{action}
+
 module GSL
   class Player
     module Common
@@ -34,8 +37,8 @@ module GSL
         }.sort_by {|r| -r.rating}.first
       end
       
-      def rate(action, why = 'rates', &doing)
-        s = Speculation.new(self, action, why, &doing)
+      def rate(what, why = 'rates', &doing)
+        s = Speculation.new(self, what, why, &doing)
         s.rating = rate_state(s.state)
         s
       end
@@ -48,11 +51,15 @@ module GSL
         if proc
           instance_exec(*args, &proc)
         elsif (args && args.first.respond_to?(:to_proc))
-          action = args.shift
-          instance_exec(*args, &(action.to_proc))
+          what = args.shift # modify args before passing remainder
+          instance_exec(*args, &(what.to_proc))
         else
           raise "nothing executable"
         end
+      end
+      
+      def action(name = "?", &proc)
+        Action.new(name, &proc)
       end
     end
   end
