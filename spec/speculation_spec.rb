@@ -42,4 +42,8 @@ describe GSL::Speculation do
     @legal.legal?.should be_true
     @illegal.legal?.should be_false
   end
+
+  it "has a reason" do
+    @illegal.why_failed.should be_kind_of(Exception)
+  end
 end

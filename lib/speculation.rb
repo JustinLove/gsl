@@ -8,6 +8,7 @@ module GSL
     attr_reader :how
     attr_reader :state
     attr_reader :why
+    attr_reader :why_failed
     attr_accessor :rating
     
     def initialize(who, what, why = '?', &how)
@@ -17,7 +18,7 @@ module GSL
       @how = how
       s = what.to_s
       if (s[0,1] == '#')
-        @why = why
+        @why = "#{why} #{what.class}"
       else
         @why = "#{why} #{s}"
       end
@@ -52,7 +53,7 @@ module GSL
         d 'block ' # takes forever + @what.inspect
         @who.execute(@what, &@how)
       rescue GamePlayException => e
-        d e.inspect
+        d @why_failed = e
         #puts e.backtrace.join("\n")
         return Passed
       rescue Exception => e

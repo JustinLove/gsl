@@ -52,7 +52,7 @@ module GSL
           @world.switch(move.state)
           return Acted
         else
-          puts "USE FAILED #{card}"
+          puts "USE FAILED #{move.why_failed}"
           return Passed
         end
       else
