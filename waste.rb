@@ -162,24 +162,24 @@ end
 to :play_the_cards do
   each_player_until_pass do
     acted = choose :held_cards do |card|
-      case judge(card)
-      when :good:
-        use card
-        Acted
-      when :bad:
-        if held_cards.count <= 1
-          #note "#{self} saves #{card.to_s}"
+      choose :play => Action{
+          use card; Acted
+        },
+        :save => Action{
+          must_have{held_cards.count <= 1};
+          note "#{self} saves #{card.to_s}"
           Passed
-        elsif card.name == :material_sale 
-          #note "#{self} forced to use #{card.to_s}"
-          use card
+        },
+        :discard => Action{
+          if (card.name == :material_sale)
+            note "#{self} forced to use #{card.to_s}"
+            use card
+          else
+            note "#{self} discards #{card.to_s}"
+            discard card
+          end
           Acted
-        else
-          note "#{self} discards #{card.to_s}"
-          discard card
-          Acted
-        end
-      end
+        }
     end
     note report
     checkpoint
