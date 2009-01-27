@@ -39,17 +39,13 @@ module GSL
       end
     
       def rate(action, why = 'rates', &doing)
-        s = what_if(action, why, &doing)
+        s = Speculation.new(self, action, why, &doing)
         s.rating = rate_state(s.state)
         s
       end
 
       def rate_state(state)
         if (state[:legal]) then 1 else 0 end
-      end
-
-      def what_if(action, why = '?', &doing)
-        Speculation.new(self, action, why, &doing)
       end
 
       def execute(*args, &proc)
