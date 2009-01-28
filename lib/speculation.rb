@@ -43,8 +43,6 @@ module GSL
       @state[:legal]
     end
     
-    alias_method :legal, :legal?
-  
     @@level = 0
     def go
       begin
