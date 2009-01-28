@@ -5,14 +5,11 @@ module GSL
   class Player
     module Common
       def choose(from, &doing)
-        best = best_rated(choose_from_what(from), &doing)
-        if (best)
-          best.switch_if_legal
-          #note "choose #{best.why} from #{from}"
+        best_rated(choose_from_what(from), &doing).switch_if_legal do |best|
+          #note "choose #{best.what} from #{from}"
           return best.what
-        else
-          return best
         end
+        return nil
       end
 
       def choose_from_what(from)
@@ -35,7 +32,7 @@ module GSL
       def best_rated(from, &doing)
         from.map {|c|
           rate(c, &doing)
-        }.sort_by {|r| -r.rating}.first
+        }.sort_by {|r| -r.rating}.first || Speculation::Nil.new
       end
       
       def rate(what, why = 'rates', &doing)
@@ -45,7 +42,7 @@ module GSL
       end
 
       def rate_state(state)
-        if (state[:legal]) then (1..100).random else 0 end
+        if (state && state[:legal]) then (1..100).random else 0 end
       end
 
       def execute(*args, &proc)

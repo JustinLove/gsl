@@ -148,7 +148,7 @@ describe GSL::Player do
         end
 
         it "best_rated nothing" do
-          @object.best_rated([]).should be_nil
+          @object.best_rated([]).should be_kind_of(GSL::Speculation::Nil)
         end
       end
       

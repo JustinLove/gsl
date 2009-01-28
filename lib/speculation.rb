@@ -26,7 +26,7 @@ module GSL
     end
     
     def to_s
-      "Speculation on #{@why}"
+      "#{self.class} on #{@why}"
     end
     
     def d(s, indent = "- ")
@@ -46,10 +46,11 @@ module GSL
     def switch_if_legal
       if legal?
         @who.world.switch(@state)
+        yield(self) if block_given?
       else
-        @who.note " * can't because #{@why_failed}"
+        @who.note " * can't because #{@why_failed}" if @who
+        self
       end
-      self
     end
     
     @@level = 0
@@ -73,5 +74,18 @@ module GSL
         @who.world[:speculate_on] = ('.' * @@level)
       end
     end
+    
+    class Nil < Speculation
+      def initialize()
+        @who = nil
+        @what = nil
+        @how = nil
+        @why = nil
+      end
+      def branch; nil; end
+      def legal?; false; end
+      def nil?; true; end
+    end
   end
+  
 end

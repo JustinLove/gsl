@@ -28,15 +28,12 @@ module GSL
     end
 
     def take(from, &doing)
-      best = best_rated(choose_from_what(from), &doing)
-      if (best)
-        best.switch_if_legal
+      best_rated(choose_from_what(from), &doing).switch_if_legal do |best|
         note "take #{best.what} from #{from}"
         must_lose [best.what], from
         return best.what
-      else
-        return best
       end
+      return nil
     end
     
     def use(card, from = nil)
