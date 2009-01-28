@@ -56,7 +56,7 @@ module GSL
     end
   
     def discard(card)
-      card.discard
+      card.discard if (card.respond_to? :discard)
     end
   
     def each_player_from_left(&proc)

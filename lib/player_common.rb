@@ -49,6 +49,7 @@ module GSL
       end
 
       def execute(*args, &proc)
+        #note "exec #{args.first} #{proc.to_s}"
         if proc
           instance_exec(*args, &proc)
         elsif (args && args.first.respond_to?(:to_proc))

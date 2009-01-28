@@ -254,14 +254,14 @@ card :advisor do
     action(:double) {
       must_have {held_cards.count > 0}
       choose :held_cards do |card|
-        use_twice = action{execute card; use card;}
+        twice = action(:twice) { execute card; use card; }
         case card.name
         when :material_sale: use card;
-        when :growth: use_twice.call;
-        when :innovation: use_twice.call;
-        when :hiring_firing: use_twice.call;
-        when :waste_disposal: use_twice.call;
-        when :waste_removal: use_twice.call;
+        when :growth: use twice;
+        when :innovation: use twice;
+        when :hiring_firing: use twice;
+        when :waste_disposal: use twice;
+        when :waste_removal: use twice;
         when :order: gain(5, :money) if use(card);
         else raise NotAllowed, "can't double #{card}"
         end
