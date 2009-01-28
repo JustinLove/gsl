@@ -7,8 +7,9 @@ module GSL
       def choose(from, &doing)
         best = best_rated(choose_from_what(from), &doing)
         if (best)
+          best.switch_if_legal
           #note "choose #{best.why} from #{from}"
-          return execute best.what, &doing
+          return best.what
         else
           return best
         end

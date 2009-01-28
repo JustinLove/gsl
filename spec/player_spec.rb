@@ -181,6 +181,10 @@ describe GSL::Player do
         @object.choose([]).should be_nil
       end
 
+      it "returns a value" do
+        @object.choose([@good]).should == @good
+      end
+
       describe "takes" do
         before do
           @game.class.make_resource(:pebbles)
@@ -204,6 +208,10 @@ describe GSL::Player do
         
         it "nothing" do
           @object.take([]).should be_nil
+        end
+
+        it "returns a value" do
+          @object.take(:pebbles).should == @good
         end
       end
       
