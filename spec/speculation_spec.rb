@@ -17,6 +17,8 @@ class Ground
   def execute(what, &doing)
     instance_eval(&what)
   end
+  
+  def note(s); end
 end
 
 describe GSL::Speculation do
@@ -25,7 +27,7 @@ describe GSL::Speculation do
     @object = @legal = GSL::Speculation.new(@ground,
       lambda{self.stuff = :ran}, "nothing much")
     @illegal = GSL::Speculation.new(@ground,
-      lambda{raise GSL::GamePlayException}, "an error")
+      lambda{self.stuff = :garbage; raise GSL::GamePlayException}, "an error")
   end
 
   it_should_behave_like "well behaved objects"
@@ -37,7 +39,7 @@ describe GSL::Speculation do
   it "executes the method" do
     @object.state[:stuff] == :ran
   end
-  
+
   it "marks legal" do
     @legal.legal?.should be_true
     @illegal.legal?.should be_false
@@ -45,5 +47,15 @@ describe GSL::Speculation do
 
   it "has a reason" do
     @illegal.why_failed.should be_kind_of(Exception)
+  end
+  
+  it "switches if legal" do
+    @legal.switch_if_legal
+    @ground.stuff.should == :ran
+  end
+
+  it "doesn't switch if not legal" do
+    @illegal.switch_if_legal
+    @ground.stuff.should_not == :garbage
   end
 end

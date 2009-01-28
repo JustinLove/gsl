@@ -45,14 +45,9 @@ module GSL
       end
       if (card)
         note "#{self.to_s} plays #{card.to_s}"
-        move = Speculation.new(self, action(card.to_s) {execute card; discard card}, 'use')
-        if (move.legal?)
-          @world.switch(move.state)
-          return Acted
-        else
-          puts "USE FAILED #{move.why_failed}"
-          return Passed
-        end
+        Speculation.new(self, 
+          action(card.to_s) {execute card; discard card}, 'use').
+          switch_if_legal
       else
         Passed
       end

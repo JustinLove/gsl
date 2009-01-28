@@ -43,6 +43,16 @@ module GSL
       @state[:legal]
     end
     
+    def switch_if_legal
+      if legal?
+        @who.world.switch(@state)
+        Acted
+      else
+        @who.note " * can't because #{@why_failed}"
+        Passed
+      end
+    end
+    
     @@level = 0
     def go
       begin
