@@ -29,8 +29,8 @@ module GSL
       "Speculation on #{@why}"
     end
     
-    def d(s)
-      #puts "#{'.' * @@level} #{@who} #{@why}: " + s
+    def d(s, indent = "- ")
+      #puts "#{' ' * @@level}#{indent}" + s
     end
     
     def branch
@@ -50,7 +50,7 @@ module GSL
       begin
         @@level += 1
         @who.world[:speculate_on] = ('.' * @@level) # + @why
-        d 'block ' # takes forever + @what.inspect
+        d "#{@who} #{why}", ""
         @who.execute(@what, &@how)
       rescue GamePlayException => e
         d @why_failed = e
@@ -59,10 +59,11 @@ module GSL
       rescue Exception => e
         raise e
       else
-        d 'succeeded'
+        #d 'succeeded'
         return Acted
       ensure
         @@level -= 1
+        @who.world[:speculate_on] = ('.' * @@level)
       end
     end
   end

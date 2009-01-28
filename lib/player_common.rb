@@ -33,7 +33,7 @@ module GSL
       
       def best_rated(from, &doing)
         from.map {|c|
-          rate(c, 'best', &doing)
+          rate(c, &doing)
         }.sort_by {|r| -r.rating}.first
       end
       
