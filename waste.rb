@@ -262,6 +262,7 @@ card :advisor do
         case card.name
         when :material_sale: use card;
         when :growth: use_twice.call;
+        when :innovation: use_twice.call;
         when :hiring_firing: use_twice.call;
         when :waste_disposal: use_twice.call;
         when :waste_removal: use_twice.call;
