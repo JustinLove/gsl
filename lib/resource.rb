@@ -21,9 +21,7 @@ module GSL
         return const_set(const_name, Class.new(self) do
           @name = name
           @option = option || {}
-          if (!proc.nil?)
-            include(Module.new(&proc))
-          end
+          include(Module.new(&proc)) if proc
         end)
       end
       def range

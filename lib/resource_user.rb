@@ -32,11 +32,11 @@ module GSL
       include ClassVars::Class
       def make_components(name, value)
         cv.components[name] = Component.send(value.class.name.downcase, name, value)
-        cv.resources << name if !cv.resources.include?(name)
+        cv.resources << name unless cv.resources.include?(name)
       end
 
       def make_resource(name, option = nil, &proc)
-        cv.resources << name if !cv.resources.include?(name)
+        cv.resources << name unless cv.resources.include?(name)
         r = Resource.define(name, option, &proc)
       end
     end
@@ -107,9 +107,7 @@ module GSL
     end
   
     def must_have(&condition)
-      if !(instance_eval &condition)
-        raise FailedPrecondition
-      end
+      raise FailedPrecondition unless (instance_eval &condition)
     end
   end
 end

@@ -56,10 +56,10 @@ module GSL
       
       def wrap(n)
         n = super(n)
-        if !n.kind_of? Array
-          [n]
-        else
+        if n.kind_of? Array
           n
+        else
+          [n]
         end
       end
       
@@ -87,10 +87,10 @@ module GSL
           _discards = @w[:discards] = 
             self.class.option[:discard_to] ||
             (name.to_s + '_discard').to_sym
-          if !@owner.respond_to?(_discards)
+          unless @owner.respond_to?(_discards)
             @owner.class.make_resource(_discards)
           end
-          if !@owner.__send__(_discards).kind_of?(GSL::Resource::Set)
+          unless @owner.__send__(_discards).kind_of?(GSL::Resource::Set)
             @owner.set_to [], _discards #type as set
           end
         end

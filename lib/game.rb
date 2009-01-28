@@ -74,7 +74,7 @@ module GSL
     end
   
     def only_during(flag)
-      if (!@context.include? flag)
+      unless (@context.include? flag)
         raise FailedPrecondition, "must be in #{flag}"
       end
     end
