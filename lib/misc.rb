@@ -2,8 +2,6 @@ Infinity = 2**30
 
 def Error(*args); raise *args; end
 Empty = nil
-Acted = true
-Passed = false
 
 class Array
   def rotate

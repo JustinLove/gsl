@@ -161,15 +161,13 @@ end
 
 to :play_the_cards do
   each_player_until_pass do
-    acted = choose :held_cards do |card|
+    pass unless choose :held_cards do |card|
       choose [
-        action(:play) {
-          use card; Acted
-        },
+        action(:play) { use card },
         action(:save) {
           must_have{held_cards.count <= 1};
           note "#{self} saves #{card.to_s}"
-          Passed
+          pass
         },
         action(:discard) {
           if (card.name == :material_sale)
@@ -179,13 +177,11 @@ to :play_the_cards do
             note "#{self} discards #{card.to_s}"
             discard card
           end
-          Acted
         }
       ]
     end
     note report
     checkpoint
-    acted
   end
 end
 

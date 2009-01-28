@@ -118,7 +118,7 @@ module GSL
     def each_player_until_pass(&proc)
       active = @players.size
       while active > 0
-        active = @players.find_all {|pl| pl.instance_eval(&proc)}.count
+        active = @players.find_all {|pl| pl.take_turn(&proc) }.count
       end
     end
   

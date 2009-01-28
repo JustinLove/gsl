@@ -46,11 +46,10 @@ module GSL
     def switch_if_legal
       if legal?
         @who.world.switch(@state)
-        Acted
       else
         @who.note " * can't because #{@why_failed}"
-        Passed
       end
+      self
     end
     
     @@level = 0
@@ -63,12 +62,12 @@ module GSL
       rescue GamePlayException => e
         d @why_failed = e
         #puts e.backtrace.join("\n")
-        return Passed
+        return false
       rescue Exception => e
         raise e
       else
         #d 'succeeded'
-        return Acted
+        return true
       ensure
         @@level -= 1
         @who.world[:speculate_on] = ('.' * @@level)

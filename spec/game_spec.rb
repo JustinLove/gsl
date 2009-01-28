@@ -177,7 +177,7 @@ describe GSL::Game do
 
     it "goes until pass" do
       countdown = 10
-      @object.each_player_until_pass {countdown -= 1; countdown > 0; }
+      @object.each_player_until_pass {countdown -= 1; pass if (countdown <= 0); }
       countdown.should <= 0
     end
 

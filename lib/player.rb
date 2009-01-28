@@ -49,8 +49,9 @@ module GSL
         Speculation.new(self, 
           action(card.to_s) {execute card; discard card}, 'use').
           switch_if_legal
+        true
       else
-        Passed
+        false
       end
     end
   
@@ -64,6 +65,14 @@ module GSL
   
     def other_players(&proc)
       @game.each_player :except => self, &proc
+    end
+    
+    def pass; @passed = true; end
+
+    def take_turn(&proc)
+      @passed = false
+      instance_eval(&proc)
+      !@passed
     end
     
     def to_s
