@@ -165,18 +165,14 @@ to :play_the_cards do
       choose [
         action(:play) { use card },
         action(:save) {
-          must_have{held_cards.count <= 1};
+          must_have {held_cards.count <= 1};
           note "#{self} saves #{card.to_s}"
           pass
         },
         action(:discard) {
-          if (card.name == :material_sale)
-            note "#{self} forced to use #{card.to_s}"
-            use card
-          else
-            note "#{self} discards #{card.to_s}"
-            discard card
-          end
+          may_not {card.name == :material_sale}
+          note "#{self} discards #{card.to_s}"
+          discard card
         }
       ]
     end

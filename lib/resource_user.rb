@@ -109,5 +109,9 @@ module GSL
     def must_have(&condition)
       raise FailedPrecondition unless (instance_eval &condition)
     end
+
+    def may_not(&condition)
+      raise NotAllowed if (instance_eval &condition)
+    end
   end
 end
