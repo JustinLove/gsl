@@ -36,6 +36,7 @@ module GSL
       @world = nil
       @name = name
       @kind = kind || name
+      @home = nil
     end
 
     def to_s

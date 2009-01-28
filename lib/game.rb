@@ -17,6 +17,7 @@ module GSL
       @world = World::View.new
       super()
       @context = []
+      @game_over = false
       @world[:log] = []
       if (file)
         # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
