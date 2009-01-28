@@ -1,10 +1,8 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{prototype world}
+GSL::depends_on %w{world}
 
 module GSL
   class Component
-    include Prototype
-    extend Prototype
     extend World::Citizen::Class
     attr_reader :name
 

@@ -1,9 +1,8 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{random prototype properties resource_user player}
+GSL::depends_on %w{random properties resource_user player}
 
 module GSL
   class Game
-    include Prototype
     extend Properties
     include ResourceUser
 

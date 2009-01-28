@@ -1,5 +1,5 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{prototype classvar misc set_resource value_resource world}
+GSL::depends_on %w{classvar misc set_resource value_resource world}
 
 module GSL
   class Resource
@@ -35,7 +35,6 @@ module GSL
       end
     end
 
-    include Prototype
     extend World::Citizen::Class
 
     ver_accessor :value
