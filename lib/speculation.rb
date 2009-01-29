@@ -59,7 +59,7 @@ module GSL
         @@level += 1
         @who.world[:speculate_on] = ('.' * @@level) # + @why
         d "#{@who} #{why}", ""
-        @who.execute(@what, &@how)
+        execute
       rescue GamePlayException => e
         d @why_failed = e
         #puts e.backtrace.join("\n")
@@ -72,6 +72,17 @@ module GSL
       ensure
         @@level -= 1
         @who.world[:speculate_on] = ('.' * @@level)
+      end
+    end
+    
+    def execute
+      #d "exec #{@what} #{@how}"
+      if @how
+        @who.instance_exec(@what, &@how)
+      elsif (@what && @what.respond_to?(:to_proc))
+        @who.instance_exec(&(@what.to_proc))
+      else
+        raise "nothing executable"
       end
     end
     

@@ -18,6 +18,8 @@ class Ground
     instance_eval(&what)
   end
   
+  def card; @w.id_card(:stuff); end
+  
   def note(s); end
 end
 
@@ -37,7 +39,7 @@ describe GSL::Speculation do
   end
   
   it "executes the method" do
-    @object.state[:stuff] == :ran
+    @object.state[@ground.card].should == :ran
   end
 
   it "marks legal" do
@@ -57,5 +59,11 @@ describe GSL::Speculation do
   it "doesn't switch if not legal" do
     @illegal.switch_if_legal
     @ground.stuff.should_not == :garbage
+  end
+  
+  it "knows how" do
+    handy = GSL::Speculation.new(@ground,
+      :hammer) {|tool| self.stuff = tool;}
+    handy.state[@ground.card].should == :hammer
   end
 end
