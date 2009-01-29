@@ -82,7 +82,7 @@ player_resource :waste_disposal, 0..16 do
     when 9..12 then :yellow
     when 13..16 then :red
     else
-      Error "impossible section"
+      Language.error "impossible section"
     end
   end
 end

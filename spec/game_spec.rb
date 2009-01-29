@@ -212,4 +212,29 @@ describe GSL::Game do
       @object.triangle(k).should == v
     end
   end
+  
+  describe "exceptions" do
+    it "raise illegal" do
+      lambda{GSL::Game.illegal :NotAllowed}.should raise_error(GSL::Game::NotAllowed)
+    end
+
+    it "with a message" do
+      begin
+        GSL::Game.illegal :NotAllowed, "ool"
+      rescue GSL::Game::NotAllowed => e
+        e.message.should == "ool"
+      else
+        raise "no exception raised"
+      end
+    end
+
+    it "with a string" do
+      lambda{GSL::Game.illegal "ool"}.should raise_error(GSL::Game::Illegal)
+    end
+
+    it "raise error" do
+      lambda{GSL::Langauge.error :Error}.should raise_error(GSL::Langauge::Error)
+    end
+
+  end
 end

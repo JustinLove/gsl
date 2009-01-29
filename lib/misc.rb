@@ -1,6 +1,5 @@
 Infinity = 2**30
 
-def Error(*args); raise *args; end
 Empty = nil
 
 class Array
@@ -66,9 +65,34 @@ def deep_copy(obj)
 end
 
 module GSL
+  module Raiser
+    def self.named(name)
+      Module.new do
+        include Raiser
+        alias_method name, :raiser
+        public name
+      end
+    end
+
+    private
+    def raiser(error, *args)
+      case error.class.to_s.to_sym
+      when :Symbol
+        raise self.const_get(error), *args
+      when :String
+        raise @default_exception, error, *args
+      else
+        raise error, *args
+      end
+    end
+  end
+
   class Game
+    extend Raiser.named(:illegal)
+    
     class Illegal < Exception 
     end
+    @default_exception = Illegal
   
     class FailedPrecondition < Illegal
     end
@@ -78,7 +102,10 @@ module GSL
   end
   
   module Langauge
+    extend Raiser.named(:error)
+
     class Error < Exception
     end
+    @default_exception = Error
   end
 end
