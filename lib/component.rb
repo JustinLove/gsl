@@ -55,7 +55,7 @@ module GSL
     def discard(deck = nil)
       deck ||= @home
       if deck.include? self
-        raise "attempt to discard #{self.to_s} twice"
+        Langauge.error "attempt to discard #{self.to_s} twice"
       end
       self.in.lose [self] if self.in
       deck.gain [self]

@@ -24,7 +24,7 @@ module GSL
           if (from.kind_of? Resource)
             from
           else
-            raise "can't choose from a #{from.class}"
+            Language.error "can't choose from a #{from.class}"
           end
         end
       end
@@ -49,7 +49,7 @@ module GSL
         if (what.to_proc)
           instance_exec(&(what.to_proc))
         else
-          raise "not executable"
+          Langauge.error "not executable"
         end
       end
       

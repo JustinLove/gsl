@@ -82,7 +82,7 @@ module GSL
       elsif (@what && @what.respond_to?(:to_proc))
         @who.instance_exec(&(@what.to_proc))
       else
-        raise "nothing executable"
+        Language.error "nothing executable"
       end
     end
     

@@ -5,7 +5,7 @@ module GSL
         if self.class.range.include?(n.size)
           self.value = own(n).dup
         else
-          raise 'resource out of range'
+          Language.error 'resource out of range'
         end
       end
   
@@ -14,7 +14,7 @@ module GSL
         if self.class.range.include?(possible.size)
           return possible
         else
-          raise Insufficient.new(name, self.value, n)
+          Game.illegal Insufficient.new(name, self.value, n)
         end
       end
 
@@ -24,7 +24,7 @@ module GSL
         if possible.size == self.value.size - n.size && self.class.range.include?(possible.size)
           return possible
         else
-          raise Insufficient.new(name, self.value, n)
+          Game.illegal Insufficient.new(name, self.value, n)
         end
       end
       

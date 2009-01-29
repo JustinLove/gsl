@@ -23,7 +23,7 @@ module GSL
           #puts "#{self.to_s} #{method} #{n} #{resource}"
           forward_to.__send__ method, n, resource
         else
-          raise "#{self.to_s} can't #{method} #{resource}"
+          Language.error "#{self.to_s} can't #{method} #{resource}"
         end
       end
     end
@@ -107,11 +107,11 @@ module GSL
     end
   
     def must_have(&condition)
-      raise Game::FailedPrecondition unless (instance_eval &condition)
+      Game.illegal :FailedPrecondition unless (instance_eval &condition)
     end
 
     def may_not(&condition)
-      raise Game::NotAllowed if (instance_eval &condition)
+      Game.illegal :NotAllowed if (instance_eval &condition)
     end
   end
 end

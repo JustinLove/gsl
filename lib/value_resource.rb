@@ -6,7 +6,7 @@ module GSL
         if self.class.range.include?(n)
           self.value = n
         else
-          raise 'resource out of range'
+          Language.error 'resource out of range'
         end
       end
 
@@ -15,7 +15,7 @@ module GSL
         if self.class.range.include?(self.value+n)
           return self.value + n
         else
-          raise Insufficient.new(name, self.value, n)
+          Game.illegal Insufficient.new(name, self.value, n)
         end
       end
   

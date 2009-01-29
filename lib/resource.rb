@@ -68,7 +68,7 @@ module GSL
       elsif (n.kind_of? Enumerable)
         return Resource::Set
       else
-        raise "can't have that kind of resource"
+        Language.error "can't have that kind of resource"
       end
     end
 
