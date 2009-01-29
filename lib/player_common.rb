@@ -24,7 +24,7 @@ module GSL
           if (from.kind_of? Resource)
             from
           else
-            throw "can't choose from a #{from.class}"
+            raise "can't choose from a #{from.class}"
           end
         end
       end
