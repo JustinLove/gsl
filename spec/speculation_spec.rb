@@ -29,7 +29,7 @@ describe GSL::Speculation do
     @object = @legal = GSL::Speculation.new(@ground,
       lambda{self.stuff = :ran}, "nothing much")
     @illegal = GSL::Speculation.new(@ground,
-      lambda{self.stuff = :garbage; raise GSL::GamePlayException}, "an error")
+      lambda{self.stuff = :garbage; raise GSL::Game::Illegal}, "an error")
   end
 
   it_should_behave_like "well behaved objects"

@@ -102,7 +102,7 @@ module GSL
       end
     end
 
-    class Insufficient < GamePlayException
+    class Insufficient < Game::Illegal
       def initialize(r, has = 0, req = 0)
         super()
         @resource = r

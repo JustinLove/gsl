@@ -60,7 +60,7 @@ module GSL
         @who.world[:speculate_on] = ('.' * @@level) # + @why
         d "#{@who} #{why}", ""
         execute
-      rescue GamePlayException => e
+      rescue Game::Illegal => e
         d @why_failed = e
         #puts e.backtrace.join("\n")
         return false

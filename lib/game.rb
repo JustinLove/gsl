@@ -76,7 +76,7 @@ module GSL
   
     def only_during(flag)
       unless (@context.include? flag)
-        raise FailedPrecondition, "must be in #{flag}"
+        raise Game::FailedPrecondition, "must be in #{flag}"
       end
     end
 

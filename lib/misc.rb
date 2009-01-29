@@ -66,12 +66,19 @@ def deep_copy(obj)
 end
 
 module GSL
-  class GamePlayException < Exception 
+  class Game
+    class Illegal < Exception 
+    end
+  
+    class FailedPrecondition < Illegal
+    end
+
+    class NotAllowed < Illegal
+    end
   end
   
-  class FailedPrecondition < GamePlayException
-  end
-
-  class NotAllowed < GamePlayException
+  module Langauge
+    class Error < Exception
+    end
   end
 end

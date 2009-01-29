@@ -259,7 +259,7 @@ card :advisor do
         when :waste_disposal: use twice;
         when :waste_removal: use twice;
         when :order: gain(5, :money) if use(card);
-        else raise NotAllowed, "can't double #{card}"
+        else raise Game::NotAllowed, "can't double #{card}"
         end
       end
     }
