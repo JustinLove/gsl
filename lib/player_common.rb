@@ -45,15 +45,11 @@ module GSL
         if (state && state[:legal]) then (1..100).random else 0 end
       end
 
-      def execute(*args, &proc)
-        #note "exec #{args.first} #{proc.to_s}"
-        if proc
-          instance_exec(*args, &proc)
-        elsif (args && args.first.respond_to?(:to_proc))
-          what = args.shift # modify args before passing remainder
-          instance_exec(*args, &(what.to_proc))
+      def execute(what)
+        if (what.to_proc)
+          instance_exec(&(what.to_proc))
         else
-          raise "nothing executable"
+          raise "not executable"
         end
       end
       

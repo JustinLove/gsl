@@ -84,15 +84,6 @@ describe GSL::Player do
       context.should == @object
     end
     
-    it "executes through a filter" do
-      context = nil
-      @object.execute(:blarg) do |a|
-        a.should == :blarg
-        context = self
-      end
-      context.should == @object
-    end
-    
     it "doesn't catch other exceptions" do
       lambda {GSL::Speculation.new(@object, lambda{raise "hell"})}.should raise_error("hell")
     end
