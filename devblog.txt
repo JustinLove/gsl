@@ -104,3 +104,50 @@ As best I can make of it, you 'include' to add the module's routines as if they 
 Since my application module will ultimately be used to extend, I have to include in the module itself.  This mostly works, except that instances of the extended application classes don't have 'cv'.
 
 What I ended up doing was have the 'included' callback 'extend' the target class with the 'included'/'extended' triggers.  The SuperClass below was called Triggers at first.
+
+2009-01-18
+
+Testing Under the World Tree
+
+I've been hammering on the board game DSL for a few weeks now.  Most of the time was spent retroactively adding tests, however, so it felt like I wasn't going anywhere ;^)
+
+I've been staring up at a potentially nasty change to the way game state is handled, and wondering how to work out all the ramifications.  From following the Ruby conference videos and other like things, I've picked up that test driven development is rather big in at least a section of the Ruby community.  I tried out <a href="http://rspec.info/">RSpec</a> on a different project over the holiday.  That project had slightly more testable nature - data containers, mostly, and it went fairly well, although for all I've done with it so far, it's debatable whether it was a win or not.
+
+GSL, on the other hand, is longer lived project, which has gotten fairly large.  I'm relatively satisfied with the language syntax, and it's complicated enough beast that debugging is becoming an impediment to progress.  Only problem is, writing tests isn't all that much, and I've got solid testing in front of me.  It really kind of felt like I was spinning my wheels, with only the promises of the testing zealots to convince me that this was better in the long term.
+
+It's only recently that I've actually gotten to turning the world upside down.  Obviously, the application will usually break at the same time the tests do.  The tests have been fairly good at immediately narrowing the problem down, rather than going and enabling prints until you back the problem into a corner.
+
+Amnesia
+
+GSL has, from to time to time, to consider whether an action is legal, or wise in the case of computer players.  (Actually, there are only computer players at the moment.)  This has been done with a Speculate class that shares a common module with Player.  It forwards resource checks and ignores most everything else.  Unfortunately, since it doesn't change anything, it also impossible to properly evaluate multiple-step actions or consider whether a course of action made the player's position better or worse.
+
+Axis Mundi
+
+My Grand Unified Solution to this problem is to put all game data in a versioned store, which can be checkpointed or taken off into speculative territory at will.  It might be owing in part to an acute case of Javascript infection - world states are stored in sparse hash tables which roll down to a parent in case of missing keys.  I guess anything that gets called the <a href="http://steve-yegge.blogspot.com/2008/10/universal-design-pattern.html">Universal Design Pattern</a> can't be all that wrong.
+
+A side benefit of the structure is that I can theoretically checkpoint a version every turn or so and have a complete game history.
+
+Hanging Loosely From the World Tree
+
+For the time being, this construct is called <a href="http://bitbucket.org/JustinLove/gsl/src/tip/lib/world.rb">World</a>.  Due to the potential tree like nature of states, I've considered changing the module's name to Yggdrasil, but haven't yet, in part due to a lack of good names for the sub modules.  It was kind of impressive how much I got in a small amount of code, but of course it's ballooned with little convenience features.  There are four sub modules: State, which wraps a hash table of values, View, which keeps a pointer to the 'current' state, Passport, which streamlines prepending each citizen's id to it's values, and Citizen, a module that for objects that will use the store, offering reader/writer/accessor methods and like.
+
+Going Nowhere Fast
+
+I started work on the world module after fleshing out the rest of the tests.  I actually worked in a more test driven method.  Testing works out much better for new code - the alternating breaks up the monotonous parts.  I've discovered a danger of TDD however.  It's very easy to implement features that completely fail the You Ain't Gonna Need It principle.  For instance, an easy and obvious thing to do was implement begin/commit/abort style transactions.  Easy, yes.  But useful to my application?  Not currently.  I actually found myself a little directionless looking for the proper abstractions.  I only had tests, not an actual application to define the desired interface.  Test can help you implement things, but they don't offer much help in design.
+
+The World is Flat
+
+One reason an existing transaction module wouldn't work is that the whole game has change state at once - if a speculative action doesn't pan out, everything has to be undone, including response by other players.  I didn't really care to get into the complexity of rebuilding the spines of trees when a leaf value changed, so that means that the store is a flat namespace, managed by prepending a unique object id to each key.  This ends up having a lot of far reaching consequences.
+
+The World is Rather Bumpy
+
+By far the biggest problem is the Set resources that hold things like decks and hands of cards.  Ruby doesn't make things easy here.  Most things are passed around by reference to an object.  The object can be changed indiscriminately without affecting the references in the least.  This means that naive way of storing sets will usually change prior states rather than updating the current one.
+
+Turning the World On it's Head?
+
+One solution to this problem is turn the resources upside down: store the location of each object and create sets by searching the store for the right location.  Since cards have to have properties, they are already objects, and in fact already have an 'in' property from card movement debugging.  I'm a little leery of the search efficiency, however.  A larger problem is the fact that I'd really like sets to be able to handle arbitrary objects, including atoms that can't have properties attached.
+
+Ice World
+
+What I have for the moment is an ice-world that freezes(makes immutable) everything that goes into it.  It's not recursive, however, so arrays and things inside the world objects can still be modified.  But, this gets the runtime system to cry bloody murder in most situations where you might be changing the past instead of the present, and allowed me to make appropriate adjustments.  In a couple of cases I had to version class variables I would have otherwise left alone, because the class was getting frozen.  It's probably safer having them versioned, anyway.
+
