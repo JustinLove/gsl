@@ -233,7 +233,7 @@ describe GSL::Game do
     end
 
     it "raise error" do
-      lambda{GSL::Langauge.error :Error}.should raise_error(GSL::Langauge::Error)
+      lambda{GSL::Language.error :Error}.should raise_error(GSL::Language::Error)
     end
 
   end
