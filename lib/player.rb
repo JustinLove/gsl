@@ -5,6 +5,7 @@ module GSL
   class Player
     include ResourceUser
     include Player::Common
+    extend World::Citizen::Class
   
     def forward_to; @game; end
   
@@ -64,12 +65,12 @@ module GSL
       @game.each_player :except => self, &proc
     end
     
-    def pass; @passed = true; end
+    def pass; @w[:passed] = true; end
 
     def take_turn(&proc)
-      @passed = false
+      @w[:passed] = false
       instance_eval(&proc)
-      !@passed
+      !@w[:passed]
     end
     
     def to_s

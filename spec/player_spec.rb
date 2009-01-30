@@ -3,6 +3,7 @@ libs %w{player game}
 
 class GSL::Player
   include Tattler
+  ver_accessor :passed
 end
 
 describe GSL::Player do
@@ -28,6 +29,14 @@ describe GSL::Player do
   it "picks a color" do
     @object.pick_color(*@colors)
     @colors.should include(@object.color)
+  end
+  
+  it "versions pass" do
+    @object.world.branch {
+      @object.pass
+      @object.passed.should be_true
+    }
+    @object.passed.should_not be_true
   end
   
   describe "with assigned colors" do
