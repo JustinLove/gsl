@@ -45,12 +45,16 @@ module GSL
     
     def switch_if_legal
       if legal?
-        @who.world.switch(@state)
+        switch
         yield(self) if block_given?
       else
         @who.note " * can't because #{@why_failed}" if @who
         self
       end
+    end
+    
+    def switch
+      @who.world.switch(@state)
     end
     
     @@level = 0
@@ -62,6 +66,7 @@ module GSL
         execute
       rescue Game::Illegal => e
         d @why_failed = e
+        @who.note " * can't because #{@why_failed}" if @who
         #puts e.backtrace.join("\n")
         return false
       rescue Exception => e

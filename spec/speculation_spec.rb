@@ -51,6 +51,11 @@ describe GSL::Speculation do
     @illegal.why_failed.should be_kind_of(Exception)
   end
   
+  it "switches" do
+    @illegal.switch
+    @ground.world[:legal].should be_false
+  end
+  
   it "switches if legal" do
     @legal.switch_if_legal
     @ground.stuff.should == :ran
