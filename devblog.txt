@@ -237,7 +237,7 @@ During the course of the weekend, I got two hits on a new ruby book, both of whi
 
 Change of Tempo
 
-Last year my pattern was to program during the weekend, and take care of everything else during the week.  So far this year, I've often had lots of interruptions during the weekend, which has often caused me to trade out and bleed the programming into the week.  When I get to the time of day Sunday where I should be wrapping up (and writing things like this), I'm just getting started.  This has been happening a fair bit lately, but I've also been feeling pretty good lately.  I'm thinking of switching to a patter of coding a little every day, and taking care of everything else in what's left of the days off.  The main trick here is that without a clean iteration break after the weekend, I'll have to remember to write my experiences more as they happen.
+Last year my pattern was to program during the weekend, and take care of everything else during the week.  So far this year, I've often had lots of interruptions during the weekend, which has often caused me to trade out and bleed the programming into the week.  When I get to the time of day Sunday where I should be wrapping up (and writing things like this), I'm just getting started.  This has been happening a fair bit lately, but I've also been feeling pretty good lately.  I'm thinking of switching to a pattern of coding a little every day, and taking care of everything else in what's left of the days off.  The main trick here is that without a clean iteration break after the weekend, I'll have to remember to write my experiences more as they happen.
 
 -----
 
