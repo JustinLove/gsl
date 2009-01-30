@@ -101,7 +101,7 @@ module GSL
     end
   end
   
-  module Langauge
+  module Language
     extend Raiser.named(:error)
 
     class Error < Exception

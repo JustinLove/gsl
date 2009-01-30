@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
-libs %w{resource_user}
+libs %w{resource_user misc}
 
 module GSL::ResourceUser
   include Tattler
@@ -117,6 +117,10 @@ describe GSL::ResourceUser do
     @user.class.make_resource(:money)
     @user.set_to 1, :money
     @user.resource(:money).should be_kind_of(GSL::Resource)
+  end
+  
+  it "wines about unknown resources" do
+    lambda{@user.gain 1, :mony}.should raise_error(GSL::Language::Error)
   end
   
   it "creates resources through resource method" do
