@@ -52,8 +52,13 @@ describe GSL::Speculation do
   end
   
   it "switches" do
-    @illegal.switch
+    @illegal.switch.should == @illegal
     @ground.world[:legal].should be_false
+  end
+  
+  it "doesn't croak on Nil" do
+    lambda {GSL::Speculation::Nil.new.switch}.should_not raise_error
+    @ground.world[:legal].should_not be_true
   end
   
   it "switches if legal" do

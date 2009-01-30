@@ -54,7 +54,8 @@ module GSL
     end
     
     def switch
-      @who.world.switch(@state)
+      @who.world.switch(@state) unless @who.nil?
+      self
     end
     
     @@level = 0
