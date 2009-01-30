@@ -151,3 +151,90 @@ Ice World
 
 What I have for the moment is an ice-world that freezes(makes immutable) everything that goes into it.  It's not recursive, however, so arrays and things inside the world objects can still be modified.  But, this gets the runtime system to cry bloody murder in most situations where you might be changing the past instead of the present, and allowed me to make appropriate adjustments.  In a couple of cases I had to version class variables I would have otherwise left alone, because the class was getting frozen.  It's probably safer having them versioned, anyway.
 
+2009-01-29
+
+Evolution, Futures, and Pacing
+
+World Invasion
+
+I got the versioned worlds system loosely integrated to the gsl framework in the previous iteration.  The work of the last weekend or so has been slowly refactoring GSL to take advantage of the new possibilities.
+<lj-cut>
+Forking Reality
+
+For instance, the old system would be constantly recalculating speculations in order to rate them, check legality, and finally execute.  The possibility now open to me is to calculate the new state, and then keep it around until I've decided what to do with it.  At that time, execution is just updating some pointers.
+
+Explosion and Extinction
+
+After getting the hooks for branching in place, the trick was interfacing it to everything else.  As I started refactoring the choice routine and it's various helpers, there was sort of a cambrian explosion of methods as new paths appeared and the old ones were still in use.  Followed, of course, by the slow pruning of the unfit specimens
+
+Evolution in Action
+
+As the future-state concept started bubble it's way through the various abstraction layers, I ran into a small problem.  Previously, I would take in some proposed action, run it through a rating function, and return that.  Later, the game code might speculate again to see if it was a good or bad idea, and yet again to see if it was a legal move.  One of my goals was to reduce that to one calculation that could be reviewed as necessary.  That left me in the position of having to return multiple items, however, such as a state-and-rating or a state-and-action.
+
+Now, you can certainly return multiple values in Ruby (really arrays, with some syntax sugar), but some places really only needed one of the values, and the destructuring seemed a dubious overhead to impose.  I started out making up a hash of properties, but this didn't last very long before being upgraded to a full object.  My old, stripped down speculator, hanging on to it's independent existence for hysterical raisins, was converted into a speculation. 
+
+One of Those Awful/Wonderful Things
+
+As I converted from hash to object, I faced the prospect changing all the references from hash-syntax to message syntax.  However, Ruby can define the indexing operator "[]".  In fact, it can alias the indexing operator to the message send method:
+
+alias_method :[], :__send__
+
+And now you can say object[:property] where you would have said object.property  I've since abandoned this clever hack, since I renamed all the properties anyway.
+
+Four <a href="http://www.kipling.org.uk/poems_serving.htm">Honest Serving Men</a>
+
+At some point, I realized that the speculation object existed to answer questions about the future.  In fact it's properties - the object (player) speculating, the action, some context information for debugging, and an action  modifier, mapped quite nicely onto who, what, why, and how.  'When' is the speculation itself, but 'where' has no obvious mapping as of yet.
+
+The Future is Nil
+
+There existed one annoying corner case: sometimes, a choice would be requested from a list of no possibilities.  The choose method has to return something, and up until recently it returned nil, Ruby's null object.  However, I found that the process of capturing the speculation into a variable and testing it before proceeding really through of the chain-of-methods style.  So I implemented a <a href="http://en.wikipedia.org/wiki/Null_Object_pattern">null object pattern</a> that could suitable respond to anything necessary.
+
+How to Break Your AI by Doing Things Right
+
+One of the places where I was recalculating speculations was in the card evaluation stage.  Having chosen a card, the computer players have to decide whether to play it, save it, or discard it.  This was one place where I wanted to get it only calculating once.  The flow of the DSL, however, strongly suggested that the card should be getting handled here, the speculations are an implementation detail.
+
+Finally I realized that was doing things wrong from the beginning: by asking whether a card was good or bad I was encoding a single, definite, strategy into the rules.  The solution was rewrite "play, save, or discard" in terms of the choice method, and let it choose the best one.
+
+What You, Stupid?
+
+The only problem is that the current computer players, as such, are dirt simple stupid.  They're degree of discretion is limited to 'legal is better than illegal'  Unfortunately, with the new system players picked up a troubling tendency to an action that couldn't be completed and didn't advance the game-end condition.  So the game looped.  The temporary solution to this is to assign random ratings to legal moves, so that it doesn't get stuck in a loop.
+
+With that in place, I polished up some other places where a little too much strategy had been written in to keep the dumb-as-dirt players moving forward.  (It can still lead to some... er... <em>suboptimal</em> moves, however.)
+
+Class Action
+
+Another instance of evolution in er, action, was the actions.  I had aliased Action to lambda to make a nicer language syntax for multi-step operations.  One of the problems I ran into is that, while a card might have a name, an action/lambda/proc doesn't, so it's often hard to follow what's going on, and this problem became more pronounced when I started using the choice method more.  So I derived an action class from Proc, with the sole addition that it takes a name in it's constructor.
+
+Cut off at the Pass
+
+Actions and speculations used to return Acted or Passed so that things like each_player_until_pass could tell what's up.  This became a bit difficult as things started returning speculations instead of booleans.  So I had to implement a passed flag with a language syntax of simply 'pass', which is less intrusive than always having to remember to return something.  However, I realized just when writing now that the passed flag needs to be a world-state variable.
+
+Twice as Nice
+
+Another piece of surface syntax I've cleaned up is 'use twice'.  This was a helper method from Industrial Waste's Advisor action, which will double the effect of most cards.  Unfortunately, the old method was to use an Action (lambda, proc) which has to be executed with use_twice.call (or [], but a wart is a wart)  In the course of working over the action execution system, I figured out that the only thing preventing it from being run through the 'use' method is the fact that it can't be discarded.  So just make discard ignore things that can't discarded, and we have "twice = action{...}; use twice"
+
+Returns and Lambdas and Blocks (oh my)
+
+However, in all may experiments, I ran across some very unusual behavior.  After some investigation, I finally tracked down that 'LocalJumpError' indicated that a block (an implicit baby-lambda that can be passed to any method) with return would <strong>return from it's parent method, not itself</strong>.  The actual lambda construct is unique in that it can actually have returns, but it requires some extra syntax.  Of course, the last statement of a method is an implicit return value, but sometimes the return keyword or early exit would have made things clearer.
+
+Logging the world tree
+
+One of the things that actually happened fairly early on in the world-state conversion was a n explosion of text.  You see, before the speculator didn't implement most of the player methods, including the output wrapper.  Now that they were being executed by an actual player, every possible history was being printed out (often multiple times, because I still had rate, judge, legality, and execute)  The solution was to store the notes in the state and print it out every time it checkpoints a successful move.
+
+If I ever get around to making a way to print out the history, the saved logs will also make it easier to follow.
+
+Retiring Prototype
+
+Somewhere along the way, I realized that the program is pretty much implemented - It's just going to get slowly rewritten a few times over from now on.  My Prototype module, which allowed the program to keep running despite missing methods had outlived it's usefulness, as was removed from all classes, as it was hiding errors more often than anything.
+
+ruby -w
+
+I ran across a new trick - Ruby's warning flag.  Unfortunately all it caught were two uninitialized instance variables, so it's hardly a necessity.
+
+<a href="http://oreilly.com/catalog/9780596516178/?CMP=OTC-KW7501011010&ATT=9780596516178">The Ruby Programming Language</a>
+
+During the course of the weekend, I got two hits on a new ruby book, both of which appeared to have good answers to nuts and bolts questions about how Ruby works.  I figured this was good enough to justify buying the book, so I finally got the <a href="http://thisisindexed.com/">Indexed</a> book, and picked up a long overdue copy of the highly regarded The C Programming Language while I was at it.
+
+Change of Tempo
+
+Last year my pattern was to program during the weekend, and take care of everything else during the week.  So far this year, I've often had lots of interruptions during the weekend, which has often caused me to trade out and bleed the programming into the week.  When I get to the time of day Sunday where I should be wrapping up (and writing things like this), I'm just getting started.  This has been happening a fair bit lately, but I've also been feeling pretty good lately.  I'm thinking of switching to a patter of coding a little every day, and taking care of everything else in what's left of the days off.  The main trick here is that without a clean iteration break after the weekend, I'll have to remember to write my experiences more as they happen.
