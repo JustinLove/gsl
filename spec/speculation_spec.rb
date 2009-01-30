@@ -61,6 +61,12 @@ describe GSL::Speculation do
     @ground.world[:legal].should_not be_true
   end
   
+  it "poisons the well" do
+    legal = @legal
+    illegal = @illegal
+    GSL::Speculation.new(@ground, lambda{illegal.switch}).legal?.should be_false
+  end
+  
   it "switches if legal" do
     @legal.switch_if_legal
     @ground.stuff.should == :ran

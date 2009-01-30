@@ -5,11 +5,9 @@ module GSL
   class Player
     module Common
       def choose(from, &doing)
-        best_rated(choose_from_what(from), &doing).switch_if_legal do |best|
-          #note "choose #{best.what} from #{from}"
-          return best.what
-        end
-        return nil
+        best = best_rated(choose_from_what(from), &doing).switch
+        #note "choose #{best.what} from #{from}"
+        return best.what
       end
 
       def choose_from_what(from)

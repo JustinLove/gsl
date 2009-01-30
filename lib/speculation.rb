@@ -35,7 +35,9 @@ module GSL
     
     def branch
       @who.world.branch do
-        @who.world[:legal] = go #.tap {|v| p v}
+        @who.world.state.update(:legal) do |v|
+          if (v.nil?) then go else go && v end
+        end
       end
     end
   

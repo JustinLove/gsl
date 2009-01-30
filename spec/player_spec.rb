@@ -150,6 +150,24 @@ describe GSL::Player do
         it "best_rated nothing" do
           @object.best_rated([]).should be_kind_of(GSL::Speculation::Nil)
         end
+        
+        it "commits legal acts" do
+          @object.use(@good)
+          @object.keys.value.should == 2
+        end
+
+        it "commits illegal acts" do
+          @object.use(@bad)
+          @object.world[:legal].should be_false
+        end
+        
+        it "poisons the well" do
+          bad = @bad
+          @object.use(lambda{
+            use(bad)
+          })
+          @object.world[:legal].should be_false
+        end
       end
       
       it "from an array" do

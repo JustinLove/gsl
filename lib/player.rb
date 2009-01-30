@@ -29,12 +29,10 @@ module GSL
     end
 
     def take(from, &doing)
-      best_rated(choose_from_what(from), &doing).switch_if_legal do |best|
-        note "take #{best.what} from #{from}"
-        must_lose [best.what], from
-        return best.what
-      end
-      return nil
+      best = best_rated(choose_from_what(from), &doing).switch
+      note "take #{best.what} from #{from}"
+      must_lose [best.what], from if best.legal?
+      return best.what
     end
     
     def use(card, from = nil)
@@ -46,7 +44,7 @@ module GSL
         note "#{self.to_s} plays #{card.to_s}"
         Speculation.new(self, 
           action(card.to_s) {execute card; discard card}, 'use').
-          switch_if_legal
+          switch
         true
       else
         false
