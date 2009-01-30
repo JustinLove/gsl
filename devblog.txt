@@ -17,3 +17,70 @@ This is one of those things where one either says "Huh?"/"Oh my god"/"So?"  I wa
 instance_eval
 
 One of the more popular and dangerous language techniques, this can run a string or block as if belongs to the object.  This raises a lot of issues about scoping and especially instance variables, but it can enable some very nice notation when used carefully.  I'm not sure if my case should be called careful: I'm not flinging them around willy-nilly, but I am using a <a href="http://www.artima.com/rubycs/articles/ruby_as_dsl.html">trick</a> recommended by my dear friend Google to run my entire domain language file in the context of the 'game object'.
+
+2008-11-13, 2008-11-15
+
+I did lot of work on the board game domain specific language during the last weekend, and on into the next week.  I dug myself quite a hole by getting into the choice question, and just couldn't pull myself away.  Since then, I've had to deal with little things like food and a noisy furnace blower, and writing about it got pushed back and back.  Stuff found while looking up links didn't help either ;^)
+
+Adding Cards
+
+GSL now does cards.  My development example is <a href="http://boardgamegeek.com/game/2476">Industrial Waste</a>.  I decided to do the initial work in a published game that is known to work.  Industrial Waste has the 'designer' feel while being fairly clean and not too complicated.  For simple things, the language can be quite nice.
+
+<pre class="ruby code">
+card :order do
+  must_have {co_workers >= rationalization}
+  pay materials_required.value, :raw_materials
+  must_gain waste_reduction.value, :waste_disposal
+  gain growth.value, :money
+end
+</pre>
+
+There are still warts of course, such as the .value on resources, and the difference between a resource and it's :symbol.
+
+If it Quacks Like Proc...
+
+I developed a number of systems around processing cards, where cards have associated actions. Then I found I sometimes needed to make choices based on other pieces of code that weren't cards - usually they were procs, Ruby's psuedo-closure objects.  To work around this, I make cards support to_proc.  to_proc is an identity function on proc objects, and the choice system will operate on anything that implements to_proc.
+
+Department of HomeDeck Security
+
+In the course of playing with several fundamental questions - such as if a card is removed from a hand when it's chosen or when it's used - I found cards were disappearing or being duplicated (sometimes infinitely).  The current version has each card register it's location (an advantage of making them objects), as well as check for duplicates or oversized stacks.  Currently discard piles are grafted onto the main card set resource, but long term I think they should become their own resources, so you can have many-one and one-many relationships.
+
+I may also want to investigate unit tests sometimes.
+
+In Context
+
+One particular problem was the Bribery card, which can only be played during an accident.  I could have perhaps made Bribery unplayable and had it discard during accidents, but that doesn't cleanly account for the cost of the playing the card.  I created a context system - automatic for defined functions such as game phases and accidents, no less - that worked out quite nicely.  The game now has "only_during :accident" and "lose(1, :growth) unless use(:bribery, :held_cards)"
+
+Averting Tragedy in the Commons
+
+In some cases, resources are shared rather than assigned to players.  When writing game rules, the name is usually sufficient to separate them and one doesn't want to write something different (common_gain, player_gain, etc.) for each case.  The game and player classes share a Resource_User module which has common definitions for most of the resource handling methods.
+
+The including class can name a delegate for resources it doesn't recognize, which is presumably another Resource_User.  Most of the actual work ends up getting handled by the resource itself, so it's just a matter of sending the appropriate methods on.  Of course, I wasn't too keen on writing this out for every method, especially given the user-forwarding mentioned above.  So I implemented a class method that defines them given only the name, in a manner similar to attr_accessor and company.
+
+Sufficiently Advanced Technology
+
+One of the fascinating things about getting into a project like this with heavy meta-programming is that I'm slowly discovering the kind of tricks that make projects like Rails famous for having hard to understand 'magic' in the framework.  I still don't have a real good intuition for Ruby's object model however.  Or rather, I have a fair intuition in the sense that I can often place something where it needs to be, but I couldn't necessarily draw a diagram of the class system, even though I've seen one a couple of them.
+
+Dangerous Speculations
+
+At some point, it was necessary to get away from random choice.  For one thing, the computer players were sometimes choosing illegal actions.  Complicating this are some very high ambitions: I don't want there to be any game-specific AI code, except perhaps if one want's to try out different strategies against each other, and even then easy things should be easy.
+
+My first attempt at something-better-than-random is the Speculate class, a sort of psuedo-player that can execute actions in a different context where it can check most resource levels and such.  Eventually it ended up doing enough itself that I pulled some of the player routines into a common module that can be shared with the speculator.
+
+Speculation has been successful in the sense that it can check for illegal plays, however there isn't yet any provision for discrimination beyond legal/illegal.  I've also run into a bit of an issue: I've implemented the part of the game that charges maintenance costs, which means players can run out of money without having any choice in the matter.  The board game has rule for loans, but it defines them by an at-any-time action.  I'd like to keep the language code as similar to the rules as possible, and I haven't found a good place to hook this in yet, especially in the presence of speculation.  I'm starting to think that I'm going to need a full copy-on-write resource system with the speculator executing more of the actions and figuring out a score change.
+
+Beyond Scripting
+
+In the course of all this, the framework file line count started getting into the high triple digits and getting generally unwieldy.  The only other Ruby projects I've done were simple scripting that fight nicely in one file, and Rails, which has a very regimented structure.  A short search found <a href="http://blog.jayfields.com/2006/10/ruby-project-tree.html">Jay Fields thoughts on ruby project structure</a>.  I actually didn't follow most of his advice - just the use of the lib directory, so far.  I was also looking through <a href="http://github.com/gilesbowkett/archaeopteryx/wikis/home">Archaeopteryx</a>, which I had downloaded recently out of curiosity on it's heavy use of lambdas; the project structure basically agreed with the advice given.
+
+After getting things split up, I also wrapped most of it up in module.
+
+I'll Raise You Two Exception Mechanisms
+
+When it came time actually start catching my insufficient resource exceptions, I found out I'd been doing it wrong.  Ruby has not one but two exception mechanisms, and I'd been mixing them.  raise gets rescued, throw gets caught.
+
+An Instance of Difficulty
+
+I ran into one hitch with my crazy metaprogramming.  I've been using instance_eval to set a default receiver for methods/messages.  This worked pretty well for a long time, since I was mostly defining game phases, cards, and other things that don't take arguments.  Then, I actually hit a case where I wanted to instance_eval with arguments.  It doesn't do that.
+
+It turns out this is a known problem; there is an instance_exec in 1.9, but that is still under development.  Fortunately, you can <a href="http://www.jroller.com/abstractScope/entry/passing_parameters_to_an_instance">implement instance_exec in 1.8</a> with some high concept metaprogramming.
