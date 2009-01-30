@@ -1,0 +1,19 @@
+2008-10-21
+
+I went back to work on my Ruby based board game domain language for a bit.  A lot of it was getting back into the meta-programming tricks I've been using, which I haven't really talked about yet, and probably should before I forget.
+
+I started the project once and got some things mostly working, but things started to get messy when it got actually running the game.  The notation was also still very... programmy.  You have to expect that a bit when using an embedded language - a legal program in the host language, in contrast to an external language, wherein one enters the interpreter or compiler tarpit I was dipping my toes in above.  However ruby offers a quite lax and varied syntax (or enough rope to hang yourself and the rest of the neighborhood, take your pick) and I decided the end result would be much better if I used more of it.
+
+So, I started over, this time writing an acceptable semi-structured form first, which I am slowly going through and converting in a Ruby-acceptable syntax, writing the necessary back end code as I go.  Making a text that read well in two language takes a few ugly/beautiful hacks, and, though this may be a bit premature, here is a survey of some of them.
+
+method_missing
+
+Ruby is object oriented, where object methods can be thought of as message sends.  In fact, you can just use object.send if you have a string you'd like to use as a method name.  If that string isn't method, you (or rather, the object) gets a chance to do something creative with it before an not found exception is generated.  Forward to another object, create a property, look it up in hash table, or whatever suits your fancy.  Another fun trick is mixing a module I call Prototype into my classes, causing them to emit a message for missing methods, but not halt the program.
+
+Class.new()
+
+This is one of those things where one either says "Huh?"/"Oh my god"/"So?"  I was most recently in middle category.  In a sense I should have known this, having read <a href="http://isbn.nu/9780262111584">The Art of the Metaobject Protocol</a>, however I didn't really get into it enough to fully understand what was going.  It might have moved from the first to the second category, however.  In my case, I wanted to create a class for each resource type in the game, which might then be instanced for each player.  Class.new() is the object creation method of the class of classes; it returns a runtime instance of a class.  You can hide this in an api, add properties and methods to the new class, and then use it just like normal.
+
+instance_eval
+
+One of the more popular and dangerous language techniques, this can run a string or block as if belongs to the object.  This raises a lot of issues about scoping and especially instance variables, but it can enable some very nice notation when used carefully.  I'm not sure if my case should be called careful: I'm not flinging them around willy-nilly, but I am using a <a href="http://www.artima.com/rubycs/articles/ruby_as_dsl.html">trick</a> recommended by my dear friend Google to run my entire domain language file in the context of the 'game object'.
