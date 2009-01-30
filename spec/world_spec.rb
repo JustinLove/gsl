@@ -75,6 +75,11 @@ shared_examples_for "state objects" do
     @object.update(:blarg) {|v| v << 4}
     @object[:blarg].should == [1, 2, 3, 4]
   end
+
+  it "Updates with a default value" do
+    @object.update(:blarg, :bleep) {|v| v.to_s.upcase.to_sym}
+    @object[:blarg].should == :BLEEP
+  end
 end
 
 describe GSL::World::State do

@@ -45,9 +45,10 @@ module GSL
         @d[k] = v.freeze
       end
       
-      def update(k, &proc)
+      def update(k, default = nil, &proc)
         v = self[k]
         v = v.dup if v.frozen?
+        v = default if v.nil?
         self[k] = proc.call(v)
       end
       
@@ -156,8 +157,8 @@ module GSL
         @world[id_card(k)] = v
       end
       
-      def update(k, &proc)
-        @world.state.update(id_card(k), &proc)
+      def update(k, default = nil, &proc)
+        @world.state.update(id_card(k), default, &proc)
       end
     end
     
