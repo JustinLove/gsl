@@ -84,3 +84,23 @@ An Instance of Difficulty
 I ran into one hitch with my crazy metaprogramming.  I've been using instance_eval to set a default receiver for methods/messages.  This worked pretty well for a long time, since I was mostly defining game phases, cards, and other things that don't take arguments.  Then, I actually hit a case where I wanted to instance_eval with arguments.  It doesn't do that.
 
 It turns out this is a known problem; there is an instance_exec in 1.9, but that is still under development.  Fortunately, you can <a href="http://www.jroller.com/abstractScope/entry/passing_parameters_to_an_instance">implement instance_exec in 1.8</a> with some high concept metaprogramming.
+
+2008-12-30
+
+One of the things I did today was refactor a small Ruby helper module.  It was monkey-patching Object and Class, and it now works as a optional module for case-by-case use.  Figuring it out involved a lot of trial and error where where to stick things in Ruby's object system.
+
+The module does class variables of the kind that are equally visible from both the class and it's instances.  Ruby has these (@@var), but they don't work the way I want.  Once one of Ruby's @@vars gets attached to a class, anything related will end up with that copy of the variable rather than creating a new one, whether you want it or not.  I had a situation where a module needed add different variables into each class it extended - doing it Ruby's way ended up with one common variable in the shared module.
+
+The resolution, of sorts, was to make method with the same name for both class and object, but with slightly different definitions.  The class version points to itself, and the object version points to it's class.  Further, if you don't like the class that get's chosen, just redefine 'cv'.
+
+The first version of this monkey-patched Class and Object.  It's messy, but after figuring out the hard way, I can kind of understand why I might have tried and given up on doing a proper module earlier ;^)
+
+I recently grabbed the file for another project.  I've also been experimenting with RSpec, so it seemed like a good opportunity to spec out the desired results and then refactor.  The testing part worked out fairly well - once things got built up, I could get an overview of which parts broke as I tried wiggling things until they worked ;^)
+
+Basic function was pretty straightforward - the tests passed and I thought I was done.  Then went back to the application and realized my tests weren't ver good ;^)  The original application, if you recall, used class variables in module to be used later.  My refactored ClassVars didn't work this situation.
+
+As best I can make of it, you 'include' to add the module's routines as if they were entered as straight text (sort of).  You 'extend' to modify the superclass, making the methods available for use in the class definition, for one.
+
+Since my application module will ultimately be used to extend, I have to include in the module itself.  This mostly works, except that instances of the extended application classes don't have 'cv'.
+
+What I ended up doing was have the 'included' callback 'extend' the target class with the 'included'/'extended' triggers.  The SuperClass below was called Triggers at first.
