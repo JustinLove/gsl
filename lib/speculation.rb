@@ -35,11 +35,12 @@ module GSL
     
     def branch
       @who.world.branch(@why) do
-        g = go
-        @who.world.state.update(:legal, true) do |v|
-          g && v
-        end
+        propigate_errors(go)
       end
+    end
+    
+    def propigate_errors(legal)
+      @who.world.state.update(:legal, true) {|old| legal && old}
     end
   
     def legal?
