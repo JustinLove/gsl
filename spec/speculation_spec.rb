@@ -69,6 +69,24 @@ describe GSL::Speculation do
     GSL::Speculation.new(ground, apple, "well").legal?.should be_false
   end
 
+  it "stays poisoned through multiple steps" do
+    ground = @ground
+    poison = lambda{raise GSL::Game::Illegal}
+    apple = lambda{
+      GSL::Speculation.new(ground, poison, "poison").switch
+      GSL::Speculation.new(ground, lambda{}, "placebo").switch
+    }
+    GSL::Speculation.new(ground, apple, "well").legal?.should be_false
+  end
+
+  it "poisons all the way down" do
+    ground = @ground
+    poison = lambda{raise GSL::Game::Illegal}
+    apple = lambda{GSL::Speculation.new(ground, poison, "poison").switch}
+    basket = lambda{apple.call}
+    GSL::Speculation.new(ground, basket, "well").legal?.should be_false
+  end
+
   it "switches if legal" do
     @legal.switch_if_legal
     @ground.stuff.should == :ran
