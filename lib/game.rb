@@ -162,7 +162,7 @@ module GSL
     end
     
     def note(what)
-      @world[:log] = @world[:log] + [@world[:speculate_on].to_s + what]
+      @world[:log] = @world[:log] + [what]
     end
     
     def note_text

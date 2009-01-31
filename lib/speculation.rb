@@ -66,7 +66,6 @@ module GSL
     def go
       begin
         @@level += 1
-        @who.world[:speculate_on] = ('.' * @@level) # + @why
         d "#{@who} #{why}", ""
         execute
       rescue Game::Illegal => e
@@ -81,7 +80,6 @@ module GSL
         return true
       ensure
         @@level -= 1
-        @who.world[:speculate_on] = ('.' * @@level)
       end
     end
     
