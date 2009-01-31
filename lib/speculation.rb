@@ -34,9 +34,10 @@ module GSL
     end
     
     def branch
-      @who.world.branch do
+      @who.world.branch(@why) do
+        g = go
         @who.world.state.update(:legal, true) do |v|
-          go && v
+          g && v
         end
       end
     end

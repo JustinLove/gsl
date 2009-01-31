@@ -11,6 +11,7 @@ class Ground
   
   def initialize
     @world = GSL::World::View.new
+    @world.state.name = "root"
     super
   end
   
@@ -27,9 +28,9 @@ describe GSL::Speculation do
   before do
     @ground = Ground.new
     @object = @legal = GSL::Speculation.new(@ground,
-      lambda{self.stuff = :ran}, "nothing much")
+      lambda{self.stuff = :ran}, "legal")
     @illegal = GSL::Speculation.new(@ground,
-      lambda{self.stuff = :garbage; raise GSL::Game::Illegal}, "an error")
+      lambda{self.stuff = :garbage; raise GSL::Game::Illegal}, "illegal")
   end
 
   it_should_behave_like "well behaved objects"
@@ -62,11 +63,12 @@ describe GSL::Speculation do
   end
   
   it "poisons the well" do
-    legal = @legal
-    illegal = @illegal
-    GSL::Speculation.new(@ground, lambda{illegal.switch}).legal?.should be_false
+    ground = @ground
+    poison = lambda{raise GSL::Game::Illegal}
+    apple = lambda{GSL::Speculation.new(ground, poison, "poison").switch}
+    GSL::Speculation.new(ground, apple, "well").legal?.should be_false
   end
-  
+
   it "switches if legal" do
     @legal.switch_if_legal
     @ground.stuff.should == :ran
