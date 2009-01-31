@@ -42,8 +42,12 @@ module GSL
       def rate_state(state)
         if (state && state[:legal]) then (1..100).random else 0 end
       end
-
+      
       def execute(what)
+        Speculation.new(self, what, 'execute').switch
+      end
+
+      def execute_unchecked(what)
         if (what.to_proc)
           instance_exec(&(what.to_proc))
         else

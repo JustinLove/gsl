@@ -43,7 +43,7 @@ module GSL
       if (card)
         note "#{self.to_s} plays #{card.to_s}"
         Speculation.new(self, 
-          action(card.to_s) {execute card; discard card}, 'use').
+          action(card.to_s) {execute_unchecked card; discard card}, 'use').
           switch
         true
       else
