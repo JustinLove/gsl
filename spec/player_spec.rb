@@ -147,6 +147,11 @@ describe GSL::Player do
           g.what.should == @good
         end
 
+        it "best_rated illegal is illegal" do
+          lambda {@object.best_rated([@bad, @bad])}.
+            should raise_error(GSL::Game::NoLegalOptions)
+        end
+
         it "best_rated nothing" do
           @object.best_rated([]).should be_kind_of(GSL::Speculation::Nil)
         end

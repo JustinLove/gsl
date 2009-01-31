@@ -99,6 +99,9 @@ module GSL
 
     class NotAllowed < Illegal
     end
+    
+    class NoLegalOptions < Illegal
+    end
   end
   
   module Language

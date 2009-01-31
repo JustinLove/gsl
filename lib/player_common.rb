@@ -28,9 +28,14 @@ module GSL
       end
       
       def best_rated(from, &doing)
-        from.map {|c|
+        choices = from.map {|c|
           rate(c, &doing)
-        }.sort_by {|r| -r.rating}.first || Speculation::Nil.new
+        }.sort_by {|r| r.rating}
+        best = choices.last || Speculation::Nil.new
+        unless (best.nil? || best.legal?)
+          Game.illegal(:NoLegalOptions, choices.map{|c| c.why}.join(', '))
+        end
+        best
       end
       
       def rate(what, why = 'rates', &doing)
