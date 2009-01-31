@@ -1,17 +1,17 @@
 def libs(args)
   args.each do |file|
-    require File.join(File.dirname(__FILE__), '..', 'lib', file)
+    require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', file))
   end
 end
 
 def tests(args)
   args.each do |file|
-    require File.join(File.dirname(__FILE__), file)
+    require File.expand_path(File.join(File.dirname(__FILE__), file))
   end
 end
 
 def file(arg)
-  File.join(File.dirname(__FILE__), '..', arg)
+  File.expand_path(File.join(File.dirname(__FILE__), '..', arg))
 end
 
 tests 'shared_spec'
