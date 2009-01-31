@@ -44,10 +44,6 @@ module GSL
       end
       
       def execute(what)
-        Speculation.new(self, what, 'execute').switch
-      end
-
-      def execute_unchecked(what)
         if (what.to_proc)
           instance_exec(&(what.to_proc))
         else

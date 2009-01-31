@@ -157,16 +157,14 @@ describe GSL::Player do
         end
 
         it "commits illegal acts" do
-          @object.use(@bad)
-          @object.world[:legal].should be_false
+          lambda {@object.use(@bad)}.should raise_error(GSL::Game::Illegal)
         end
         
         it "poisons the well" do
           bad = @bad
-          @object.use(lambda{
+          lambda {@object.use(lambda{
             use(bad)
-          })
-          @object.world[:legal].should be_false
+          })}.should raise_error(GSL::Game::Illegal)
         end
       end
       
