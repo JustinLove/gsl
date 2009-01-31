@@ -2,6 +2,14 @@ require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
 GSL::depends_on %w{action}
 
 module GSL
+  module World
+    class State
+      def difference
+        @d.keys.size
+      end
+    end
+  end
+  
   class Player
     module Common
       def choose(from, &doing)
@@ -45,7 +53,11 @@ module GSL
       end
 
       def rate_state(state)
-        if (state && state[:legal]) then (1..100).random else 0 end
+        if (state && state[:legal]) then
+          state.difference + (1..10).random
+        else
+          0
+        end
       end
       
       def execute(what)
