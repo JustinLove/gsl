@@ -251,11 +251,19 @@ Simply implementing this has far from desired results however, because it's been
 
 My strategy so far has been to make the illegal state poisonous.  Right now I'm not committing an illegal speculation.  In the new scheme, I would always commit it where there would otherwise be a legality check.  The thing that will (or should) keep illegal actions from being performed is a combination of the choice process and a fitness function that always rates illegal actions lower than any legal action.  If an illegal state is ever committed to reality, the only thing to do is raise an language error informing the author that he needs a better fitness function for the AI or a 'pass' action that is always legal.
 
-Actually, I'm a ninny.  I've introduced new mechanics, but they are still being used in old ways.  I've changed how things are supposed to work and kept the same mechanisms.  Every 'illegal state' originates in an exception.  What the speculation does it commute that into a boolean that can be examined later.  Previously, I'd been checking for legal states before performing things, but this hid errors.  Now I'm not checking that flag anymore, and I've written a bunch of code of propagate errors, most of it specs, refactoring, and debug support.  I could just let the exception keep on going to much the same effect.  Catching the errors only matters where the program will make some decision based upon it.  This is only the choice points now
+Actually, I'm a ninny.  I've introduced new mechanics, but they are still being used in old ways.  I've changed how things are supposed to work and kept the same mechanisms.  Every 'illegal state' originates in an exception.  What the speculation does it commute that into a boolean that can be examined later.  Previously, I'd been checking for legal states before performing things, but this hid errors.  Now I'm not checking that flag anymore, and I've written a bunch of code of propagate errors, most of it specs, refactoring, and debug support.  I could just let the exception keep on going to much the same effect.  Catching the errors only matters where the program will make some decision based upon it.  This is only the choice points now.
 
 Did I Waste My Day?
 
-Maybe.  Error propagation might come into play where all choices are illegal, when the best one got committed, it would set the illegal flag and propagate it up.  This might be useful for choice-within-choice scenarios.  On the other hand, I'm probably better better off raising a "no legal choice" exception, which is really a better description of the problem.
+Maybe.  Error propagation might come into play where all choices are illegal, when the best one got committed, it would set the illegal flag and propagate it up.  This might be useful for choice-within-choice scenarios.  On the other hand, I'm probably better off raising a "no legal choice" exception, which is really a better description of the problem.
+
+A Little Less Than Random
+
+I made one small tweak to the stopgap fitness function - add the number of changes to game state.  I was trying to get rid of needless discards, but it turns out that a discard touches as much game state as most actions (cards still move from hand to discard, plus some book-keeping information.)
+
+2009-01-30
+
+-----
 
 Whats in a Name?
 
