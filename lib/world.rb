@@ -3,17 +3,19 @@ module GSL
     class State
       attr_reader :parent
       attr_reader :depth
+      attr_accessor :name
       
-      def initialize(_parent = nil)
+      def initialize(_parent = nil, _name = nil)
         super()
         @d = {}
         @parent = _parent
+        @name = _name || object_id.to_s
         @depth = 1
         @depth += _parent.depth if _parent
       end
       
-      def derive
-        State.new(self)
+      def derive(_name = nil)
+        State.new(self, _name)
       end
       
       def clone
@@ -21,7 +23,7 @@ module GSL
       end
       
       def to_s
-        "State(#{depth}) #{object_id}[#{@d.keys.count}] < #{@parent.object_id}"
+        "State(#{depth}) #{name}[#{@d.keys.count}] < #{@parent && @parent.name}"
       end
       
       def pretty_print(pp = nil)
@@ -91,8 +93,8 @@ module GSL
         @state[k] = v
       end
       
-      def descend
-        @state = @state.derive #.tap {|s| puts "#{@state} + #{s}"}
+      def descend(_name = nil)
+        @state = @state.derive(_name) #.tap {|s| puts "#{@state} + #{s}"}
       end
       
       def ascend
@@ -113,13 +115,13 @@ module GSL
         end
       end
       
-      def checkpoint
-        @reality = descend
+      def checkpoint(_name = nil)
+        @reality = descend(_name)
       end
       
-      def branch
+      def branch(_name = nil)
         hidden = [@state, @reality]
-        descend
+        descend(_name)
         yield
         b = @state
         @state, @reality = hidden

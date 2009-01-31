@@ -80,6 +80,10 @@ shared_examples_for "state objects" do
     @object.update(:blarg, :bleep) {|v| v.to_s.upcase.to_sym}
     @object[:blarg].should == :BLEEP
   end
+  
+  it "has a name" do
+    @object.name.should be_kind_of(String)
+  end
 end
 
 describe GSL::World::State do
@@ -93,10 +97,14 @@ describe GSL::World::State do
   it "derives new states" do
     @object.derive.should be_kind_of(GSL::World::State)
   end
-  
+
+  it "creates with a name" do
+    GSL::World::State.new(nil, "barney").name.should == "barney"
+  end
+
   describe "derived" do
     before do
-      @object = @object.derive
+      @object = @object.derive("child")
       @top[:parent] = :parent
       @object[:child] = :child
     end
@@ -105,6 +113,10 @@ describe GSL::World::State do
     
     it "has a parent" do
       @object.parent.should == @top
+    end
+
+    it "has a name" do
+      @object.name.should == "child"
     end
     
     it "retrieves parent values" do
@@ -184,6 +196,11 @@ describe GSL::World::View do
     @object[:larry].should_not == :dead
   end
   
+  it "descends with a name" do
+    @object.descend("down")
+    @object.state.name.should == "down"
+  end
+  
   it "begins" do
     @object[:blarg] = :bleep
     @object.begin
@@ -261,6 +278,12 @@ describe GSL::World::View do
       @object.switch(@object.branch{})
     end
     @object.reality.should == truth
+  end
+
+  it "branches with a name" do
+    w = @object.branch("fred") do
+    end
+    w.name.should == "fred"
   end
   
   it "switches" do
