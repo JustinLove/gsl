@@ -2,7 +2,7 @@ require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
 GSL::depends_on %w{misc}
 
 module GSL
-  class Speculation
+  class Future
     attr_reader :who
     attr_reader :what
     attr_reader :how
@@ -94,7 +94,7 @@ module GSL
       end
     end
     
-    class Nil < Speculation
+    class Nil < Future
       def initialize()
         @who = nil
         @what = nil

@@ -94,7 +94,7 @@ describe GSL::Player do
     end
     
     it "doesn't catch other exceptions" do
-      lambda {GSL::Speculation.new(@object, lambda{raise "hell"})}.should raise_error("hell")
+      lambda {GSL::Future.new(@object, lambda{raise "hell"})}.should raise_error("hell")
     end
     
     describe "side effects" do
@@ -110,7 +110,7 @@ describe GSL::Player do
       end
       
       it "speculation is impotent" do
-        GSL::Speculation.new(@object, @action)
+        GSL::Future.new(@object, @action)
         @object.marbles.value.should == 5
       end
     end
@@ -125,8 +125,8 @@ describe GSL::Player do
       
       describe "(internals)" do
         it "rate_state" do
-          @object.rate_state(GSL::Speculation.new(@object, @good).state).should > 
-            @object.rate_state(GSL::Speculation.new(@object, @bad).state)
+          @object.rate_state(GSL::Future.new(@object, @good).state).should > 
+            @object.rate_state(GSL::Future.new(@object, @bad).state)
         end
         
         it "rates actions" do
@@ -153,7 +153,7 @@ describe GSL::Player do
         end
 
         it "best_rated nothing" do
-          @object.best_rated([]).should be_kind_of(GSL::Speculation::Nil)
+          @object.best_rated([]).should be_kind_of(GSL::Future::Nil)
         end
         
         it "commits legal acts" do

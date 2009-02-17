@@ -39,7 +39,7 @@ module GSL
         choices = from.map {|c|
           rate(c, &doing)
         }.sort_by {|r| r.rating}
-        best = choices.last || Speculation::Nil.new
+        best = choices.last || Future::Nil.new
         unless (best.nil? || best.legal?)
           Game.illegal(:NoLegalOptions, choices.map{|c| c.why}.join(', '))
         end
@@ -47,7 +47,7 @@ module GSL
       end
       
       def rate(what, why = 'rates', &doing)
-        s = Speculation.new(self, what, why, &doing)
+        s = Future.new(self, what, why, &doing)
         s.rating = rate_state(s.state)
         s
       end
