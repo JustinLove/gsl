@@ -109,7 +109,7 @@ describe GSL::Player do
         @object.marbles.value.should == 2
       end
       
-      it "speculation is impotent" do
+      it "future is impotent" do
         GSL::Future.new(@object, @action)
         @object.marbles.value.should == 5
       end
