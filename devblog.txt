@@ -267,7 +267,9 @@ I made one small tweak to the stopgap fitness function - add the number of chang
 
 Whats in a Name?
 
-I've been making lots of references to the versioned store of world states.  I'm starting to think that I ought to call it Yggdrasil just so i have a good name for it.  My main reluctance to do this is lack of good names for the sub-concepts, some of which work quite well - Citizen in particular.  Well, that and renaming everything from nordic mythology would probably make it harder to understand.  Probably I'll take Yggdrasil, consider anything that really doesn't fit any more, and try to leave the rest alone.
+I've been making lots of references to the versioned store of world states.  I'm starting to think that I ought to call it Yggdrasil just so i have a good name for it.  My main reluctance to do this is lack of good names for the sub-concepts, some of which work quite well - Citizen in particular.  Well, that and renaming everything from nordic mythology would probably make it harder to understand.
+
+I went ahead and renamed it Yggdrasil.  View could then become World, and ver_accessor and friends become ygg_accessor, but not much else.  I'm a little uneasy with the name Passport, but I don't have a better one at the moment.
 
 Another name on the chopping block is Speculation,  It's a bit of a mouthful and is too reminiscent of specification, which is the testing framework.  Current candidate is Future.
 
