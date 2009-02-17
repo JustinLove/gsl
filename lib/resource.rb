@@ -33,7 +33,7 @@ module GSL
       end
     end
 
-    extend World::Citizen::Class
+    extend Yggdrasil::Citizen::Class
 
     ver_accessor :value
     def name

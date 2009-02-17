@@ -5,7 +5,7 @@ module GSL
   class Player
     include ResourceUser
     include Player::Common
-    extend World::Citizen::Class
+    extend Yggdrasil::Citizen::Class
   
     def forward_to; @game; end
   

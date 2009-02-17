@@ -1,7 +1,7 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
 GSL::depends_on %w{action}
 
-module World
+module Yggdrasil
   class State
     def difference
       @d.keys.size

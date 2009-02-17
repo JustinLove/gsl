@@ -1,4 +1,4 @@
-module World
+module Yggdrasil
   class State
     attr_reader :parent
     attr_reader :depth

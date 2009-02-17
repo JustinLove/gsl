@@ -2,25 +2,25 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 libs %w{world}
 require 'pp'
 
-class World::State
+class Yggdrasil::State
   include Tattler
 end
 
-class World::View
+class Yggdrasil::View
   include Tattler
 end
 
-class World::Passport
+class Yggdrasil::Passport
   include Tattler
 end
 
-module World::Citizen
+module Yggdrasil::Citizen
   include Tattler
 end
 
 class Kane
   include Tattler
-  extend World::Citizen::Class
+  extend Yggdrasil::Citizen::Class
   ver_accessor :blarg
   ver_accessor :larry
   ver_reader :china
@@ -86,20 +86,20 @@ shared_examples_for "state objects" do
   end
 end
 
-describe World::State do
+describe Yggdrasil::State do
   before do
-    @top = @object = World::State.new
+    @top = @object = Yggdrasil::State.new
   end
   
   it_should_behave_like "well behaved objects"
   it_should_behave_like "state objects"
   
   it "derives new states" do
-    @object.derive.should be_kind_of(World::State)
+    @object.derive.should be_kind_of(Yggdrasil::State)
   end
 
   it "creates with a name" do
-    World::State.new(nil, "barney").name.should == "barney"
+    Yggdrasil::State.new(nil, "barney").name.should == "barney"
   end
 
   describe "derived" do
@@ -162,15 +162,15 @@ describe World::State do
   end
 end
 
-describe World::View do
+describe Yggdrasil::View do
   before do
-    @object = World::View.new
+    @object = Yggdrasil::View.new
   end
 
   it_should_behave_like "well behaved objects"
   
   it "has a state" do
-    @object.state.should be_kind_of(World::State)
+    @object.state.should be_kind_of(Yggdrasil::State)
   end
   
   it "forwards []" do
@@ -216,7 +216,7 @@ describe World::View do
   
   it "doesn't ascend to nil" do
     lambda {@object.ascend}.should raise_error
-    @object.state.should be_kind_of(World::State)
+    @object.state.should be_kind_of(Yggdrasil::State)
   end
   
   it "commits" do
@@ -260,7 +260,7 @@ describe World::View do
   it "doesn't commit to nil" do
     @object.checkpoint
     lambda {@object.commit}.should raise_error
-    @object.state.should be_kind_of(World::State)
+    @object.state.should be_kind_of(Yggdrasil::State)
   end
   
   it "branches" do
@@ -292,11 +292,11 @@ describe World::View do
   end
 end
 
-describe World::Passport do
+describe Yggdrasil::Passport do
   before do
-    @world = World::View.new
-    @object = World::Passport.new(Kane.new(@world))
-    @other = World::Passport.new(Kane.new(@world))
+    @world = Yggdrasil::View.new
+    @object = Yggdrasil::Passport.new(Kane.new(@world))
+    @other = Yggdrasil::Passport.new(Kane.new(@world))
   end
   
   it_should_behave_like "well behaved objects"
@@ -338,9 +338,9 @@ describe World::Passport do
   end
 end
 
-describe World::Citizen do
+describe Yggdrasil::Citizen do
   before do
-    @world = World::View.new
+    @world = Yggdrasil::View.new
     @object = Kane.new(@world)
     @other = Kane.new(@world)
   end

@@ -142,7 +142,7 @@ module GSL
         @w.update(:value) {|v| v.delete(item); v}
         result = yield item
         @w.update(:value) {|v| v << item}
-        if (result.kind_of?(World::State))
+        if (result.kind_of?(Yggdrasil::State))
           result.update(@w.id_card(:value)) {|v| v << item}
         end
         return result

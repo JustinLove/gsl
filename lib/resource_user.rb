@@ -3,7 +3,7 @@ GSL::depends_on %w{classvar resource component world}
 
 module GSL
   module ResourceUser
-    extend World::Citizen::Class
+    extend Yggdrasil::Citizen::Class
     
     def self.included(base)
       #puts base.name

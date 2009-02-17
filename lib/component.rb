@@ -3,7 +3,7 @@ GSL::depends_on %w{world}
 
 module GSL
   class Component
-    extend World::Citizen::Class
+    extend Yggdrasil::Citizen::Class
     attr_reader :name
 
     class << self

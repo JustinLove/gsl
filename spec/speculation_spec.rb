@@ -6,11 +6,11 @@ class GSL::Speculation
 end
 
 class Ground
-  extend World::Citizen::Class
+  extend Yggdrasil::Citizen::Class
   ver_accessor :stuff
   
   def initialize
-    @world = World::View.new
+    @world = Yggdrasil::View.new
     @world.state.name = "root"
     super
   end

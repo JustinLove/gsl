@@ -14,7 +14,7 @@ module GSL
     as_property :number_of_players
 
     def initialize(file = nil)
-      @world = World::View.new
+      @world = Yggdrasil::View.new
       super()
       @context = []
       @game_over = false
