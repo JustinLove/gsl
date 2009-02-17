@@ -63,7 +63,7 @@ module Yggdrasil
     end
   end
   
-  class View
+  class World
     attr_reader :state
     attr_reader :reality
     
@@ -73,7 +73,7 @@ module Yggdrasil
     end
     
     def to_s
-      "View (#{@state})"
+      "World (#{@state})"
     end
     
     def pretty_print(pp = nil)

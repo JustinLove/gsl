@@ -6,7 +6,7 @@ class Yggdrasil::State
   include Tattler
 end
 
-class Yggdrasil::View
+class Yggdrasil::World
   include Tattler
 end
 
@@ -162,9 +162,9 @@ describe Yggdrasil::State do
   end
 end
 
-describe Yggdrasil::View do
+describe Yggdrasil::World do
   before do
-    @object = Yggdrasil::View.new
+    @object = Yggdrasil::World.new
   end
 
   it_should_behave_like "well behaved objects"
@@ -294,7 +294,7 @@ end
 
 describe Yggdrasil::Passport do
   before do
-    @world = Yggdrasil::View.new
+    @world = Yggdrasil::World.new
     @object = Yggdrasil::Passport.new(Kane.new(@world))
     @other = Yggdrasil::Passport.new(Kane.new(@world))
   end
@@ -340,7 +340,7 @@ end
 
 describe Yggdrasil::Citizen do
   before do
-    @world = Yggdrasil::View.new
+    @world = Yggdrasil::World.new
     @object = Kane.new(@world)
     @other = Kane.new(@world)
   end

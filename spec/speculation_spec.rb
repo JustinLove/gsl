@@ -10,7 +10,7 @@ class Ground
   ver_accessor :stuff
   
   def initialize
-    @world = Yggdrasil::View.new
+    @world = Yggdrasil::World.new
     @world.state.name = "root"
     super
   end

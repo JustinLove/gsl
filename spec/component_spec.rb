@@ -108,7 +108,7 @@ describe GSL::Component do
   describe "tracks location" do
     before :all do
       @user = User.new()
-      @user.world = Yggdrasil::View.new
+      @user.world = Yggdrasil::World.new
     end
     
     before do

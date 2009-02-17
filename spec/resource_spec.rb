@@ -13,7 +13,7 @@ end
 describe "all tests", :shared => true do
   before :all do
     @user = User.new()
-    @user.world = Yggdrasil::View.new
+    @user.world = Yggdrasil::World.new
   end
 
   describe "before typing" do
@@ -217,7 +217,7 @@ describe "all tests", :shared => true do
   describe "with deleted discard" do
     before do
       @user = User.new();
-      @user.world = Yggdrasil::View.new
+      @user.world = Yggdrasil::World.new
       @class = GSL::Resource.define(:vegitable)
       @object = @class.new(@user)
       @initial_value = [:carrot, :celery, :lettuce]
