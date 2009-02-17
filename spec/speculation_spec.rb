@@ -6,11 +6,11 @@ class GSL::Speculation
 end
 
 class Ground
-  extend GSL::World::Citizen::Class
+  extend World::Citizen::Class
   ver_accessor :stuff
   
   def initialize
-    @world = GSL::World::View.new
+    @world = World::View.new
     @world.state.name = "root"
     super
   end

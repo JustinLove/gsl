@@ -1,15 +1,15 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
 GSL::depends_on %w{action}
 
-module GSL
-  module World
-    class State
-      def difference
-        @d.keys.size
-      end
+module World
+  class State
+    def difference
+      @d.keys.size
     end
   end
-  
+end
+
+module GSL
   class Player
     module Common
       def choose(from, &doing)

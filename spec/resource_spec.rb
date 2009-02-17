@@ -13,7 +13,7 @@ end
 describe "all tests", :shared => true do
   before :all do
     @user = User.new()
-    @user.world = GSL::World::View.new
+    @user.world = World::View.new
   end
 
   describe "before typing" do
@@ -217,7 +217,7 @@ describe "all tests", :shared => true do
   describe "with deleted discard" do
     before do
       @user = User.new();
-      @user.world = GSL::World::View.new
+      @user.world = World::View.new
       @class = GSL::Resource.define(:vegitable)
       @object = @class.new(@user)
       @initial_value = [:carrot, :celery, :lettuce]

@@ -2,25 +2,25 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 libs %w{world}
 require 'pp'
 
-class GSL::World::State
+class World::State
   include Tattler
 end
 
-class GSL::World::View
+class World::View
   include Tattler
 end
 
-class GSL::World::Passport
+class World::Passport
   include Tattler
 end
 
-module GSL::World::Citizen
+module World::Citizen
   include Tattler
 end
 
 class Kane
   include Tattler
-  extend GSL::World::Citizen::Class
+  extend World::Citizen::Class
   ver_accessor :blarg
   ver_accessor :larry
   ver_reader :china
@@ -86,20 +86,20 @@ shared_examples_for "state objects" do
   end
 end
 
-describe GSL::World::State do
+describe World::State do
   before do
-    @top = @object = GSL::World::State.new
+    @top = @object = World::State.new
   end
   
   it_should_behave_like "well behaved objects"
   it_should_behave_like "state objects"
   
   it "derives new states" do
-    @object.derive.should be_kind_of(GSL::World::State)
+    @object.derive.should be_kind_of(World::State)
   end
 
   it "creates with a name" do
-    GSL::World::State.new(nil, "barney").name.should == "barney"
+    World::State.new(nil, "barney").name.should == "barney"
   end
 
   describe "derived" do
@@ -162,15 +162,15 @@ describe GSL::World::State do
   end
 end
 
-describe GSL::World::View do
+describe World::View do
   before do
-    @object = GSL::World::View.new
+    @object = World::View.new
   end
 
   it_should_behave_like "well behaved objects"
   
   it "has a state" do
-    @object.state.should be_kind_of(GSL::World::State)
+    @object.state.should be_kind_of(World::State)
   end
   
   it "forwards []" do
@@ -216,7 +216,7 @@ describe GSL::World::View do
   
   it "doesn't ascend to nil" do
     lambda {@object.ascend}.should raise_error
-    @object.state.should be_kind_of(GSL::World::State)
+    @object.state.should be_kind_of(World::State)
   end
   
   it "commits" do
@@ -260,7 +260,7 @@ describe GSL::World::View do
   it "doesn't commit to nil" do
     @object.checkpoint
     lambda {@object.commit}.should raise_error
-    @object.state.should be_kind_of(GSL::World::State)
+    @object.state.should be_kind_of(World::State)
   end
   
   it "branches" do
@@ -292,11 +292,11 @@ describe GSL::World::View do
   end
 end
 
-describe GSL::World::Passport do
+describe World::Passport do
   before do
-    @world = GSL::World::View.new
-    @object = GSL::World::Passport.new(Kane.new(@world))
-    @other = GSL::World::Passport.new(Kane.new(@world))
+    @world = World::View.new
+    @object = World::Passport.new(Kane.new(@world))
+    @other = World::Passport.new(Kane.new(@world))
   end
   
   it_should_behave_like "well behaved objects"
@@ -338,9 +338,9 @@ describe GSL::World::Passport do
   end
 end
 
-describe GSL::World::Citizen do
+describe World::Citizen do
   before do
-    @world = GSL::World::View.new
+    @world = World::View.new
     @object = Kane.new(@world)
     @other = Kane.new(@world)
   end

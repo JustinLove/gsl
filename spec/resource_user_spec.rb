@@ -22,7 +22,7 @@ end
 describe GSL::ResourceUser do
   before do
     @object = @user = User.new()
-    @object.world = GSL::World::View.new
+    @object.world = World::View.new
   end
   
   it_should_behave_like "well behaved objects"

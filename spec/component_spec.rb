@@ -108,7 +108,7 @@ describe GSL::Component do
   describe "tracks location" do
     before :all do
       @user = User.new()
-      @user.world = GSL::World::View.new
+      @user.world = World::View.new
     end
     
     before do
