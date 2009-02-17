@@ -1,5 +1,5 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{world}
+GSL::depends_on %w{yggdrasil}
 
 module GSL
   class Component

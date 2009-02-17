@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
-libs %w{speculation world}
+libs %w{speculation yggdrasil}
 
 class GSL::Speculation
   include Tattler

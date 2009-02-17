@@ -1,5 +1,5 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{classvar resource component world}
+GSL::depends_on %w{classvar resource component yggdrasil}
 
 module GSL
   module ResourceUser
