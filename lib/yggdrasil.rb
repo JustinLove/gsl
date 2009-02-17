@@ -193,21 +193,21 @@ module Yggdrasil
     module Class
       extend SuperClass
       
-      def ver_writer(var)
+      def ygg_writer(var)
         self.__send__ :define_method, "#{var}=" do |v|
           @w[var] = v
         end
       end
       
-      def ver_reader(var)
+      def ygg_reader(var)
         self.__send__ :define_method, var do
           @w[var]
         end
       end
       
-      def ver_accessor(var)
-        ver_reader(var)
-        ver_writer(var)
+      def ygg_accessor(var)
+        ygg_reader(var)
+        ygg_writer(var)
       end
     end
   end

@@ -3,7 +3,7 @@ libs %w{player game}
 
 class GSL::Player
   include Tattler
-  ver_accessor :passed
+  ygg_accessor :passed
 end
 
 describe GSL::Player do

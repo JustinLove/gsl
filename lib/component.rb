@@ -43,7 +43,7 @@ module GSL
       "#{@name}(#{@world && self.in})"
     end
     
-    ver_reader :in
+    ygg_reader :in
     def in=(where)
       if (@home.nil? && where.respond_to?(:discards))
         @home = where.discards

@@ -35,7 +35,7 @@ module GSL
 
     extend Yggdrasil::Citizen::Class
 
-    ver_accessor :value
+    ygg_accessor :value
     def name
       self.class.name
     end

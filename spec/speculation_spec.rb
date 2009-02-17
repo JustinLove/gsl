@@ -7,7 +7,7 @@ end
 
 class Ground
   extend Yggdrasil::Citizen::Class
-  ver_accessor :stuff
+  ygg_accessor :stuff
   
   def initialize
     @world = Yggdrasil::World.new

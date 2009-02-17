@@ -21,10 +21,10 @@ end
 class Kane
   include Tattler
   extend Yggdrasil::Citizen::Class
-  ver_accessor :blarg
-  ver_accessor :larry
-  ver_reader :china
-  ver_writer :sewer
+  ygg_accessor :blarg
+  ygg_accessor :larry
+  ygg_reader :china
+  ygg_writer :sewer
   attr_accessor :w
   
   def initialize(_world)
