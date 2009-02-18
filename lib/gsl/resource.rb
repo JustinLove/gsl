@@ -1,5 +1,5 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{classvar misc set_resource value_resource yggdrasil}
+GSL::depends_on %w{classvar misc set_resource value_resource ygg}
 
 module GSL
   class Resource

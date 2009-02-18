@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
-libs %w{yggdrasil}
+libs %w{../yggdrasil}
 require 'pp'
 
 class Yggdrasil::State
