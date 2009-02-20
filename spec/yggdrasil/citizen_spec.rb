@@ -1,23 +1,9 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 libs %w{yggdrasil/citizen yggdrasil/world}
+tests %w{yggdrasil/citizen_helper}
 
 module Yggdrasil::Citizen
   include Tattler
-end
-
-class Kane
-  include Tattler
-  extend Yggdrasil::Citizen::Class
-  ygg_accessor :blarg
-  ygg_accessor :larry
-  ygg_reader :china
-  ygg_writer :sewer
-  attr_accessor :w
-  
-  def initialize(_world)
-    @world = _world
-    super()
-  end
 end
 
 describe Yggdrasil::Citizen do
