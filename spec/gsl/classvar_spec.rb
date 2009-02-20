@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
-libs %w{classvar}
+libs %w{gsl/classvar}
 
 describe "extended", :shared => true do
   describe Class do

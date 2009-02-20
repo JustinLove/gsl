@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
-libs %w{component}
-libs %w{resource resource_user}
+libs %w{gsl/component}
+libs %w{gsl/resource gsl/resource_user}
 
 class GSL::Component
   include Tattler

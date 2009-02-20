@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
-libs %w{../yggdrasil/citizen ../yggdrasil/world}
+libs %w{yggdrasil/citizen yggdrasil/world}
 
 module Yggdrasil::Citizen
   include Tattler

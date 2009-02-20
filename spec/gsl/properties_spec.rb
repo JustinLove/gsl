@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
-libs %w{properties}
+libs %w{gsl/properties}
 
 class Rat
   extend Properties

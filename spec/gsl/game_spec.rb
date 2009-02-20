@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
-libs %w{game}
+libs %w{gsl/game}
 
 class GSL::Game
   include Tattler

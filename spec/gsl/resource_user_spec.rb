@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
-libs %w{resource_user}
+libs %w{gsl/resource_user}
 
 module GSL::ResourceUser
   include Tattler

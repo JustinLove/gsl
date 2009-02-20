@@ -1,6 +1,6 @@
 def libs(args)
   args.each do |file|
-    require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'gsl', file))
+    require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', file))
   end
 end
 
