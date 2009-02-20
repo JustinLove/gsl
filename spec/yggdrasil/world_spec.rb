@@ -26,21 +26,21 @@ describe Yggdrasil::World do
     @object.state[:blarg].should == :bleep
   end
   
-  it "descends" do
+  it "grows" do
     @object[:blarg] = :bleep
-    @object.descend
+    @object.grow
     @object[:blarg].should == :bleep
   end
   
-  it "ascends" do
-    @object.descend
+  it "prunes" do
+    @object.grow
     @object[:larry] = :dead
-    @object.ascend
+    @object.prune
     @object[:larry].should_not == :dead
   end
   
-  it "descends with a name" do
-    @object.descend("down")
+  it "grows with a name" do
+    @object.grow("down")
     @object.state.name.should == "down"
   end
   
@@ -57,8 +57,8 @@ describe Yggdrasil::World do
     @object[:larry].should_not == :dead
   end
   
-  it "doesn't ascend to nil" do
-    lambda {@object.ascend}.should raise_error
+  it "doesn't prune to nil" do
+    lambda {@object.prune}.should raise_error
     @object.state.should be_kind_of(Yggdrasil::State)
   end
   
@@ -67,7 +67,7 @@ describe Yggdrasil::World do
     @object[:cancer] = :cured
     @object.commit
     @object[:cancer].should == :cured
-    lambda {@object.ascend}.should raise_error
+    lambda {@object.prune}.should raise_error
   end
   
   it "abort-commit" do
@@ -97,7 +97,7 @@ describe Yggdrasil::World do
   it "checkpoints" do
     @object.checkpoint
     @object.state.parent.should_not be_nil
-    lambda {@object.ascend}.should raise_error
+    lambda {@object.prune}.should raise_error
   end
   
   it "doesn't commit to nil" do

@@ -30,18 +30,18 @@ module Yggdrasil
       @state[k] = v
     end
     
-    def descend(_name = nil)
+    def grow(_name = nil)
       @state = @state.derive(_name) #.tap {|s| puts "#{@state} + #{s}"}
     end
     
-    def ascend
-      raise "Can't ascend past reality" if @state == @reality
+    def prune
+      raise "Can't prune past reality" if @state == @reality
       #puts "#{@state} - #{@state.parent}"
       @state = @state.parent
     end
     
-    alias_method :begin, :descend
-    alias_method :abort, :ascend
+    alias_method :begin, :grow
+    alias_method :abort, :prune
     
     def commit
       raise "Can't commit past reality" if @state == @reality
@@ -53,12 +53,12 @@ module Yggdrasil
     end
     
     def checkpoint(_name = nil)
-      @reality = descend(_name)
+      @reality = grow(_name)
     end
     
     def branch(_name = nil)
       hidden = [@state, @reality]
-      descend(_name)
+      grow(_name)
       yield
       b = @state
       @state, @reality = hidden
