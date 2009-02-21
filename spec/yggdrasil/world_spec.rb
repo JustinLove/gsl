@@ -105,6 +105,15 @@ describe Yggdrasil::World do
     lambda {@object.commit}.should raise_error
     @object.state.should be_kind_of(Yggdrasil::State)
   end
+
+  it "enters" do
+    s = @object.begin(:twig)
+    @object[:blarg] = :bleep
+    @object.abort
+    @object[:blarg].should_not == :bleep
+    @object.enter(s) {@object[:blarg].should == :bleep}
+    @object[:blarg].should_not == :bleep
+  end
   
   it "branches" do
     @object[:blarg] = :bleep

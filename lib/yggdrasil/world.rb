@@ -56,9 +56,13 @@ module Yggdrasil
       @reality = grow(_name)
     end
     
-    def branch(_name = nil)
+    def branch(_name = nil, &proc)
+      enter(@state.derive(_name), &proc)
+    end
+    
+    def enter(_state)
       hidden = [@state, @reality]
-      grow(_name)
+      @state = _state
       yield
       b = @state
       @state, @reality = hidden
