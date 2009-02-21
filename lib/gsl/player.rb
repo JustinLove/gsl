@@ -22,6 +22,7 @@ module GSL
       @world = game.world
       super()
       @game = game
+      @score = 0
     end
     
     def pick_color(*choices)

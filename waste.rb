@@ -61,7 +61,8 @@ utility :report do
     "#{raw_materials.value}/#{materials_required.value}m " +
     "#{waste_disposal.value}(#{waste_disposal.section})/#{waste_reduction.value}w " +
     "$#{money.value}(-#{loans.value}) +#{growth.value} " +
-    "#{held_cards.count}"
+    "#{held_cards.count} " +
+    "##{score}"
 end
 
 
