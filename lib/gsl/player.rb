@@ -10,6 +10,7 @@ module GSL
     def forward_to; @game; end
   
     attr_reader :color
+    ygg_property :tiebreaker
   
     @@any_time = []
   

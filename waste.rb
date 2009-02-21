@@ -294,6 +294,6 @@ to :score do
       plus money.value/2
       minus loans
     end
-    #tiebreaker money.value
+    tiebreaker money.value
   end
 end
