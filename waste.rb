@@ -99,6 +99,9 @@ to :play do
   round until game_over?
   accident
   score
+  each_player do
+    puts report
+  end    
 end
 
 every :round do
@@ -283,14 +286,14 @@ end
 
 to :score do
   each_player do
-    score = growth.value
-    [:rationalization, :materials_required, :waste_reduction].each do |tech|
-      score += triangle(6 - resource(tech).value)
+    score do
+      plus growth.value
+      [:rationalization, :materials_required, :waste_reduction].each do |tech|
+        plus triangle(6 - resource(tech).value)
+      end
+      plus money.value/2
+      minus loans
     end
-    score += money.value/2
-    score -= loans
-    tiebreaker = money.value
-    puts report
-    puts score
+    #tiebreaker money.value
   end
 end
