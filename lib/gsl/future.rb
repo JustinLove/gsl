@@ -26,7 +26,7 @@ module GSL
     end
     
     def to_s
-      "#{self.class} on #{@why}"
+      "#{self.class} on #{@why} (#{@rating})"
     end
     
     def d(s, indent = "- ")
