@@ -39,6 +39,14 @@ describe GSL::Player do
     @object.passed.should_not be_true
   end
   
+  it "calcualtes a score" do
+    @object.score do
+      plus 10
+      minus 2
+    end
+    @object.score.should == 8
+  end
+  
   describe "with assigned colors" do
     before do
       @game.players.each do |player|

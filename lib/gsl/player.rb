@@ -70,6 +70,28 @@ module GSL
       !@w[:passed]
     end
     
+    def score(arg = nil, &proc)
+      if block_given?
+        @score = 0 unless arg == :keep
+        instance_eval(&proc)
+        @score
+      elsif arg == :reset
+        @score = 0
+      elsif arg.kind_of?(Numeric)
+        @score += arg
+      else
+        @score
+      end
+    end
+    
+    def plus(n)
+      @score += n
+    end
+    
+    def minus(n)
+      @score -= n
+    end
+    
     def to_s
       if @color
         @color.to_s
