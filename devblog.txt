@@ -278,3 +278,6 @@ Another name on the chopping block is Speculation,  It's a bit of a mouthful and
 2009-02-20
 
 --------
+
+I've replaced random choice with something less random.  If the game has a score method, that will be used to judge alternate game states.  It's not a perfect solution by any means - resource building may be more important early on, and some beginning and intermediate resources may not figure into the score at all.  The real trick will be figuring out a way to account for these factors without requiring the game author to set up a special AI section.  I might need some hook for that anyway, to allow setting up different play styles.
+
