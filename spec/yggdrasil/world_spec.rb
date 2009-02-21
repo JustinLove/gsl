@@ -115,6 +115,13 @@ describe Yggdrasil::World do
     @object[:blarg].should_not == :bleep
   end
   
+  it "evals" do
+    s = @object.begin(:twig)
+    @object[:blarg] = :bleep
+    @object.abort
+    @object.eval(s) {@object[:blarg]}.should == :bleep
+  end
+  
   it "branches" do
     @object[:blarg] = :bleep
     w = @object.branch do

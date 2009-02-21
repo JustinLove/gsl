@@ -69,6 +69,14 @@ module Yggdrasil
       return b
     end
     
+    def eval(_state)
+      hidden = [@state, @reality]
+      @state = _state
+      r = yield
+      @state, @reality = hidden
+      return r
+    end
+    
     def switch(w)
       @reality = @state = w
     end
