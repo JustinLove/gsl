@@ -8,6 +8,7 @@ class Kane
   ygg_accessor :larry
   ygg_reader :china
   ygg_writer :sewer
+  ygg_property :dashing
   attr_accessor :w
   
   def initialize(_world)

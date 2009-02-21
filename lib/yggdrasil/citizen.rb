@@ -47,6 +47,17 @@ module Yggdrasil
         ygg_reader(var)
         ygg_writer(var)
       end
+      
+      def ygg_property(var)
+        self.__send__ :define_method, var do |*parameters|
+          v, *ignored = *parameters
+          if (v)
+            @w[var] = v
+          else
+            @w[var]
+          end
+        end
+      end
     end
   end
 end

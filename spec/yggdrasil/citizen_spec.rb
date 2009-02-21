@@ -34,6 +34,11 @@ describe Yggdrasil::Citizen do
     @object.should respond_to(:sewer=)
   end
   
+  it "has properties" do
+    @object.dashing(true)
+    @object.dashing.should be_true
+  end
+  
   it "has internal access" do
     @object.w[:china] = :bejing
     @object.china.should == :bejing
