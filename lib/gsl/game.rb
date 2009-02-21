@@ -113,7 +113,7 @@ module GSL
         end
         order.rotate
       end
-      order.each {|pl| pl.instance_eval(&proc) if pl != except}
+      order.each {|pl| pl.take_turn(&proc) if pl != except}
     end
   
     def each_player_until_pass(&proc)
