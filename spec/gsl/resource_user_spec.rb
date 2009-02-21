@@ -156,4 +156,12 @@ describe GSL::ResourceUser do
       @user.blue_tape.value.should == 105
     end
   end
+  
+  it "should define utility methods" do
+    @user.utility(:test) {$ran = true}
+    $ran = false
+    @user.test
+    $ran.should be_true
+  end
+  
 end

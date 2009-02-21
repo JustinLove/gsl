@@ -113,5 +113,9 @@ module GSL
     def may_not(&condition)
       Game.illegal :NotAllowed if (instance_eval &condition)
     end
+    
+    def utility(name, &proc)
+      ResourceUser.__send__(:define_method, name, &proc)
+    end
   end
 end

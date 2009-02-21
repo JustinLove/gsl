@@ -55,7 +55,7 @@ at_any_time :take_a_loan do
   gain 10, :loans
 end
 
-at_any_time :report do
+utility :report do
   "%%%% #{self.to_s} " +
     "#{co_workers.value}/#{rationalization.value}p " +
     "#{raw_materials.value}/#{materials_required.value}m " +
