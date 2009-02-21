@@ -1,9 +1,8 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{random resource_user player_common future properties}
+GSL::depends_on %w{random resource_user player_common future}
 
 module GSL
   class Player
-    extend Properties
     include ResourceUser
     include Player::Common
     extend Yggdrasil::Citizen::Class
@@ -11,7 +10,6 @@ module GSL
     def forward_to; @game; end
   
     attr_reader :color
-    as_property :tiebreaker
   
     @@any_time = []
   
@@ -24,8 +22,8 @@ module GSL
       @world = game.world
       super()
       @game = game
-      @score = 0
-      @tiebreaker = 0
+      @w[:score] = 0
+      @w[:tiebreaker] = 0
     end
     
     def pick_color(*choices)
@@ -76,24 +74,24 @@ module GSL
     
     def score(arg = nil, &proc)
       if block_given?
-        @score = 0 unless arg == :keep
+        @w[:score] = 0 unless arg == :keep
         instance_eval(&proc)
-        @score
+        @w[:score]
       elsif arg == :reset
-        @score = 0
+        @w[:score] = 0
       elsif arg.kind_of?(Numeric)
-        @score += arg
+        @w[:score] += arg
       else
-        @score
+        @w[:score]
       end
     end
     
     def plus(n)
-      @score += n
+      @w[:score] += n
     end
     
     def minus(n)
-      @score -= n
+      @w[:score] -= n
     end
     
     def to_s
