@@ -54,7 +54,11 @@ module GSL
 
       def rate_state(state)
         if (state && state[:legal]) then
-          state.difference + (1..10).random
+          if (@game.respond_to? :score)
+            @world.eval(state) {@game.score; score}
+          else
+            state.difference + (1..10).random
+          end
         else
           0
         end

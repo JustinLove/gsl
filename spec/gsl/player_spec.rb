@@ -126,15 +126,33 @@ describe GSL::Player do
     describe "chooses" do
       before do
         @object.class.make_resource(:keys)
-        @object.set_to 1, :keys
+        @game.each_player {set_to 1, :keys}
         @good = lambda{gain 1, :keys}
         @bad = lambda{pay 3, :keys}
+        @better = lambda{gain 5, :keys}
       end
       
       describe "(internals)" do
         it "rate_state" do
           @object.rate_state(GSL::Future.new(@object, @good).state).should > 
             @object.rate_state(GSL::Future.new(@object, @bad).state)
+        end
+        
+        it "rate_state with scoring function" do
+          class GSL::Game
+            def score
+              each_player do
+                score do
+                  plus keys.value
+                end
+              end
+            end
+          end
+          @object.rate_state(GSL::Future.new(@object, @better).state).should > 
+            @object.rate_state(GSL::Future.new(@object, @good).state)
+          class GSL::Game
+            remove_method :score
+          end
         end
         
         it "rates actions" do
