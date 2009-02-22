@@ -18,6 +18,13 @@ shared_examples_for "well behaved objects" do
     s.should_not match(/#<.*>/)
   end
   
+  it "doesn't go crazy" do
+    s = @object.inspect
+    p s
+    s.should be_kind_of(String)
+    s.length.should be_between(1,256)
+  end
+  
   it "initialize calls super" do
     Tattler.callers.should include(@object)
   end
