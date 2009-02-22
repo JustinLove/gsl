@@ -14,6 +14,10 @@ module Yggdrasil
         "Citizen #{object_id} of #{@world}"
       end
       alias_method :citizen_s, :to_s
+      
+      def inspect
+        "Citizen #{object_id} of #{@world}"
+      end
     end
 
     module SuperClass
