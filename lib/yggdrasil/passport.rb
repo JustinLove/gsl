@@ -13,6 +13,10 @@ module Yggdrasil
       "Passport #{@oid} for #{@owner}"
     end
     
+    def inspect
+      "Passport #{@oid} for #{@owner}"
+    end
+    
     def id_card(key)
       @oid + key.to_s
     end
