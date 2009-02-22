@@ -29,6 +29,12 @@ module GSL
       "#{self.class} on #{@why} (#{@rating})"
     end
     
+    def inspect
+      "#{self.class}, " +
+      "#{(@who.respond_to?(:name) && @who.name) || @who.object_id} " +
+      "on #{@why}(#{describe_action}) -> #{@rating}/#{@why_failed}"
+    end
+    
     def d(s, indent = "- ")
       #puts "#{' ' * @@level}#{indent}" + s
     end
@@ -89,6 +95,16 @@ module GSL
         @who.instance_exec(@what, &@how)
       elsif (@what && @what.respond_to?(:to_proc))
         @who.instance_exec(&(@what.to_proc))
+      else
+        Language.error "nothing executable"
+      end
+    end
+    
+    def describe_action
+      if @how
+        eval('"#{__FILE__}:#{__LINE__}"', @how.binding)
+      elsif (@what && @what.respond_to?(:to_proc))
+        eval('"#{__FILE__}:#{__LINE__}"', @what.binding)
       else
         Language.error "nothing executable"
       end
