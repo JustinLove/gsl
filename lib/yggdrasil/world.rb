@@ -11,7 +11,11 @@ module Yggdrasil
     end
     
     def to_s
-      "World (#{@state})"
+      "World (#{@state}, +#{@state.depth - @reality.depth})"
+    end
+    
+    def inspect
+      "World (s:#{@state}, r:#{@reality})"
     end
     
     def pretty_print(pp = nil)
