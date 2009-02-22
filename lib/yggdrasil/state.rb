@@ -25,6 +25,10 @@ module Yggdrasil
       "State(#{depth}) #{name}[#{@d.keys.count}] < #{@parent && @parent.name}"
     end
     
+    def inspect
+      "State(#{depth}) #{name}[#{@d.keys.count}: #{@d.keys[0,5]}] < #{@parent && @parent.name}"
+    end
+    
     def pretty_print(pp = nil)
       if (pp)
         super
