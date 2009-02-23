@@ -20,7 +20,6 @@ shared_examples_for "well behaved objects" do
   
   it "doesn't go crazy" do
     s = @object.inspect
-    p s
     s.should be_kind_of(String)
     s.length.should be_between(1,256)
   end
