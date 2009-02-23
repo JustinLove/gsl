@@ -76,8 +76,8 @@ module GSL
     def score(arg = nil, &proc)
       if block_given?
         @w[:score] = 0 unless arg == :keep
-        instance_eval(&proc)
-        @w[:score]
+        f = Future.new(self, proc, 'score')
+        @w[:score] = f.state[@w.id_card(:score)]
       elsif arg == :reset
         @w[:score] = 0
       elsif arg.kind_of?(Numeric)

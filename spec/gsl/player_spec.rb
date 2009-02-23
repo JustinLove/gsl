@@ -121,6 +121,13 @@ describe GSL::Player do
         GSL::Future.new(@object, @action)
         @object.marbles.value.should == 5
       end
+      
+      it "score is impotent" do
+        @object.score do
+          gain 2, :marbles
+        end
+        @object.marbles.value.should == 5
+      end
     end
     
     describe "chooses" do
