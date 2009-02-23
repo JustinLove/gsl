@@ -68,9 +68,12 @@ module GSL
     def pass; @w[:passed] = true; end
 
     def take_turn(&proc)
+      passed = @w[:passed]
       @w[:passed] = false
       instance_eval(&proc)
-      !@w[:passed]
+      cont = !@w[:passed]
+      @w[:passed] = passed
+      return cont
     end
     
     def score(arg = nil, &proc)

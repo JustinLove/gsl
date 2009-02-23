@@ -181,6 +181,28 @@ describe GSL::Game do
       countdown.should <= 0
     end
 
+    it "isn't affected by each_player" do
+      lambda {
+        countdown = 10
+        @object.each_player_until_pass {
+          countdown -= 1
+          raise('hell') if (countdown <= 0)
+          pass
+          each_player {|x| x}
+        }
+      }.should_not raise_error
+    end
+
+    it "handles nested pass" do
+      countdown = 10
+      @object.each_player_until_pass {
+        countdown -= 1
+        pass if (countdown <= 0)
+        each_player_until_pass {pass}
+      }
+      countdown.should <= 0
+    end
+
     it "documents that return from block doesn't do what you expect" do
       lambda {
         @object.each_player_until_pass {
