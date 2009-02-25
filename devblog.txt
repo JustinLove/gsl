@@ -279,5 +279,34 @@ Another name on the chopping block is Speculation,  It's a bit of a mouthful and
 
 --------
 
+Settling The Score
+
 I've replaced random choice with something less random.  If the game has a score method, that will be used to judge alternate game states.  It's not a perfect solution by any means - resource building may be more important early on, and some beginning and intermediate resources may not figure into the score at all.  The real trick will be figuring out a way to account for these factors without requiring the game author to set up a special AI section.  I might need some hook for that anyway, to allow setting up different play styles.
 
+Credit Crisis
+
+This is in but one step in pursuit of one particular feature:  Industrial Waste has an 'any time' action which allows a player to take a loan.  If I was just coding IW, this would be a simple hook on the pay-money routine.  However, I'm going for a general language of game rules.  The rules define it as an any time action.  More importantly, other games define more and varied kinds of free actions.
+
+Unsettling the Score
+
+Getting a real scoring method to rate futures in place was big piece of the puzzle - it makes it possible for a player to evaluate taking the loan (however badly)  Unfortunately, I've got a bit of cynical recursion.
+
+My first attempt to hook up the any time actions was to put them in take_turn.  A player has the option of taking the normal turn, or taking it after each possible any time action.  Since a player might need to take a loan during things like an auction sub-game, this has to happen any time we iterate players.  Here's the catch: in order to choose one of those options the player has to rank them.  Ranking uses the score method if it's available.  The score method iterates each player to calculate his score - which brings us back to take_turn and choosing whether or not to take a loan first.  Please wait for the ride to come to a complete stop - when Ruby throws an exception because the stack got too big.
+
+Now What?
+
+I could move the free actions to the choose method.  Just extend the list of things we're choosing from with the free actions.  This won't work for IW because the place where I really need loans to work is the mandatory maintenance costs, where there is no choice involved.  And what if a free action has a choice?
+
+I could have a different version of player iteration for non-game situations.  However, the natural way to describe calculating the score is with each_player, which is also the natural way to describe many in-game activities.  It shouldn't matter to the game author how I'm implementing free actions.
+
+It might matter, however, when free actions are available.  I could force rule writers to explicitly say when free actions are allowed as a step in every process.  While this could be considered overhead, it's somewhat attractive because it forces people to think about when these things actually should be available.  In IW's case, the actual rules definition is any time, but getting it out of basic methods like each_player would certainly resolve the problem.
+
+A Fatal Flaw
+
+There is a fatal flaw with this, and with my whole system: I could make a separate routine that choose between 'take-a-loan' and 'do-nothing'  Unfortunately, this would always choose 'do-nothing' because it's an isolated event - the choice is made without considering what events come afterwards.  
+
+The only obvious way to do this in Ruby would be to make the entire rest of the action a block passed to the any time action, which is a rather unnatural way of writing things, from a pure rules perspective.  If there were multiple opportunities during the course of an action, the indents would just keep on piling up.
+
+2009-02-24
+
+--------
