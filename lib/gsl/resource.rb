@@ -31,6 +31,13 @@ module GSL
           0..Infinity
         end
       end
+      
+      def stub(name)
+        define_method name do
+          #p self.class, @owner.to_s
+          raise Game.illegal(NotYetDefined.new(self, @owner))
+        end
+      end
     end
 
     extend Yggdrasil::Citizen::Class
@@ -75,6 +82,11 @@ module GSL
     def self_include(_class)
       class << self; self; end.__send__(:include, _class)
     end
+    
+    stub :gain
+    stub :lose
+    stub :if_gain
+    stub :if_lose
 
     def must_gain(n)
       self.value = if_gain(n)
@@ -112,6 +124,18 @@ module GSL
 
       def to_s
         "Insufficient #{@resource}, #{@req} < #{@has}"
+      end
+    end
+    
+    class NotYetDefined < Game::Illegal
+      def initialize(r, o)
+        @resource = r
+        @owner = o
+        super(to_s)
+      end
+
+      def to_s
+        "#{@owner}'s #{@resource.class} not yet defined"
       end
     end
   end
