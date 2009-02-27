@@ -12,11 +12,15 @@ module GSL
     attr_reader :color
     ygg_property :tiebreaker
   
-    @@any_time = [NoAction.new]
+    @@free_actions = [NoAction.new]
   
     def self.at_any_time(name, proc)
       define_method(name, proc)
-      @@any_time << name
+      @@free_actions << name
+    end
+    
+    def free_actions
+      @@free_actions
     end
   
     def initialize(game)
