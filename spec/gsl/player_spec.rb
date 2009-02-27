@@ -239,7 +239,7 @@ describe GSL::Player do
         @object.choose([@good]).should == @good
       end
         
-      it "handles recursive choice" do
+      it "doesn't handles recursive choice" do
         @object.class.make_resource(:doors)
         @game.each_player {set_to 0, :doors}
         class GSL::Game
@@ -253,14 +253,14 @@ describe GSL::Player do
           end
         end
         begin
-          pending "recursive choice" do
+          lambda {
             @object.choose :one => lambda {
               choose :loan => lambda {gain 10, :keys; gain 10, :doors},
                 :not => lambda {}
               pay 5, :keys
             }
             @object.doors.value.should == 10
-          end
+          }.should raise_error
         ensure
           class GSL::Game
             remove_method :score
