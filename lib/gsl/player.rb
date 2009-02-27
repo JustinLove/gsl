@@ -16,7 +16,7 @@ module GSL
   
     def self.at_any_time(name, proc)
       define_method(name, proc)
-      @@free_actions << name
+      @@free_actions << Action.new(name, &proc)
     end
     
     def free_actions
