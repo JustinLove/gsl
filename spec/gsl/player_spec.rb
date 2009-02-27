@@ -246,7 +246,7 @@ describe GSL::Player do
           def score
             each_player do
               score do
-                plus keys.value
+                plus(keys.value / 2)
                 minus doors.value
               end
             end
