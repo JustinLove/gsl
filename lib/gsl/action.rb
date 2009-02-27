@@ -14,6 +14,8 @@ module GSL
   
   class NoAction
     def call; end
+    def to_proc; self; end
+    def nil?; true; end
     def to_s
       "No Action"
     end
