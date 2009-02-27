@@ -120,9 +120,11 @@ end
 every :accident do
   p "Accident!"
   each_player do
-    case waste_disposal.section
-    when :red: pay 10, :money; lose(2, :growth) unless use(:bribery, held_cards);
-    when :yellow: pay 5, :money; lose(1, :growth) unless use(:bribery, held_cards);
+    with_free_actions do
+      case waste_disposal.section
+      when :red: pay 10, :money; lose(2, :growth) unless use(:bribery, held_cards);
+      when :yellow: pay 5, :money; lose(1, :growth) unless use(:bribery, held_cards);
+      end
     end
     puts report
   end
@@ -167,7 +169,7 @@ to :play_the_cards do
   each_player_until_pass do
     pass unless choose :held_cards do |card|
       choose [
-        action(:play) { use card },
+        action(:play) { with_free_actions { use card }},
         action(:save) {
           must_have {held_cards.count <= 1};
           note "#{self} saves #{card.to_s}"
@@ -272,7 +274,9 @@ end
 
 to :pay_basic_costs do
   each_player do
-    pay co_workers, :money
+    with_free_actions do
+      pay co_workers, :money
+    end
   end
 end
 

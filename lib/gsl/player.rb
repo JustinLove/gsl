@@ -22,6 +22,13 @@ module GSL
     def free_actions
       @@free_actions
     end
+    
+    def with_free_actions
+      choose free_actions do |act|
+        execute act
+        yield
+      end
+    end
   
     def initialize(game)
       @world = game.world
