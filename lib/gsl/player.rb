@@ -12,7 +12,7 @@ module GSL
     attr_reader :color
     ygg_property :tiebreaker
   
-    @@any_time = []
+    @@any_time = [NoAction.new]
   
     def self.at_any_time(name, proc)
       define_method(name, proc)

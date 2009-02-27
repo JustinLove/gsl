@@ -11,4 +11,11 @@ module GSL
       "Action #{name}"
     end
   end
+  
+  class NoAction
+    def call; end
+    def to_s
+      "No Action"
+    end
+  end
 end

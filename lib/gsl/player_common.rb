@@ -75,6 +75,10 @@ module GSL
       def action(name = "?", &proc)
         Action.new(name, &proc)
       end
+      
+      def no_action
+        NoAction.new
+      end
     end
   end
 end
