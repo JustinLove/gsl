@@ -53,7 +53,7 @@ module Yggdrasil
         (@parent && @parent[k])
       else
         @@lookups += 1
-        @@log.puts @@depth
+        @@log.puts "#{k.to_s.gsub(/\d/,'')} #{@@depth}"
         @@depth = 0
         @d[k]
       end
