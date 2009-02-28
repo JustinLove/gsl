@@ -43,7 +43,7 @@ module Yggdrasil
     @@lookups = 0
     @@log = nil# File.open('ygg.log', 'w')
     def self.report
-      "#{@@calls} calls, #{@@lookups} lookups, #{@@calls / @@lookups} avg"
+      "#{@@calls} calls, #{@@lookups} lookups, #{@@calls.to_f / @@lookups} avg"
     end
     
     def [](k)
