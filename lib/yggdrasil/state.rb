@@ -100,6 +100,12 @@ module Yggdrasil
       end
     end
     
+    module ReadCache
+      def upcall(k)
+        @d[k] = super
+      end
+    end
+    
     include Base
 
     def initialize(_parent = nil, _name = nil)

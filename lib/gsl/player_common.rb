@@ -5,6 +5,7 @@ module Yggdrasil
   class State
     include Tracing
     #include Logging
+    include ReadCache
     def difference
       @d.keys.size
     end
