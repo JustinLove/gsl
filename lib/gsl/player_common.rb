@@ -4,6 +4,7 @@ GSL::depends_on %w{action ygg}
 module Yggdrasil
   class State
     include Tracing
+    #include Logging
     def difference
       @d.keys.size
     end

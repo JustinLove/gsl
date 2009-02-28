@@ -61,9 +61,9 @@ module Yggdrasil
     
     module Tracing
       @@calls = 0
-      @@depth = 0
       @@lookups = 0
-      @@log = nil# File.open('ygg.log', 'w')
+      
+      def calls; @@calls; end
 
       def self.report
         "#{@@calls} calls, #{@@lookups} lookups, #{@@calls.to_f / @@lookups} avg"
@@ -71,15 +71,32 @@ module Yggdrasil
 
       def [](k)
         @@calls +=1
-        @@depth += 1
         if (@d[k].nil?)
-          (@parent && @parent[k])
+          upcall(k)
         else
           @@lookups += 1
-          @@log.puts "#{k.to_s.gsub(/\d/,'')} #{@@depth}" if @@log
-          @@depth = 0
-          @d[k]
+          hit(k)
         end
+      end
+      
+      def upcall(k)
+        (@parent && @parent[k])
+      end
+      
+      def hit(k)
+        @d[k]
+      end
+    end
+    
+    module Logging
+      @@called = 0
+      def self.included(base)
+        @@log = File.open("#{base}.log", 'w')
+      end
+      def hit(k)
+        @@log.puts "#{k.to_s.gsub(/\d/,'')} #{calls - @@called}"
+        @@called = calls
+        @d[k]
       end
     end
     
