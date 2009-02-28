@@ -38,10 +38,18 @@ module Yggdrasil
       end
     end
     
+    @@chain = 0
+    @@hit = 0
+    def self.report
+      "#{@@chain} calls, #{@@hit} lookups, #{@@chain / @@hit} avg"
+    end
+    
     def [](k)
       if (@d[k].nil?)
+        @@chain += 1
         (@parent && @parent[k])
       else
+        @@hit += 1
         @d[k]
       end
     end
