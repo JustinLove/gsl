@@ -41,7 +41,7 @@ module Yggdrasil
     @@calls = 0
     @@depth = 0
     @@lookups = 0
-    @@log = File.open('ygg.log', 'w')
+    @@log = nil# File.open('ygg.log', 'w')
     def self.report
       "#{@@calls} calls, #{@@lookups} lookups, #{@@calls / @@lookups} avg"
     end
@@ -53,7 +53,7 @@ module Yggdrasil
         (@parent && @parent[k])
       else
         @@lookups += 1
-        @@log.puts "#{k.to_s.gsub(/\d/,'')} #{@@depth}"
+        @@log.puts "#{k.to_s.gsub(/\d/,'')} #{@@depth}" if @@log
         @@depth = 0
         @d[k]
       end
