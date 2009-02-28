@@ -30,20 +30,10 @@ module Yggdrasil
         end
       end
     
-      @@calls = 0
-      @@depth = 0
-      @@lookups = 0
-      @@log = nil# File.open('ygg.log', 'w')
-
       def [](k)
-        @@calls +=1
-        @@depth += 1
         if (@d[k].nil?)
           (@parent && @parent[k])
         else
-          @@lookups += 1
-          @@log.puts "#{k.to_s.gsub(/\d/,'')} #{@@depth}" if @@log
-          @@depth = 0
           @d[k]
         end
       end
@@ -69,6 +59,30 @@ module Yggdrasil
       end
     end
     
+    module Tracing
+      @@calls = 0
+      @@depth = 0
+      @@lookups = 0
+      @@log = nil# File.open('ygg.log', 'w')
+
+      def self.report
+        "#{@@calls} calls, #{@@lookups} lookups, #{@@calls.to_f / @@lookups} avg"
+      end
+
+      def [](k)
+        @@calls +=1
+        @@depth += 1
+        if (@d[k].nil?)
+          (@parent && @parent[k])
+        else
+          @@lookups += 1
+          @@log.puts "#{k.to_s.gsub(/\d/,'')} #{@@depth}" if @@log
+          @@depth = 0
+          @d[k]
+        end
+      end
+    end
+    
     include Base
 
     def initialize(_parent = nil, _name = nil)
@@ -80,8 +94,5 @@ module Yggdrasil
       @depth += _parent.depth if _parent
     end
     
-    def self.report
-      "#{@@calls} calls, #{@@lookups} lookups, #{@@calls.to_f / @@lookups} avg"
-    end
   end
 end

@@ -1,8 +1,9 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{action}
+GSL::depends_on %w{action ygg}
 
 module Yggdrasil
   class State
+    include Tracing
     def difference
       @d.keys.size
     end

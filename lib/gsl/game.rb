@@ -55,7 +55,7 @@ module GSL
       create_players(players)
       puts "#{@players.size} players"
       play
-      puts Yggdrasil::State.report
+      puts Yggdrasil::State::Tracing.report
     end
   
     def enter(flag)
