@@ -38,18 +38,23 @@ module Yggdrasil
       end
     end
     
-    @@chain = 0
-    @@hit = 0
+    @@calls = 0
+    @@depth = 0
+    @@lookups = 0
+    @@log = File.open('ygg.log', 'w')
     def self.report
-      "#{@@chain} calls, #{@@hit} lookups, #{@@chain / @@hit} avg"
+      "#{@@calls} calls, #{@@lookups} lookups, #{@@calls / @@lookups} avg"
     end
     
     def [](k)
+      @@calls +=1
+      @@depth += 1
       if (@d[k].nil?)
-        @@chain += 1
         (@parent && @parent[k])
       else
-        @@hit += 1
+        @@lookups += 1
+        @@log.puts @@depth
+        @@depth = 0
         @d[k]
       end
     end
