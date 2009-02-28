@@ -32,12 +32,20 @@ module Yggdrasil
     
       def [](k)
         if (@d[k].nil?)
-          (@parent && @parent[k])
+          upcall(k)
         else
-          @d[k]
+          hit(k)
         end
       end
-    
+      
+      def upcall(k)
+        (@parent && @parent[k])
+      end
+      
+      def hit(k)
+        @d[k]
+      end
+
       def []=(k, v)
         @d[k] = v.freeze
       end
@@ -71,32 +79,31 @@ module Yggdrasil
 
       def [](k)
         @@calls +=1
-        if (@d[k].nil?)
-          upcall(k)
-        else
-          @@lookups += 1
-          hit(k)
-        end
-      end
-      
-      def upcall(k)
-        (@parent && @parent[k])
+        super
       end
       
       def hit(k)
-        @d[k]
+        @@lookups += 1
+        super
       end
     end
     
     module Logging
-      @@called = 0
+      @@depth = 0
+
       def self.included(base)
         @@log = File.open("#{base}.log", 'w')
       end
+
+      def [](k)
+        @@depth +=1
+        super
+      end
+
       def hit(k)
-        @@log.puts "#{k.to_s.gsub(/\d/,'')} #{calls - @@called}"
-        @@called = calls
-        @d[k]
+        @@log.puts "#{k.to_s.gsub(/\d/,'')} #{@@depth}"
+        @@depth = 0
+        super
       end
     end
     
