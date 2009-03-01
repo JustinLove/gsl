@@ -19,7 +19,7 @@ class Ground
     instance_eval(&what)
   end
   
-  def card; @w.id_card(:stuff); end
+  def rune; @w.rune(:stuff); end
   
   def note(s); end
 end
@@ -40,7 +40,7 @@ describe GSL::Future do
   end
   
   it "executes the method" do
-    @object.state[@ground.card].should == :ran
+    @object.state[@ground.rune].should == :ran
   end
 
   it "marks legal" do
@@ -100,6 +100,6 @@ describe GSL::Future do
   it "knows how" do
     handy = GSL::Future.new(@ground,
       :hammer) {|tool| self.stuff = tool;}
-    handy.state[@ground.card].should == :hammer
+    handy.state[@ground.rune].should == :hammer
   end
 end

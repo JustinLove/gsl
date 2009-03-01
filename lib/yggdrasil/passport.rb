@@ -17,20 +17,20 @@ module Yggdrasil
       "Passport #{@oid} for #{@owner}"
     end
     
-    def id_card(key)
+    def rune(key)
       @oid + key.to_s
     end
     
     def [](k)
-      @world[id_card(k)]
+      @world[rune(k)]
     end
     
     def []=(k, v)
-      @world[id_card(k)] = v
+      @world[rune(k)] = v
     end
     
     def update(k, default = nil, &proc)
-      @world.state.update(id_card(k), default, &proc)
+      @world.state.update(rune(k), default, &proc)
     end
   end
 end

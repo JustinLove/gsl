@@ -143,7 +143,7 @@ module GSL
         result = yield item
         @w.update(:value) {|v| v << item}
         if (result.kind_of?(Yggdrasil::State))
-          result.update(@w.id_card(:value)) {|v| v << item}
+          result.update(@w.rune(:value)) {|v| v << item}
         end
         return result
       end

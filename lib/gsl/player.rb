@@ -91,7 +91,7 @@ module GSL
       if block_given?
         @w[:score] = 0 unless arg == :keep
         f = Future.new(self, proc, 'score')
-        @w[:score] = f.state[@w.id_card(:score)]
+        @w[:score] = f.state[@w.rune(:score)]
       elsif arg == :reset
         @w[:score] = 0
       elsif arg.kind_of?(Numeric)
