@@ -164,4 +164,9 @@ describe GSL::ResourceUser do
     $ran.should be_true
   end
   
+  it "caculates probablity" do
+    @user.class.make_components(:fiddlesticks, [:long, :long, :short])
+    @user.probability(:fiddlesticks) {|stick| stick.name == :long}.should == 2.0/3
+  end
+  
 end

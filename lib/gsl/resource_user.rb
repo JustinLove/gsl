@@ -117,5 +117,10 @@ module GSL
     def utility(name, &proc)
       ResourceUser.__send__(:define_method, name, &proc)
     end
+    
+    def probability(component, &proc)
+      c = cv.components[component]
+      c.find_all(&proc).length.to_f / c.length
+    end
   end
 end
