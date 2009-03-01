@@ -1,6 +1,7 @@
 title "Industrial Waste"
 author "Jurgon Strohm"
 number_of_players 3..4
+round_limit 30
 
 common_components :action_cards => {
     :order => 9,

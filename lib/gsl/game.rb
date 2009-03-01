@@ -12,12 +12,13 @@ module GSL
     as_property :title
     as_property :author
     as_property :number_of_players
+    as_property :round_limit
 
     def initialize(file = nil)
       @world = Yggdrasil::World.new
       super()
       @context = []
-      @game_over = false
+      @w[:game_over] = false
       @world[:log] = []
       if (file)
         # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
@@ -55,6 +56,7 @@ module GSL
       create_players(players)
       puts "#{@players.size} players"
       play
+      puts "#{@w[:game_over]} at round #{@rounds}"
       puts Yggdrasil::State::Tracing.report
     end
   
@@ -144,12 +146,12 @@ module GSL
   
     def game_over?
       @rounds ||= 0
-      return (@rounds = @rounds + 1) > @players.length || @game_over
+      return (@rounds = @rounds + 1) > round_limit || @w[:game_over]
     end
   
     def game_over!
       p 'game over!'
-      @game_over = true
+      @w[:game_over] = true
     end
   
     def card(name, &proc)

@@ -60,7 +60,7 @@ module GSL
             state.difference + (1..10).random
           end
         else
-          0
+          -Infinity
         end
       end
       
