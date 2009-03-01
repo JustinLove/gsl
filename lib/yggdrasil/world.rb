@@ -8,6 +8,7 @@ module Yggdrasil
     def initialize
       super
       @state = @reality = State.new
+      @checkpoint = @state.parent
     end
     
     def to_s
@@ -57,7 +58,15 @@ module Yggdrasil
     end
     
     def checkpoint(_name = nil)
+      compact
       @reality = grow(_name)
+    end
+    
+    def compact
+      while @state != @checkpoint && @state.parent != @checkpoint
+        @state = @state.merge
+      end
+      @checkpoint = @state
     end
     
     def branch(_name = nil, &proc)
