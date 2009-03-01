@@ -65,9 +65,8 @@ module GSL
       end
       
       def execute(what)
-        if (what.kind_of?(NoAction))
-        elsif (what.to_proc)
-          instance_exec(&(what.to_proc))
+        if (what.to_proc)
+          what.to_proc.call_on(self)
         else
           Language.error "not executable"
         end

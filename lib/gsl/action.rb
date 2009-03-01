@@ -14,10 +14,17 @@ module GSL
   
   class NoAction
     def call; end
+    def call_on(it, *args); end
     def to_proc; self; end
     def nil?; true; end
     def to_s
       "No Action"
     end
+  end
+end
+
+class Proc
+  def call_on(it, *args)
+    it.instance_exec(*args, &self)
   end
 end
