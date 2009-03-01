@@ -1,11 +1,8 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{action ygg}
+GSL::depends_on %w{action}
 
 module Yggdrasil
   class State
-    include Tracing
-    #include Logging
-    include ReadCache
     def difference
       @d.keys.size
     end
