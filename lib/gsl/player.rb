@@ -44,7 +44,7 @@ module GSL
 
     def take(from, &doing)
       best = best_rated(choose_from_what(from), &doing).switch
-      note "take #{best.what} from #{from}"
+      #note "take #{best.what} from #{from}"
       must_lose [best.what], from if best.legal?
       return best.what
     end

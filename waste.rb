@@ -156,7 +156,8 @@ end
 
 to :choose_card_combinations do
   each_player do
-    take(:combinations) {|choice| gain(choice, :held_cards);}
+    what = take(:combinations) {|choice| gain(choice, :held_cards);}
+    note "#{self} takes #{what}"
   end
   combinations.each do |pile|
     note "discard leftover #{pile.to_s}"
