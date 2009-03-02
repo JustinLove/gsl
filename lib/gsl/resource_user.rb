@@ -39,6 +39,12 @@ module GSL
         cv.resources << name unless cv.resources.include?(name)
         r = Resource.define(name, option, &proc)
       end
+      
+      def resource_hints(weights)
+        weights.each do |resource, weight|
+          Resource.get(resource).option[:hint] = weight
+        end
+      end
     end
 
     def initialize

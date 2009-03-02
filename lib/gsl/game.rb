@@ -49,6 +49,10 @@ module GSL
       Player.make_resource(name, option.merge({:range => range}), &proc)
     end
     
+    def resource_hints(weights)
+      Player.resource_hints(weights)
+    end
+    
     def create_players(players)
       @players = Array.new(players) {Player.new(self)}
     end

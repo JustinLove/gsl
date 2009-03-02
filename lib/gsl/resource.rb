@@ -6,6 +6,7 @@ module GSL
     class << self
       alias :class_name :name
       attr_accessor :name, :option
+      
       def to_s
         if @name then
           "#{@name} #{@range}"
@@ -13,8 +14,17 @@ module GSL
           super
         end
       end
+      
+      def class_name(name)
+        name.to_s.capitalize
+      end
+      
+      def get(name)
+        return const_get(class_name(name))
+      end
+      
       def define(name, option = {}, &proc)
-        const_name = name.to_s.capitalize
+        const_name = class_name(name)
         if (const_defined?(const_name))
           return const_get(const_name)
         end
@@ -24,6 +34,7 @@ module GSL
           include(Module.new(&proc)) if proc
         end)
       end
+      
       def range
         if @option[:range]
           @option[:range]
