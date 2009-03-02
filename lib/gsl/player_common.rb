@@ -24,6 +24,8 @@ module GSL
           from
         when :Hash:
           from.values
+        when :Range:
+          from.to_a
         when :Symbol:
           __send__(from)
         else
