@@ -40,6 +40,10 @@ module GSL
     end
 
     def to_s
+      name.to_s
+    end
+    
+    def inspect
       "#{@name}(#{@world && self.in})"
     end
     
