@@ -151,6 +151,14 @@ module GSL
       def names
         self.value.map {|c| c.name}
       end
+      
+      def fitness
+        if @value
+          @value.length * hint
+        else
+          0
+        end
+      end
   
       def to_s
         self.value ||= []

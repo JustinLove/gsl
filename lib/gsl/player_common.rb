@@ -62,13 +62,21 @@ module GSL
 
       def rate_state(state)
         if (state && state[:legal]) then
-          if (@game.respond_to? :score)
-            @world.eval(state) {@game.score; score}
-          else
-            state.difference + (1..10).random
-          end
+          @world.eval(state) {fitness}
         else
           -Infinity
+        end
+      end
+      
+      def fitness
+        if (@game.respond_to? :score)
+          @game.score
+          fit = score
+        else
+          fit = 0
+        end
+        cv.resources.inject(fit) do |sum,res|
+          sum + resource(res).fitness
         end
       end
       

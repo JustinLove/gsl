@@ -32,6 +32,10 @@ module GSL
       def lose(n = :all)
         -self.gain(-wrap(n))
       end
+      
+      def fitness
+        value * hint
+      end
     end
   end
 end

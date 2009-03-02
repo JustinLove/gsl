@@ -124,6 +124,10 @@ module GSL
         return n
       end
     end
+    
+    def hint
+      self.class.option[:hint] || 1
+    end
 
     class Insufficient < Game::Illegal
       def initialize(r, has = 0, req = 0)
