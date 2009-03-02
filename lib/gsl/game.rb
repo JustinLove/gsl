@@ -14,15 +14,17 @@ module GSL
     as_property :number_of_players
     as_property :round_limit
 
-    def initialize(file = nil)
+    def initialize(*files)
       @world = Yggdrasil::World.new
       super()
       @context = []
       @w[:game_over] = false
       @world[:log] = []
-      if (file)
-        # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
-        self.instance_eval(File.read(file), file)
+      if (files.count > 0)
+        files.each do |file|
+          # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
+          self.instance_eval(File.read(file), file)
+        end
         self.go(@number_of_players.random)
       end
     end
