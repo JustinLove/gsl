@@ -221,6 +221,11 @@ describe GSL::Player do
         @object.keys.value.should > 1
       end
       
+      it "from a number" do
+        @object.choose(5) {|n| gain n, :keys}
+        @object.keys.value.should > 1
+      end
+      
       it "from a resource" do
         @object.class.make_resource(:choices)
         @object.set_to [@bad, @good, @bad], :choices

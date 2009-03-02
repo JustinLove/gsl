@@ -26,6 +26,8 @@ module GSL
           from.values
         when :Range:
           from.to_a
+        when :Fixnum
+          (0..from).to_a
         when :Symbol:
           __send__(from)
         else
