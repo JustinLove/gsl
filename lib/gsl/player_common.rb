@@ -17,6 +17,10 @@ module GSL
         #note "choose #{best.what} from #{from}"
         return best.what
       end
+      
+      def consider(from, &doing)
+        best_rated(choose_from_what(from), &doing).what
+      end
 
       def choose_from_what(from)
         case from.class.to_s.to_sym

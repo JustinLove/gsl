@@ -248,7 +248,12 @@ describe GSL::Player do
       it "returns a value" do
         @object.choose([@good]).should == @good
       end
-        
+      
+      it "considers uncommited choices" do
+        @object.consider([@good, @bad]).should == @good
+        @object.keys.value.should == 1
+      end
+      
       it "doesn't handles recursive choice" do
         @object.class.make_resource(:doors)
         @game.each_player {set_to 0, :doors}
