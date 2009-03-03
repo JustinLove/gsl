@@ -62,25 +62,20 @@ module GSL
 
       def rate_state(state)
         if (state && state[:legal]) then
-          @world.eval(state) {fitness} #.tap{|x| puts "#{state}: #{x}"}
+          @world.eval(state) {relative_fitness} #.tap{|x| puts "#{state}: #{x}"}
         else
           -Infinity
         end
       end
       
-      def fitness
-        if (@game.respond_to? :score)
-          @game.score
-          fit = score
-        else
-          fit = 0
-        end
-        fit = cv.resources.inject(fit) do |sum,res|
-          sum + resource(res).fitness #.tap {|x| puts "#{res} #{x}"}
-        end
-        fit = cv.hints.inject(fit) do |sum,proc|
-          sum + (execute(proc) || 0)
-        end
+      def relative_fitness
+        @game.simple_fitness
+        fits = players.map {|p| p.absolute_fitness}
+        best = fits.max
+        average = fits.inject(0) {|sum,x| sum + x} / fits.length
+        trail = absolute_fitness - best
+        pack = absolute_fitness - average
+        trail + pack
       end
       
       def execute(what)

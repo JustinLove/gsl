@@ -188,6 +188,23 @@ module GSL
       y
     end
     
+    def simple_fitness
+      if (respond_to? :score)
+        score
+      end
+      each_player do
+        fit = score
+        fit = cv.resources.inject(fit) do |sum,res|
+          sum + resource(res).fitness #.tap {|x| puts "#{res} #{x}"}
+        end
+        fit = cv.hints.inject(fit) do |sum,proc|
+          sum + (execute(proc) || 0)
+        end
+        @w[:absolute_fitness] = fit
+        #p "#{self}: #{fit}"
+      end
+    end
+    
     def description
       "#{@title} by #{@author}, #{@number_of_players} players"
     end

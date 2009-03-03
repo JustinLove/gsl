@@ -11,6 +11,7 @@ module GSL
   
     attr_reader :color
     ygg_property :tiebreaker
+    ygg_reader :absolute_fitness
   
     @@free_actions = [NoAction.new]
   
