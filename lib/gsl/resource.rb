@@ -128,6 +128,10 @@ module GSL
     def hint
       self.class.option[:hint] || 1
     end
+    
+    def fitness
+      0
+    end
 
     class Insufficient < Game::Illegal
       def initialize(r, has = 0, req = 0)

@@ -196,7 +196,7 @@ module GSL
       else
         past = 0
       end
-      remaining = (time_hint || round_limit) + 1
+      remaining = ((@time_hint && @time_hint.call) || round_limit || 0) + 1
       total = past + remaining
       each_player do
         fit = 0
