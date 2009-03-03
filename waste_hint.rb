@@ -7,3 +7,7 @@ resource_hints({
   :waste_reduction => -1,
   :waste_disposal => -1,
 })
+
+hints({
+  action('labor'){co_workers.value < rationalization.value} => -20
+})

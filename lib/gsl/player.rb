@@ -29,6 +29,12 @@ module GSL
         yield
       end
     end
+
+    psuedo_class_var :hint_list
+    cv.hint_list = {}
+    def self.hints(weights)
+      cv.hint_list.merge!(weights)
+    end
   
     def initialize(game)
       @world = game.world

@@ -75,8 +75,13 @@ module GSL
         else
           fit = 0
         end
-        cv.resources.inject(fit) do |sum,res|
+        fit = cv.resources.inject(fit) do |sum,res|
           sum + resource(res).fitness
+        end
+        fit = cv.hint_list.inject(fit) do |sum,pair|
+          k, v = pair
+          sum += v if execute(k)
+          sum
         end
       end
       
@@ -86,14 +91,6 @@ module GSL
         else
           Language.error "not executable"
         end
-      end
-      
-      def action(name = "?", &proc)
-        Action.new(name, &proc)
-      end
-      
-      def no_action
-        NoAction.new
       end
     end
   end

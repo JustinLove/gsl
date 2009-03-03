@@ -53,6 +53,10 @@ module GSL
       Player.resource_hints(weights)
     end
     
+    def hints(weights)
+      Player.hints(weights)
+    end
+    
     def create_players(players)
       @players = Array.new(players) {Player.new(self)}
     end
