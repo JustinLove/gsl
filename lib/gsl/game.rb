@@ -160,7 +160,7 @@ module GSL
     end
   
     def game_over!
-      p 'game over!'
+      note 'game over!'
       @w[:game_over] = true
     end
   
