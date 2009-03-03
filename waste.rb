@@ -171,13 +171,13 @@ to :play_the_cards do
   each_player_until_pass do
     pass unless choose :held_cards do |card|
       choose [
-        action(:play) { with_free_actions { use card }},
-        action(:save) {
+        action("play #{card}") { with_free_actions { use card }},
+        action("save #{card}") {
           must_have {held_cards.count <= 1};
           note "#{self} saves #{card.to_s}"
           pass
         },
-        action(:discard) {
+        action("discard #{card}") {
           may_not {card.name == :material_sale}
           note "#{self} discards #{card.to_s}"
           discard card

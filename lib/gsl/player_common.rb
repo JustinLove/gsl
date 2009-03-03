@@ -62,7 +62,7 @@ module GSL
 
       def rate_state(state)
         if (state && state[:legal]) then
-          @world.eval(state) {fitness}
+          @world.eval(state) {fitness} #.tap{|x| puts "#{state}: #{x}"}
         else
           -Infinity
         end
@@ -76,7 +76,7 @@ module GSL
           fit = 0
         end
         fit = cv.resources.inject(fit) do |sum,res|
-          sum + resource(res).fitness
+          sum + resource(res).fitness #.tap {|x| puts "#{res} #{x}"}
         end
         fit = cv.hint_list.inject(fit) do |sum,pair|
           k, v = pair
