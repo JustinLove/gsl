@@ -126,7 +126,7 @@ module GSL
     end
     
     def hint
-      self.class.option[:hint] || 1
+      self.class.option[:hint] || 0
     end
     
     def fitness

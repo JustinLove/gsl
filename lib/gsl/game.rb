@@ -192,7 +192,7 @@ module GSL
     def simple_fitness
       if (respond_to? :score)
         score
-        past = @rounds
+        past = @rounds + 1
       else
         past = 0
       end

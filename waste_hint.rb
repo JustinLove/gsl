@@ -6,6 +6,9 @@ resource_hints({
   :materials_required => -3,
   :waste_reduction => -3,
   :waste_disposal => -1,
+  :held_cards => 1,
+  :growth => 1,
+  :raw_materials => 1,
 })
 
 hint {-20 if (co_workers.value < rationalization.value)}
