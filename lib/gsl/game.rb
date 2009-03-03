@@ -190,12 +190,14 @@ module GSL
     end
     
     def simple_fitness
-      remaining = (time_hint || round_limit) + 1
-      past = @rounds
-      total = past + remaining
       if (respond_to? :score)
         score
+        past = @rounds
+      else
+        past = 0
       end
+      remaining = (time_hint || round_limit) + 1
+      total = past + remaining
       each_player do
         fit = 0
         fit = cv.resources.inject(fit) do |sum,res|
