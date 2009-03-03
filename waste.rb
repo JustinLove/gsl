@@ -100,9 +100,6 @@ to :play do
   round until game_over?
   accident
   score
-  each_player do
-    puts report
-  end    
 end
 
 every :round do
