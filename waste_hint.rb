@@ -9,3 +9,5 @@ resource_hints({
 })
 
 hint {-20 if (co_workers.value < rationalization.value)}
+
+time_hint {20 - players.map {|p| p.growth.value || 0}.max}

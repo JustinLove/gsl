@@ -13,11 +13,13 @@ module GSL
     as_property :author
     as_property :number_of_players
     as_property :round_limit
+    as_proc :time_hint
 
     def initialize(*files)
       @world = Yggdrasil::World.new
       super()
       @context = []
+      @rounds = 0
       @w[:game_over] = false
       @world[:log] = []
       if (files.count > 0)
@@ -155,7 +157,6 @@ module GSL
     alias every to
   
     def game_over?
-      @rounds ||= 0
       return (@rounds = @rounds + 1) > round_limit || @w[:game_over]
     end
   
@@ -189,18 +190,21 @@ module GSL
     end
     
     def simple_fitness
+      remaining = (time_hint || round_limit) + 1
+      past = @rounds
+      total = past + remaining
       if (respond_to? :score)
         score
       end
       each_player do
-        fit = score
+        fit = 0
         fit = cv.resources.inject(fit) do |sum,res|
           sum + resource(res).fitness #.tap {|x| puts "#{res} #{x}"}
         end
         fit = cv.hints.inject(fit) do |sum,proc|
           sum + (execute(proc) || 0)
         end
-        @w[:absolute_fitness] = fit
+        @w[:absolute_fitness] = ((score * past) + (fit * remaining)) / total
         #p "#{self}: #{fit}"
       end
     end
