@@ -62,7 +62,7 @@ module GSL
 
       def rate_state(state)
         if (state && state[:legal]) then
-          @world.eval(state) {relative_fitness} #.tap{|x| puts "#{state}: #{x}"}
+          @world.eval(state) {relative_fitness + state.difference * 0.01} #.tap{|x| puts "#{state}: #{x}"}
         else
           -Infinity
         end
