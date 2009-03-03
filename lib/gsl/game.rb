@@ -53,8 +53,8 @@ module GSL
       Player.resource_hints(weights)
     end
     
-    def hints(weights)
-      Player.hints(weights)
+    def hint(&proc)
+      Player.hint(&proc)
     end
     
     def create_players(players)

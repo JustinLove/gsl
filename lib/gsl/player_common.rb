@@ -78,10 +78,8 @@ module GSL
         fit = cv.resources.inject(fit) do |sum,res|
           sum + resource(res).fitness #.tap {|x| puts "#{res} #{x}"}
         end
-        fit = cv.hint_list.inject(fit) do |sum,pair|
-          k, v = pair
-          sum += v if execute(k)
-          sum
+        fit = cv.hints.inject(fit) do |sum,proc|
+          sum + (execute(proc) || 0)
         end
       end
       

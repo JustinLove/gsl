@@ -8,6 +8,4 @@ resource_hints({
   :waste_disposal => -1,
 })
 
-hints({
-  action('labor'){co_workers.value < rationalization.value} => -20
-})
+hint {-20 if (co_workers.value < rationalization.value)}

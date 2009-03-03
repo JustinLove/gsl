@@ -30,10 +30,10 @@ module GSL
       end
     end
 
-    psuedo_class_var :hint_list
-    cv.hint_list = {}
-    def self.hints(weights)
-      cv.hint_list.merge!(weights)
+    psuedo_class_var :hints
+    cv.hints = []
+    def self.hint(&proc)
+      cv.hints << proc
     end
   
     def initialize(game)
