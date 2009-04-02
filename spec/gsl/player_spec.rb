@@ -133,6 +133,7 @@ describe GSL::Player do
     describe "chooses" do
       before do
         @object.class.make_resource(:keys)
+        @object.resource_hints(:keys => 1)
         @game.each_player {set_to 1, :keys}
         @good = lambda{gain 1, :keys}
         @bad = lambda{pay 3, :keys}
@@ -256,6 +257,7 @@ describe GSL::Player do
       
       it "doesn't handles recursive choice" do
         @object.class.make_resource(:doors)
+        @object.resource_hints(:doors => -1)
         @game.each_player {set_to 0, :doors}
         class GSL::Game
           def score

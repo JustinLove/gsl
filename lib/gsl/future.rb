@@ -120,6 +120,7 @@ module GSL
       def branch; nil; end
       def legal?; false; end
       def nil?; true; end
+      def describe_action; 'Nil'; end
     end
   end
   
