@@ -112,6 +112,15 @@ describe "all tests", :shared => true do
       @object.discards.should be_kind_of(GSL::Resource::Set)
     end
     
+    it "to_s works with discards" do
+      @object.discards
+      @object.to_s.should be_kind_of(String)
+    end
+    
+    it "spots recursive discarditis" do
+      lambda {@object.discards.discards.to_s}.should raise_error(GSL::Language::Error)
+    end
+    
     it "reshuffles" do
       @object.discards.gain([:jack])
       @object.reshuffle

@@ -84,6 +84,11 @@ module GSL
       def discards
         _discards = @w[:discards]
         if _discards.nil?
+          if (name.to_s.match(/_discard/) && !self.class.option[:discard_to])
+            raise Language.error("If you really want to discard from" +
+              " a discard pile, create it manually" +
+              " with the :discard_to option")
+          end
           _discards = @w[:discards] = 
             self.class.option[:discard_to] ||
             (name.to_s + '_discard').to_sym
@@ -162,7 +167,12 @@ module GSL
   
       def to_s
         self.value ||= []
-        "#{name}:#{self.value.count}/#{discards.count}(#{self.value.count + discards.count})"
+        if (@w[:discards])
+          _discards = discards
+        else
+          _discards = []
+        end
+        "#{name}:#{self.value.count}/#{_discards.count}(#{self.value.count + _discards.count})"
       end
   
       def to_a
