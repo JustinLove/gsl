@@ -16,17 +16,17 @@ module GSL
     as_property :seed
     as_proc :time_hint
 
-    def initialize(*files)
+    def initialize(*args)
       @world = Yggdrasil::World.new
       super()
       @context = []
       @rounds = 0
       @w[:game_over] = false
       @world[:log] = []
-      if (files.count > 0)
-        files.each do |file|
+      if (args.count > 0)
+        args.each do |arg|
           # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
-          self.instance_eval(File.read(file), file)
+          self.instance_eval(File.read(arg), arg)
         end
         init_random
         self.go(@number_of_players.random)
