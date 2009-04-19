@@ -25,8 +25,12 @@ module GSL
       @world[:log] = []
       if (args.count > 0)
         args.each do |arg|
-          # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
-          self.instance_eval(File.read(arg), arg)
+          if File.exist?(arg)
+            # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
+            self.instance_eval(File.read(arg), arg)
+          else
+            self.instance_eval(arg)
+          end
         end
         init_random
         self.go(@number_of_players.random)
