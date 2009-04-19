@@ -13,6 +13,7 @@ module GSL
     as_property :author
     as_property :number_of_players
     as_property :round_limit
+    as_property :seed
     as_proc :time_hint
 
     def initialize(*files)
@@ -27,6 +28,7 @@ module GSL
           # http://www.artima.com/rubycs/articles/ruby_as_dsl.html
           self.instance_eval(File.read(file), file)
         end
+        init_random
         self.go(@number_of_players.random)
       end
     end
@@ -59,8 +61,15 @@ module GSL
       Player.hint(&proc)
     end
     
-    def seed(n)
-      srand(n)
+    def init_random
+      unless seed
+        srand
+        seed rand(1000)
+      end
+      p srand(seed)
+      p srand(seed)
+      p srand(seed)
+      note "seed: #{seed}"
     end
     
     def create_players(players)
@@ -72,7 +81,7 @@ module GSL
       create_players(players)
       puts "#{@players.size} players"
       play
-      puts "#{@w[:game_over]} at round #{@rounds}"
+      puts "#{@w[:game_over]} at round #{@rounds} (#{seed})"
       puts Yggdrasil::State::Tracing.report
     end
   
