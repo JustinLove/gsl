@@ -59,6 +59,10 @@ module GSL
       Player.hint(&proc)
     end
     
+    def seed(n)
+      srand(n)
+    end
+    
     def create_players(players)
       @players = Array.new(players) {Player.new(self)}
     end
