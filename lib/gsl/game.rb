@@ -66,9 +66,7 @@ module GSL
         srand
         seed rand(1000)
       end
-      p srand(seed)
-      p srand(seed)
-      p srand(seed)
+      srand(seed)
       note "seed: #{seed}"
     end
     
