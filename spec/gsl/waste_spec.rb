@@ -3,6 +3,6 @@ libs %w{gsl/game}
 
 describe "Industrial Waste" do
   it "runs" do
-    GSL::Game.new(file("waste.rb"), file("waste_hint.rb"))
+    GSL::Game.new(file("waste.rb"), file("waste_hint.rb"), "seed 1")
   end
 end
