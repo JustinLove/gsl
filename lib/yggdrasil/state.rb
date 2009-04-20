@@ -52,7 +52,10 @@ module Yggdrasil
     
       def update(k, default = nil, &proc)
         v = self[k]
-        v = v.dup if v.frozen?
+        begin
+          v = v.dup
+        rescue
+        end
         v = default if v.nil?
         self[k] = proc.call(v)
       end
