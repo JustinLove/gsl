@@ -120,8 +120,8 @@ every :accident do
   each_player do
     with_free_actions do
       case waste_disposal.section
-      when :red: pay 10, :money; lose(2, :growth) unless use(:bribery, held_cards);
-      when :yellow: pay 5, :money; lose(1, :growth) unless use(:bribery, held_cards);
+      when :red; pay 10, :money; lose(2, :growth) unless use(:bribery, held_cards);
+      when :yellow; pay 5, :money; lose(1, :growth) unless use(:bribery, held_cards);
       end
     end
     puts report
@@ -137,8 +137,8 @@ to :lay_out_card_combinations do
     combinations.each do |pile|
       pile << draw(:action_cards) do |card|
         case (card && card.name) || Empty
-        when Empty: reshuffle; draw;
-        when :accident: accident; discard card; reshuffle; draw;
+        when Empty; reshuffle; draw;
+        when :accident; accident; discard card; reshuffle; draw;
         else
           if names(pile).include?(card.name)
             discard card; reshuffle; draw;
@@ -257,13 +257,13 @@ card :advisor do
       choose :held_cards do |card|
         twice = action(:twice) { execute card; use card; }
         case card.name
-        when :material_sale: use card;
-        when :growth: use twice;
-        when :innovation: use twice;
-        when :hiring_firing: use twice;
-        when :waste_disposal: use twice;
-        when :waste_removal: use twice;
-        when :order: gain(5, :money) if use(card);
+        when :material_sale; use card;
+        when :growth; use twice;
+        when :innovation; use twice;
+        when :hiring_firing; use twice;
+        when :waste_disposal; use twice;
+        when :waste_removal; use twice;
+        when :order; gain(5, :money) if use(card);
         else raise Game::NotAllowed, "can't double #{card}"
         end
       end
