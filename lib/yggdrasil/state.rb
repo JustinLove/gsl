@@ -71,11 +71,14 @@ module Yggdrasil
       @@calls = 0
       @@lookups = 0
       @@writes = 0
+      @@states = 0
       
       def calls; @@calls; end
 
       def self.report
-        "#@@writes writes, #@@calls calls, #@@lookups lookups, #{@@calls.to_f / @@lookups} avg, #{@@lookups.to_f / @@writes} r/w"
+        "#@@states states, #@@writes writes, #@@calls calls, #@@lookups lookups, " +
+          "#{@@calls.to_f / @@lookups} avg, #{@@lookups.to_f / @@writes} r/w; " +
+          "#{@@lookups.to_f / @@states} r/s #{@@writes / @@states} w/s"
       end
 
       def [](k)
@@ -90,6 +93,11 @@ module Yggdrasil
       
       def hit(k)
         @@lookups += 1
+        super
+      end
+      
+      def initialize(*args)
+        @@states += 1
         super
       end
     end

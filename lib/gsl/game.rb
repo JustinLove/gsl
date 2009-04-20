@@ -85,6 +85,7 @@ module GSL
       play
       puts "#{@w[:game_over]} at round #{@rounds} (#{seed})"
       puts Yggdrasil::State::Tracing.report
+      puts @w.world.state.depth
     end
   
     def enter(flag)
