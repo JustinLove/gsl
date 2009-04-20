@@ -70,15 +70,21 @@ module Yggdrasil
     module Tracing
       @@calls = 0
       @@lookups = 0
+      @@writes = 0
       
       def calls; @@calls; end
 
       def self.report
-        "#{@@calls} calls, #{@@lookups} lookups, #{@@calls.to_f / @@lookups} avg"
+        "#@@writes writes, #@@calls calls, #@@lookups lookups, #{@@calls.to_f / @@lookups} avg, #{@@lookups.to_f / @@writes} r/w"
       end
 
       def [](k)
         @@calls +=1
+        super
+      end
+
+      def []=(k, v)
+        @@writes += 1
         super
       end
       
