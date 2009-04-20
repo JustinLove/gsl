@@ -76,9 +76,11 @@ module Yggdrasil
       def calls; @@calls; end
 
       def self.report
-        "#@@states states, #@@writes writes, #@@calls calls, #@@lookups lookups, " +
-          "#{@@calls.to_f / @@lookups} avg, #{@@lookups.to_f / @@writes} r/w; " +
-          "#{@@lookups.to_f / @@states} r/s #{@@writes / @@states} w/s"
+        if @@states > 0
+          "#@@states states, #@@writes writes, #@@calls calls, #@@lookups lookups, " +
+            "#{@@calls.to_f / @@lookups} avg, #{@@lookups.to_f / @@writes} r/w; " +
+            "#{@@lookups.to_f / @@states} r/s #{@@writes / @@states} w/s"
+        end
       end
 
       def [](k)
