@@ -52,7 +52,7 @@ module GSL
       if (@home.nil? && where.respond_to?(:discards))
         @home = where.discards
       end
-      @w.world = @world = where.world if (where)
+      self.world = where.world if (where)
       @w[:in] = where
     end
 

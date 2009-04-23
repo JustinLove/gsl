@@ -5,6 +5,11 @@ module Yggdrasil
     module Object
       attr_reader :world
       
+      def world=(v)
+        @w.world = @world = v
+      end
+      private :world=
+      
       def initialize
         super
         @w = Passport.new(self)
