@@ -61,7 +61,7 @@ module GSL
     end
     
     def to_s
-      "#{self.class} with #{@resources.keys}"
+      "#{self.class} with #{@resources && @resources.keys}"
     end
 
     def respond_to?(method)
