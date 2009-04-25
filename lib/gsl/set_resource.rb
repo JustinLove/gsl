@@ -164,19 +164,23 @@ module GSL
           0
         end
       end
-  
-      def to_s
-        self.value ||= []
+
+      def maybe_discards
         if (@w[:discards])
           _discards = discards
         else
           _discards = []
         end
+      end
+  
+      def to_s
+        self.value ||= []
+        _discards = maybe_discards
         "#{name}:#{self.value.count}/#{_discards.count}(#{self.value.count + _discards.count})"
       end
   
       def to_a
-        [self.value.to_s, discards.to_s]
+        [self.value.to_s, maybe_discards.to_s]
       end
     end
   end

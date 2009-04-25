@@ -35,7 +35,6 @@ describe GSL::ResourceUser do
   it "makes components" do
     @user.class.make_components(:cubes, 10)
     @user.cv.components[:cubes].first.should be_kind_of(GSL::Component)
-    @user.cv.resources.should include(:cubes)
   end
   
   it "makes resources" do

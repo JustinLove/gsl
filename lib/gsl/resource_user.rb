@@ -32,7 +32,6 @@ module GSL
       include ClassVars::Class
       def make_components(name, value)
         cv.components[name] = Component.send(value.class.name.downcase, name, value)
-        cv.resources << name unless cv.resources.include?(name)
       end
 
       def make_resource(name, option = nil, &proc)
@@ -52,6 +51,7 @@ module GSL
       @resources = Hash.new do |hash, key|
         hash[key] = Resource.define(key).new(self)
         if (cv.components.keys.include? key)
+          cv.resources << key unless cv.resources.include?(key)
           hash[key].set deep_copy(cv.components[key])
         elsif (hash[key].class.option[:initial])
           hash[key].set deep_copy(hash[key].class.option[:initial])
@@ -75,6 +75,9 @@ module GSL
 
     def method_missing(method, *args, &block)
       if (cv.resources.include?(method))
+        #puts 'returning ' + method.to_s
+        return @resources[method]
+      elsif (cv.components.keys.include?(method))
         #puts 'returning ' + method.to_s
         return @resources[method]
       elsif (forward_to && forward_to.respond_to?(method))
