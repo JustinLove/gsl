@@ -21,7 +21,7 @@ module ClassVars
     def cv; self; end
     
     def psuedo_class_var(var)
-      self.class.__send__ :attr_accessor, "#{var}"
+      class <<self; self; end.__send__ :attr_accessor, "#{var}"
     end
   end
 end
