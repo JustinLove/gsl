@@ -23,6 +23,7 @@ module GSL
       @rounds = 0
       @w[:game_over] = false
       @world[:log] = []
+      @seed = nil
       if (args.count > 0)
         args.each do |arg|
           if File.exist?(arg)
