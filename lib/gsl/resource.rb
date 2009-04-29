@@ -4,7 +4,7 @@ GSL::depends_on %w{classvar misc set_resource value_resource ygg}
 module GSL
   class Resource
     class << self
-      alias :class_name :name
+      alias :ruby_class_name :name
       attr_accessor :name, :option
       
       def to_s
