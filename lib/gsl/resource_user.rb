@@ -116,11 +116,11 @@ module GSL
     end
   
     def must_have(&condition)
-      Game.illegal :FailedPrecondition unless (instance_eval &condition)
+      Game.illegal :FailedPrecondition unless (instance_eval(&condition))
     end
 
     def may_not(&condition)
-      Game.illegal :NotAllowed if (instance_eval &condition)
+      Game.illegal :NotAllowed if (instance_eval(&condition))
     end
     
     def utility(name, &proc)
