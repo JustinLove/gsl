@@ -158,8 +158,8 @@ module GSL
       end
       
       def fitness
-        if @value
-          @value.length * hint
+        if self.value
+          self.value.length * hint
         else
           0
         end
