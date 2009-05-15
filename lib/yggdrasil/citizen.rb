@@ -41,15 +41,11 @@ module Yggdrasil
       extend SuperClass
       
       def ygg_writer(var)
-        self.__send__ :define_method, "#{var}=" do |v|
-          @w[var] = v
-        end
+        self.class_eval "def #{var}=(v); @w[:#{var}] = v; end"
       end
       
       def ygg_reader(var)
-        self.__send__ :define_method, var do
-          @w[var]
-        end
+        self.class_eval "def #{var}; @w[:#{var}]; end"
       end
       
       def ygg_accessor(var)
@@ -58,14 +54,15 @@ module Yggdrasil
       end
       
       def ygg_property(var)
-        self.__send__ :define_method, var do |*parameters|
-          v, *ignored = *parameters
-          if (v)
-            @w[var] = v
-          else
-            @w[var]
+        self.class_eval <<-PROP
+          def #{var}(v = nil)
+            if (v)
+              @w[:#{var}] = v
+            else
+              @w[:#{var}]
+            end
           end
-        end
+        PROP
       end
     end
   end
