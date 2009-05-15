@@ -105,6 +105,12 @@ module Yggdrasil
         @@states += 1
         super
       end
+      
+      def self.included(base)
+        at_exit do
+          puts report
+        end
+      end
     end
     
     module Logging
