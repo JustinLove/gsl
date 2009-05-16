@@ -103,7 +103,8 @@ module GSL
       end
   
       def shuffle
-        self.value = self.value.shuffle
+        l = self.value.length * 10
+        self.value = self.value.sort_by {rand(l)}
       end
 
       def reshuffle
