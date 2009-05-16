@@ -18,19 +18,19 @@ module Yggdrasil
     end
     
     def rune(key)
-      @oid + key.to_s
+      key.to_s + @oid
     end
     
     def [](k)
-      @world[@oid + k.to_s]
+      @world[k.to_s + @oid]
     end
     
     def []=(k, v)
-      @world[@oid + k.to_s] = v
+      @world[k.to_s + @oid] = v
     end
     
     def update(k, default = nil, &proc)
-      @world.state.update(@oid + k.to_s, default, &proc)
+      @world.state.update(k.to_s + @oid, default, &proc)
     end
   end
 end
