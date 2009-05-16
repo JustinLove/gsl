@@ -22,15 +22,15 @@ module Yggdrasil
     end
     
     def [](k)
-      @world[rune(k)]
+      @world[@oid + k.to_s]
     end
     
     def []=(k, v)
-      @world[rune(k)] = v
+      @world[@oid + k.to_s] = v
     end
     
     def update(k, default = nil, &proc)
-      @world.state.update(rune(k), default, &proc)
+      @world.state.update(@oid + k.to_s, default, &proc)
     end
   end
 end
