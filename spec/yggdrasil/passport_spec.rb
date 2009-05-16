@@ -16,7 +16,7 @@ describe Yggdrasil::Passport do
   it_should_behave_like "well behaved objects"
 
   it "has key generator" do
-    @object.rune(:blarg).should be_kind_of(String)
+    @object.rune(:blarg).should be_kind_of(Symbol)
   end
   
   it "stores values" do
