@@ -1,21 +1,24 @@
 module Properties
   def as_property(named)
-    define_method(named) do |*parameters|
-      value, *ignored = *parameters
-      if (value)
-        instance_variable_set("@#{named}", value)
-      else
-        instance_variable_get("@#{named}")
+    class_eval <<-PROP
+      def #{named}(value = nil)
+        if (value)
+          @#{named} = value
+        else
+          @#{named}
+        end
       end
-    end
+      PROP
   end
   def as_proc(named)
-    define_method(named) do |&proc|
-      if (proc)
-        instance_variable_set("@#{named}", proc)
-      else
-        instance_variable_get("@#{named}").call
+    class_eval <<-PROC
+      def #{named}(&proc)
+        if (proc)
+          @#{named} = proc
+        else
+          @#{named}.call
+        end
       end
-    end
+      PROC
   end
 end
