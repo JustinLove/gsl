@@ -9,8 +9,8 @@ module GSL
     class << self
       def hash(name, value)
         list = []
-        value.each do|k,v|
-          v.times {list << Component.new(k, name)}
+        value.keys.sort_by{|k| k.to_s}.each do|k|
+          value[k].times {list << Component.new(k, name)}
         end
         list
       end
