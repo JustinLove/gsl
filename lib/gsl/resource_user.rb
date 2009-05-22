@@ -52,9 +52,9 @@ module GSL
         hash[key] = Resource.define(key).new(self)
         if (cv.components.keys.include? key)
           cv.resources << key unless cv.resources.include?(key)
-          hash[key].set deep_copy(cv.components[key])
+          hash[key].set cv.components[key].dup
         elsif (hash[key].class.option[:initial])
-          hash[key].set deep_copy(hash[key].class.option[:initial])
+          hash[key].set hash[key].class.option[:initial].dup
         end
         hash[key]
       end

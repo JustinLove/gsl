@@ -60,10 +60,6 @@ class Object
   end
 end
 
-def deep_copy(obj)
-  Marshal::load(Marshal.dump(obj))
-end
-
 module GSL
   module Raiser
     def self.named(name)
