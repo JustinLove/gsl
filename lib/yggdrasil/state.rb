@@ -31,10 +31,10 @@ module Yggdrasil
       end
     
       def [](k)
-        if (@d[k].nil?)
-          upcall(k)
-        else
+        if (@d.has_key?(k))
           hit(k)
+        else
+          upcall(k)
         end
       end
       

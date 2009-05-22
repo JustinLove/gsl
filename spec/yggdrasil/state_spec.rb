@@ -104,6 +104,13 @@ describe Yggdrasil::State do
       @top[:parent].should == :parent
     end
     
+    it "writes nulls" do
+      @object[:parent] = :child
+      @object[:parent].should == :child
+      @object[:parent] = nil
+      @object[:parent].should == nil
+    end
+    
     it "Updates derived values" do
       @object.update(:parent) {|v| (v.to_s * 2).to_sym}
       @object[:parent].should == :parentparent
