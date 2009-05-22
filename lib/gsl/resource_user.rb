@@ -54,7 +54,11 @@ module GSL
           cv.resources << key unless cv.resources.include?(key)
           hash[key].set cv.components[key].dup
         elsif (hash[key].class.option[:initial])
-          hash[key].set hash[key].class.option[:initial].dup
+          begin
+            hash[key].set hash[key].class.option[:initial].dup
+          rescue
+            hash[key].set hash[key].class.option[:initial]
+          end
         end
         hash[key]
       end
