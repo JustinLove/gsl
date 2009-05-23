@@ -7,7 +7,11 @@ module GSL
     attr_reader :name
 
     class << self
-      def hash(name, value)
+      def from(name, value)
+        self.__send__("from"+value.class.name, name, value)
+      end
+      
+      def fromHash(name, value)
         list = []
         value.keys.sort_by{|k| k.to_s}.each do|k|
           value[k].times {list << Component.new(k, name)}
@@ -15,11 +19,11 @@ module GSL
         list
       end
 
-      def array(name, value)
+      def fromArray(name, value)
         value.map {|v| Component.new(v, name)}
       end
 
-      def fixnum(name, value)
+      def fromFixnum(name, value)
         list = []
         value.times {list << Component.new(name)}
         list

@@ -31,7 +31,7 @@ module GSL
     module Class
       include ClassVars::Class
       def make_components(name, value)
-        cv.components[name] = Component.send(value.class.name.downcase, name, value)
+        cv.components[name] = Component.from(name, value)
       end
 
       def make_resource(name, option = nil, &proc)
