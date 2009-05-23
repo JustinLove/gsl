@@ -161,10 +161,10 @@ module GSL
       Player.at_any_time(name, proc)
     end
   
-    def to(name, &proc)
+    def to(name, &what)
       self.class.__send__ :define_method, name do |*args, &block|
         enter name
-        result = proc.call(*args, &block)
+        result = what.call(*args, &block)
         leave name
         result
       end
