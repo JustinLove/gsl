@@ -1,5 +1,5 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
-GSL::depends_on %w{action}
+GSL::depends_on %w{action plan}
 
 module Yggdrasil
   class State
@@ -34,30 +34,9 @@ module GSL
       end
       
       def list_of_choices(from, &doing)
-        rate_choices(choose_from_what(from), &doing)
+        rate_choices(Plan.new(self, from, &doing), &doing)
       end
 
-      def choose_from_what(from)
-        case from
-        when Array
-          from
-        when Hash
-          from.values
-        when Range
-          from.to_a
-        when Fixnum
-          (0..from).to_a
-        when Symbol
-          __send__(from)
-        else
-          if (from.kind_of? Resource)
-            from
-          else
-            Language.error "can't choose from a #{from.class}"
-          end
-        end
-      end
-      
       def rate_choices(from, &doing)
         from.map {|c|
           rate(c, &doing)
