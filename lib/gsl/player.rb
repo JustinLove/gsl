@@ -49,13 +49,6 @@ module GSL
       @color = (choices - @game.players.map {|pl| pl.color}).random
     end
 
-    def take(from, &doing)
-      best = best_rated(choose_from_what(from), &doing).switch
-      #note "take #{best.what} from #{from}"
-      must_lose [best.what], from if best.legal?
-      return best.what
-    end
-    
     def use(card, from = nil)
       if card.kind_of?(Symbol) && from
         card = from.find{|c| c.name == card}
