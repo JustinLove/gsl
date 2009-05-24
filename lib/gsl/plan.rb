@@ -49,5 +49,8 @@ module GSL
       end
     end
     
+    def best
+      @what.first
+    end
   end
 end

@@ -54,4 +54,9 @@ describe GSL::Plan do
   it "is enumerable" do
     @object.map {|x| x}.should == [1, 2, 3]
   end
+  
+  it "returns a best element" do
+    best = @object.best
+    best.should_not be_nil
+  end
 end
