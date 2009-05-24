@@ -6,5 +6,10 @@ class GSL::Plan
 end
 
 describe GSL::Plan do
+  before do
+    @object = GSL::Plan.new()
+  end
+  
+  it_should_behave_like "well behaved objects"
   
 end
