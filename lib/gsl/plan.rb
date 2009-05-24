@@ -65,7 +65,11 @@ module GSL
     end
     
     def best
-      @what.last
+      best = @what.last || Future::Nil.new
+      unless (best.nil? || best.legal?)
+        Game.illegal(:NoLegalOptions, @what.map{|c| c.why}.join(', '))
+      end
+      best
     end
   end
 end
