@@ -62,6 +62,10 @@ describe GSL::Plan do
     best.should_not be_nil
   end
   
+  it "best rated nothing" do
+    GSL::Plan.new(@ground, []).best.should be_kind_of(GSL::Future::Nil)
+  end
+  
   it "adds a rating" do
     best = @object.best
     best.rating.should be_kind_of(Numeric)

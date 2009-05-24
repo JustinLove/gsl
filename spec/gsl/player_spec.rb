@@ -189,11 +189,6 @@ describe GSL::Player do
             should raise_error(GSL::Game::NoLegalOptions)
         end
 
-        it "best_rated nothing" do
-          pending
-          @object.best_rated([]).should be_kind_of(GSL::Future::Nil)
-        end
-        
         it "commits legal acts" do
           @object.use(@good)
           @object.keys.value.should == 2
