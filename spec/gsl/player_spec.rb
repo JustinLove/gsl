@@ -173,16 +173,16 @@ describe GSL::Player do
         end
         
         it "best_rated" do
-          g = @object.best_rated([@good, @bad])
+          g = @object.choose_best([@good, @bad])
           g.what.should == @good
           g.legal?.should be_true
           g.rating.should_not be_nil
-          g = @object.best_rated([@bad, @good])
+          g = @object.choose_best([@bad, @good])
           g.what.should == @good
         end
 
         it "best_rated illegal is illegal" do
-          lambda {@object.best_rated([@bad, @bad])}.
+          lambda {@object.choose_best([@bad, @bad])}.
             should raise_error(GSL::Game::NoLegalOptions)
         end
 

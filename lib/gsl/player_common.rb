@@ -30,7 +30,11 @@ module GSL
       end
       
       def choose_best(from, &doing)
-        best_rated(choose_from_what(from), &doing)
+        best_rated(list_of_choices(from, &doing))
+      end
+      
+      def list_of_choices(from, &doing)
+        rate_choices(choose_from_what(from), &doing)
       end
 
       def choose_from_what(from)
@@ -54,10 +58,13 @@ module GSL
         end
       end
       
-      def best_rated(from, &doing)
-        choices = from.map {|c|
+      def rate_choices(from, &doing)
+        from.map {|c|
           rate(c, &doing)
         }.sort_by {|r| r.rating}
+      end
+      
+      def best_rated(choices)
         best = choices.last || Future::Nil.new
         unless (best.nil? || best.legal?)
           Game.illegal(:NoLegalOptions, choices.map{|c| c.why}.join(', '))
