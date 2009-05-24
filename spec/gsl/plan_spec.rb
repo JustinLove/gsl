@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
-libs %w{gsl/plan gsl/ygg}
+libs %w{gsl/misc gsl/plan gsl/ygg}
 
 class GSL::Plan
   include Tattler
@@ -14,6 +14,8 @@ class GroundPlan
     super
   end
   
+  def note(s); end
+  
   def stuff; [:stuff]; end
   
   def rate_state(s); rand; end
@@ -23,6 +25,7 @@ describe GSL::Plan do
   before do
     @ground = GroundPlan.new
     @object = GSL::Plan.new(@ground, [1, 2, 3]) {}
+    @bad = lambda{GSL::Game.illegal("badness")}
   end
   
   it_should_behave_like "well behaved objects"
@@ -60,6 +63,11 @@ describe GSL::Plan do
   it "returns a best element" do
     best = @object.best
     best.should_not be_nil
+  end
+
+  it "best rated illegal is illegal" do
+    lambda {GSL::Plan.new(@ground, [@bad, @bad]).best}.
+      should raise_error(GSL::Game::NoLegalOptions)
   end
   
   it "best rated nothing" do

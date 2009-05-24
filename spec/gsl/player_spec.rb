@@ -183,12 +183,6 @@ describe GSL::Player do
           g.what.should == @good
         end
 
-        it "best_rated illegal is illegal" do
-          pending
-          lambda {@object.choose_best([@bad, @bad])}.
-            should raise_error(GSL::Game::NoLegalOptions)
-        end
-
         it "commits legal acts" do
           @object.use(@good)
           @object.keys.value.should == 2
