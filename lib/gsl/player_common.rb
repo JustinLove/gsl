@@ -13,20 +13,24 @@ module GSL
   class Player
     module Common
       def choose(from, &doing)
-        best = best_rated(choose_from_what(from), &doing).switch
+        best = choose_best(from, &doing).switch
         #note "choose #{best.what} from #{from}"
         return best.what
       end
       
       def take(from, &doing)
-        best = best_rated(choose_from_what(from), &doing).switch
+        best = choose_best(from, &doing).switch
         #note "take #{best.what} from #{from}"
         must_lose [best.what], from if best.legal?
         return best.what
       end
 
       def consider(from, &doing)
-        best_rated(choose_from_what(from), &doing).what
+        choose_best(from, &doing).what
+      end
+      
+      def choose_best(from, &doing)
+        best_rated(choose_from_what(from), &doing)
       end
 
       def choose_from_what(from)
