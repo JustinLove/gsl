@@ -34,16 +34,16 @@ module GSL
       end
 
       def choose_from_what(from)
-        case from.class.to_s.to_sym
-        when :Array
+        case from
+        when Array
           from
-        when :Hash
+        when Hash
           from.values
-        when :Range
+        when Range
           from.to_a
-        when :Fixnum
+        when Fixnum
           (0..from).to_a
-        when :Symbol
+        when Symbol
           __send__(from)
         else
           if (from.kind_of? Resource)
