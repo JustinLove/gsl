@@ -14,36 +14,38 @@ class GroundPlan
     super
   end
   
-  def stuff; :stuff; end
+  def stuff; [:stuff]; end
+  
+  def rate_state(s); rand; end
 end
 
 describe GSL::Plan do
   before do
     @ground = GroundPlan.new
-    @object = GSL::Plan.new(@ground, [1, 2, 3])
+    @object = GSL::Plan.new(@ground, [1, 2, 3]) {}
   end
   
   it_should_behave_like "well behaved objects"
   
   describe "takes different inputs" do
     it "takes arrays" do
-      GSL::Plan.new(@ground, [1, 2, 3]).should_not be_nil
+      GSL::Plan.new(@ground, [1, 2, 3]){}.should_not be_nil
     end
 
     it "takes arrays" do
-      GSL::Plan.new(@ground, [1, 2, 3]).should_not be_nil
+      GSL::Plan.new(@ground, [1, 2, 3]){}.should_not be_nil
     end
 
     it "takes hashs" do
-      GSL::Plan.new(@ground, :one => 1, :two => 2).should_not be_nil
+      GSL::Plan.new(@ground, :one => 1, :two => 2){}.should_not be_nil
     end
     
     it "takes numbers" do
-      GSL::Plan.new(@ground, 3).should_not be_nil
+      GSL::Plan.new(@ground, 3){}.should_not be_nil
     end
 
     it "takes symbols" do
-      GSL::Plan.new(@ground, :stuff).should_not be_nil
+      GSL::Plan.new(@ground, :stuff){}.should_not be_nil
     end
     
     it "throws out the rest" do
@@ -52,11 +54,16 @@ describe GSL::Plan do
   end
   
   it "is enumerable" do
-    @object.map {|x| x}.should == [1, 2, 3]
+    @object.map {|x| x}.should be_kind_of(Array)
   end
   
   it "returns a best element" do
     best = @object.best
     best.should_not be_nil
+  end
+  
+  it "adds a rating" do
+    best = @object.best
+    best.rating.should be_kind_of(Numeric)
   end
 end

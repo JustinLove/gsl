@@ -34,29 +34,17 @@ module GSL
       end
       
       def list_of_choices(from, &doing)
-        rate_choices(Plan.new(self, from, &doing), &doing)
+        Plan.new(self, from, &doing)
       end
 
-      def rate_choices(from, &doing)
-        from.map {|c|
-          rate(c, &doing)
-        }.sort_by {|r| r.rating}
-      end
-      
       def best_rated(choices)
-        best = choices.last || Future::Nil.new
+        best = choices.best || Future::Nil.new
         unless (best.nil? || best.legal?)
           Game.illegal(:NoLegalOptions, choices.map{|c| c.why}.join(', '))
         end
         best
       end
       
-      def rate(what, why = 'rates', &doing)
-        s = Future.new(self, what, why, &doing)
-        s.rating = rate_state(s.state)
-        s
-      end
-
       def rate_state(state)
         if (state && state[:legal]) then
           @world.eval(state) {relative_fitness + state.difference * 0.01} #.tap{|x| puts "#{state}: #{x}"}

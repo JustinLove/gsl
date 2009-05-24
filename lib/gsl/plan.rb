@@ -1,13 +1,16 @@
+require File.join(File.expand_path(File.dirname(__FILE__)), 'depends')
+GSL::depends_on %w{future}
+
 module GSL
   class Plan
     def initialize(_who, _what, &_how)
       super()
       @who = _who
-      @what = array_from(_what)
       @how = _how
-      s = @what.to_s
+      @what = rate_choices(array_from(_what))
+      s = @how.to_s
       if (s[0,1] == '#')
-        @why = "#{@what.class}"
+        @why = "#{@how.class}"
       else
         @why = "#{s}"
       end
@@ -49,8 +52,20 @@ module GSL
       end
     end
     
+    def rate_choices(from)
+      from.map {|c|
+        rate(c)
+      }.sort_by {|r| r.rating}
+    end
+
+    def rate(what, why = 'rates')
+      s = Future.new(@who, what, why, &@how)
+      s.rating = @who.rate_state(s.state)
+      s
+    end
+    
     def best
-      @what.first
+      @what.last
     end
   end
 end
