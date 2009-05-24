@@ -168,12 +168,6 @@ describe GSL::Player do
           @object.rate(@good).rating.should > @object.rate(@bad).rating
         end
 
-        #stopgap
-        it "randomizes ratings" do
-          pending
-          Array.new(3) {@object.rate(@good)}.uniq.count.should > 1
-        end
-        
         it "best_rated" do
           g = @object.choose_best([@good, @bad])
           g.what.should == @good
