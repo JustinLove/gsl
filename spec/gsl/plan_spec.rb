@@ -18,7 +18,13 @@ class GroundPlan
   
   def stuff; [:stuff]; end
   
-  def rate_state(s); rand; end
+  def rate_state(s)
+    if s[:legal]
+      rand
+    else
+      -1
+    end
+  end
 end
 
 describe GSL::Plan do
@@ -26,6 +32,7 @@ describe GSL::Plan do
     @ground = GroundPlan.new
     @object = GSL::Plan.new(@ground, [1, 2, 3]) {}
     @bad = lambda{GSL::Game.illegal("badness")}
+    @good = lambda{}
   end
   
   it_should_behave_like "well behaved objects"
@@ -63,6 +70,10 @@ describe GSL::Plan do
   it "returns a best element" do
     best = @object.best
     best.should_not be_nil
+  end
+
+  it "rates actions" do
+    @object.rate(@good).rating.should > @object.rate(@bad).rating
   end
 
   it "best rated illegal is illegal" do

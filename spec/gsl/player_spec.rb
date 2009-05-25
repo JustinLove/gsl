@@ -163,11 +163,6 @@ describe GSL::Player do
           end
         end
         
-        it "rates actions" do
-          pending
-          @object.rate(@good).rating.should > @object.rate(@bad).rating
-        end
-
         it "best_rated" do
           g = @object.choose_best([@good, @bad])
           g.what.should == @good
