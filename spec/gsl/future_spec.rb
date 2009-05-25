@@ -42,6 +42,14 @@ describe GSL::Future do
   it "executes the method" do
     @object.state[@ground.rune].should == :ran
   end
+  
+  it "executes lazily" do
+    blarg = nil
+    f = GSL::Future.new(@ground, lambda{blarg = :bleep})
+    blarg.should == nil
+    f.state
+    blarg.should == :bleep
+  end
 
   it "marks legal" do
     @legal.legal?.should be_true

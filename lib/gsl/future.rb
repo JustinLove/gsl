@@ -6,9 +6,7 @@ module GSL
     attr_reader :who
     attr_reader :what
     attr_reader :how
-    attr_reader :state
     attr_reader :why
-    attr_reader :why_failed
     attr_accessor :rating
     
     def initialize(who, what, why = '?', &how)
@@ -22,7 +20,7 @@ module GSL
       else
         @why = "#{why} #{s}"
       end
-      @state = branch
+      @state = nil
     end
     
     def to_s
@@ -39,6 +37,18 @@ module GSL
       #puts "#{' ' * @@level}#{indent}" + s
     end
     
+    def state
+      @state ||= branch
+    end
+    
+    def why_failed
+      force; @why_failed
+    end
+    
+    def force
+      state
+    end
+    
     def branch
       @who.world.branch(@why) do
         propigate_errors(go)
@@ -50,7 +60,7 @@ module GSL
     end
   
     def legal?
-      @state[:legal]
+      state[:legal]
     end
     
     def switch_if_legal
@@ -64,7 +74,7 @@ module GSL
     end
     
     def switch
-      @who.world.switch(@state) unless @who.nil?
+      @who.world.switch(state) unless @who.nil?
       self
     end
     

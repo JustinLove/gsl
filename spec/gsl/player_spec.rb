@@ -102,7 +102,7 @@ describe GSL::Player do
     end
     
     it "doesn't catch other exceptions" do
-      lambda {GSL::Future.new(@object, lambda{raise "hell"})}.should raise_error("hell")
+      lambda {GSL::Future.new(@object, lambda{raise "hell"}).force}.should raise_error("hell")
     end
     
     describe "side effects" do
