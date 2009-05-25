@@ -28,7 +28,7 @@ module GSL
     end
     
     def inspect
-      "#{self.class}, " +
+      "#{self.class}#{if (deferred?) then '*' else '' end}, " +
       "#{(@who.respond_to?(:name) && @who.name) || @who.object_id} " +
       "on #{@why}(#{describe_action}) -> #{@rating}/#{@state && @why_failed}"
     end
