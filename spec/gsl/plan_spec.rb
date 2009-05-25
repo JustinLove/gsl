@@ -20,7 +20,7 @@ class GroundPlan
   
   def rate_state(s)
     if s[:legal]
-      rand
+      1
     else
       -1
     end
@@ -73,6 +73,7 @@ describe GSL::Plan do
   end
 
   it "rates actions" do
+    @object = GSL::Plan.new(@ground, [@good, @bad])
     @object.rate(@good).rating.should > @object.rate(@bad).rating
   end
 
