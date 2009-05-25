@@ -46,8 +46,10 @@ describe GSL::Future do
   it "executes lazily" do
     blarg = nil
     f = GSL::Future.new(@ground, lambda{blarg = :bleep})
+    f.should be_deferred
     blarg.should == nil
-    f.state
+    f.force
+    f.should_not be_deferred
     blarg.should == :bleep
   end
 

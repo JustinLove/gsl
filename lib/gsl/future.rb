@@ -30,7 +30,7 @@ module GSL
     def inspect
       "#{self.class}, " +
       "#{(@who.respond_to?(:name) && @who.name) || @who.object_id} " +
-      "on #{@why}(#{describe_action}) -> #{@rating}/#{@why_failed}"
+      "on #{@why}(#{describe_action}) -> #{@rating}/#{@state && @why_failed}"
     end
     
     def d(s, indent = "- ")
@@ -47,6 +47,10 @@ module GSL
     
     def force
       state
+    end
+    
+    def deferred?
+      @state == nil
     end
     
     def branch
