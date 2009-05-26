@@ -24,7 +24,7 @@ module GSL
     end
     
     def to_s
-      "#{self.class} on #{@why} (#{@rating})"
+      "#{self.class}#{if (deferred?) then '*' else '' end} on #{@why} (#{@rating})"
     end
     
     def inspect
