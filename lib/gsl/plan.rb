@@ -3,6 +3,7 @@ GSL::depends_on %w{future}
 
 module GSL
   class Plan
+    @@ratings = {}
     def initialize(_who, _what, &_how)
       super()
       @who = _who
@@ -55,21 +56,25 @@ module GSL
     def rate_choices(from)
       from.map {|c|
         rate(c)
-      }.sort_by {|r| r.rating}
+      }.sort_by {|r| -r.rating}
     end
 
     def rate(what, why = 'rates')
       s = Future.new(@who, what, why, &@how)
-      s.rating = @who.rate_state(s.state)
+      s.rating = @@ratings[s.describe_action] ||= @who.rate_state(s.state)
       s
     end
     
     def best
-      b = @what.last || Future::Nil.new
-      unless (b.nil? || b.legal?)
-        Game.illegal(:NoLegalOptions, @what.map{|c| c.why}.join(', '))
+      if (@what.empty?)
+        return Future::Nil.new
       end
-      b
+      @what.each do |choice|
+        if choice.legal?
+          return choice
+        end
+      end
+      Game.illegal(:NoLegalOptions, @what.map{|c| c.why}.join(', '))
     end
   end
 end

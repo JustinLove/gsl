@@ -90,4 +90,17 @@ describe GSL::Plan do
     best = @object.best
     best.rating.should be_kind_of(Numeric)
   end
+  
+  it "deferes later executions" do
+    executions = 0
+    good1 = lambda{executions += 1}
+    good2 = lambda{executions += 1}
+    bad1 = lambda{executions += 1; GSL::Game.illegal("badness")}
+    bad2 = lambda{executions += 1; GSL::Game.illegal("badness")}
+    GSL::Plan.new(@ground, [bad1, bad2, good1, good2]).best
+    executions.should == 4
+    executions = 0
+    GSL::Plan.new(@ground, [bad1, bad2, good1, good2]).best
+    executions.should == 1
+  end
 end

@@ -116,7 +116,7 @@ module GSL
     
     def describe_action
       if @how
-        eval('"#{__FILE__}:#{__LINE__}"', @how.binding)
+        eval('"#{__FILE__}:#{__LINE__}"', @how.binding) + "(#{@what})"
       elsif (@what && @what.respond_to?(:to_proc))
         eval('"#{__FILE__}:#{__LINE__}"', @what.binding)
       else
