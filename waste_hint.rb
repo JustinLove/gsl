@@ -1,3 +1,5 @@
+round_limit 30
+
 resource_hints({
   :money => 0.5,
   :loans => -1,
