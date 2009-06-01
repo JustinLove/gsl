@@ -34,8 +34,12 @@ module Yggdrasil
         if (@d.has_key?(k))
           hit(k)
         else
-          upcall(k)
+          miss(k)
         end
+      end
+      
+      def miss(k)
+        upcall(k)
       end
       
       def upcall(k)
@@ -133,7 +137,7 @@ module Yggdrasil
     end
     
     module ReadCache
-      def upcall(k)
+      def miss(k)
         @d[k] = super
       end
     end
