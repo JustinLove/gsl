@@ -29,6 +29,12 @@ module Yggdrasil
           puts @parent.pretty_print if @parent
         end
       end
+      
+      def dump
+        puts "#{name}[#{@d.keys.count}]"
+        @d.each {|k,v| puts "  #{k}: #{v}"}
+        @parent.dump if @parent
+      end
     
       def [](k)
         if (@d.has_key?(k))
