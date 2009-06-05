@@ -7,7 +7,7 @@ module GSL
       super()
       @who = _who
       @how = _how
-      @what = rate_choices(array_from(_what))
+      @what = futures(array_from(_what))
       s = @how.to_s
       if (s[0,1] == '#')
         @why = "#{@how.class}"
@@ -52,16 +52,10 @@ module GSL
       end
     end
     
-    def rate_choices(from)
-      from.map {|c|
-        rate(c)
+    def futures(from)
+      from.map {|what|
+        Future.new(@who, what, 'planning', &@how)
       }
-    end
-    
-    def rate(what, why = 'rates')
-      s = Future.new(@who, what, why, &@how)
-      s.rating = assign_rating(s);
-      s
     end
     
     def best
@@ -74,12 +68,12 @@ module GSL
     end
 
     class BroadShallow < Plan
-      def assign_rating(s)
+      def rate_future(s)
         @who.rate_state(s.state)
       end
 
       def plan_best
-        @what.sort_by {|r| -r.rating}.each do |choice|
+        @what.sort_by {|r| -(r.rating = rate_future(r))}.each do |choice|
           if choice.legal?
             return choice
           end
@@ -91,7 +85,7 @@ module GSL
     class Cached < BroadShallow
       @@ratings = {}
 
-      def assign_rating(s)
+      def rate_future(s)
         @@ratings[s.describe_action] ||= super
       end
     end

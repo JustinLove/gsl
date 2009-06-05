@@ -64,11 +64,6 @@ shared_examples_for "well behaved plans" do
     best.should_not be_nil
   end
 
-  it "rates actions" do
-    @object = @class.new(@ground, [@good, @bad])
-    @object.rate(@good).rating.should > @object.rate(@bad).rating
-  end
-
   it "best rated illegal is illegal" do
     lambda {@class.new(@ground, [@bad, @bad]).best}.
       should raise_error(GSL::Game::NoLegalOptions)
