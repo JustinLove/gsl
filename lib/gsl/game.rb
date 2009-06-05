@@ -13,14 +13,13 @@ module GSL
     as_property :author
     as_property :number_of_players
     as_property :round_limit
+    as_property :trials
     as_property :seed
     as_proc :time_hint
 
     def initialize(*args)
       super()
-      @context = []
-      @rounds = 0
-      @seed = nil
+      @trials = 1
       self.reset
       if (args.count > 0)
         args.each do |arg|
@@ -31,7 +30,7 @@ module GSL
             self.instance_eval(arg)
           end
         end
-        self.go(@number_of_players.random)
+        run_trials(@trials)
       end
     end
     
@@ -40,6 +39,9 @@ module GSL
       @w = Yggdrasil::Passport.new(self)
       @w[:game_over] = false
       @world[:log] = []
+      @context = []
+      @rounds = 0
+      @seed = nil
       init_random
     end
   
@@ -82,6 +84,13 @@ module GSL
     
     def create_players(players)
       @players = Array.new(players) {Player.new(self)}
+    end
+
+    def run_trials(n)
+      n.times do
+        reset
+        go(@number_of_players.random)
+      end
     end
 
     def go(players)
@@ -192,7 +201,7 @@ module GSL
     end
     
     def checkpoint
-      puts note_text
+      #puts note_text
       @world.checkpoint
       @world[:log] = []
     end
