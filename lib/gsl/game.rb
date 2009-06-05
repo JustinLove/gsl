@@ -20,6 +20,7 @@ module GSL
     def initialize(*args)
       super()
       @trials = 1
+      @seed = nil
       self.reset
       if (args.count > 0)
         args.each do |arg|
@@ -41,7 +42,6 @@ module GSL
       @world[:log] = []
       @context = []
       @rounds = 0
-      @seed = nil
       init_random
     end
   
@@ -90,6 +90,7 @@ module GSL
       n.times do
         reset
         go(@number_of_players.random)
+        @seed = nil
       end
     end
 
