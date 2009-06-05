@@ -91,6 +91,7 @@ module GSL
       n.times do
         reset
         go(@number_of_players.random)
+        each_player {puts report}
         @seed = nil
       end
     end
