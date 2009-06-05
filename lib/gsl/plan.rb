@@ -3,7 +3,6 @@ GSL::depends_on %w{future}
 
 module GSL
   class Plan
-    @@ratings = {}
     def initialize(_who, _what, &_how)
       super()
       @who = _who
@@ -56,25 +55,29 @@ module GSL
     def rate_choices(from)
       from.map {|c|
         rate(c)
-      }.sort_by {|r| -r.rating}
+      }
     end
 
-    def rate(what, why = 'rates')
-      s = Future.new(@who, what, why, &@how)
-      s.rating = @@ratings[s.describe_action] ||= @who.rate_state(s.state)
-      s
-    end
-    
-    def best
-      if (@what.empty?)
-        return Future::Nil.new
+    class Cached < Plan
+      @@ratings = {}
+
+      def rate(what, why = 'rates')
+        s = Future.new(@who, what, why, &@how)
+        s.rating = @@ratings[s.describe_action] ||= @who.rate_state(s.state)
+        s
       end
-      @what.each do |choice|
-        if choice.legal?
-          return choice
+
+      def best
+        if (@what.empty?)
+          return Future::Nil.new
         end
+        @what.sort_by {|r| -r.rating}.each do |choice|
+          if choice.legal?
+            return choice
+          end
+        end
+        Game.illegal(:NoLegalOptions, @what.map{|c| c.why}.join(', '))
       end
-      Game.illegal(:NoLegalOptions, @what.map{|c| c.why}.join(', '))
     end
   end
 end

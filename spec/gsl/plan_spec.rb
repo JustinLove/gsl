@@ -31,27 +31,27 @@ shared_examples_for "well behaved plans" do
   
   describe "takes different inputs" do
     it "takes arrays" do
-      GSL::Plan.new(@ground, [1, 2, 3]){}.should_not be_nil
+      @class.new(@ground, [1, 2, 3]){}.should_not be_nil
     end
 
     it "takes arrays" do
-      GSL::Plan.new(@ground, [1, 2, 3]){}.should_not be_nil
+      @class.new(@ground, [1, 2, 3]){}.should_not be_nil
     end
 
     it "takes hashs" do
-      GSL::Plan.new(@ground, :one => 1, :two => 2){}.should_not be_nil
+      @class.new(@ground, :one => 1, :two => 2){}.should_not be_nil
     end
     
     it "takes numbers" do
-      GSL::Plan.new(@ground, 3){}.should_not be_nil
+      @class.new(@ground, 3){}.should_not be_nil
     end
 
     it "takes symbols" do
-      GSL::Plan.new(@ground, :stuff){}.should_not be_nil
+      @class.new(@ground, :stuff){}.should_not be_nil
     end
     
     it "throws out the rest" do
-      lambda {GSL::Plan.new(@ground, @ground)}.should raise_error
+      lambda {@class.new(@ground, @ground)}.should raise_error
     end
   end
   
@@ -65,17 +65,17 @@ shared_examples_for "well behaved plans" do
   end
 
   it "rates actions" do
-    @object = GSL::Plan.new(@ground, [@good, @bad])
+    @object = @class.new(@ground, [@good, @bad])
     @object.rate(@good).rating.should > @object.rate(@bad).rating
   end
 
   it "best rated illegal is illegal" do
-    lambda {GSL::Plan.new(@ground, [@bad, @bad]).best}.
+    lambda {@class.new(@ground, [@bad, @bad]).best}.
       should raise_error(GSL::Game::NoLegalOptions)
   end
   
   it "best rated nothing" do
-    GSL::Plan.new(@ground, []).best.should be_kind_of(GSL::Future::Nil)
+    @class.new(@ground, []).best.should be_kind_of(GSL::Future::Nil)
   end
   
   it "adds a rating" do
@@ -87,24 +87,30 @@ end
 describe GSL::Plan do
   before do
     @ground = GroundPlan.new
-    @object = GSL::Plan.new(@ground, [1, 2, 3]) {}
     @bad = lambda{GSL::Game.illegal("badness")}
     @good = lambda{}
   end
   
-  it_should_behave_like "well behaved objects"
-  it_should_behave_like "well behaved plans"
+  describe GSL::Plan::Cached do
+    before do
+      @class = GSL::Plan::Cached
+      @object = @class.new(@ground, [1, 2, 3]) {}
+    end
+      
+    it_should_behave_like "well behaved objects"
+    it_should_behave_like "well behaved plans"
   
-  it "deferes later executions" do
-    executions = 0
-    good1 = lambda{executions += 1}
-    good2 = lambda{executions += 1}
-    bad1 = lambda{executions += 1; GSL::Game.illegal("badness")}
-    bad2 = lambda{executions += 1; GSL::Game.illegal("badness")}
-    GSL::Plan.new(@ground, [bad1, bad2, good1, good2]).best
-    executions.should == 4
-    executions = 0
-    GSL::Plan.new(@ground, [bad1, bad2, good1, good2]).best
-    executions.should == 1
+    it "deferes later executions" do
+      executions = 0
+      good1 = lambda{executions += 1}
+      good2 = lambda{executions += 1}
+      bad1 = lambda{executions += 1; GSL::Game.illegal("badness")}
+      bad2 = lambda{executions += 1; GSL::Game.illegal("badness")}
+      @class.new(@ground, [bad1, bad2, good1, good2]).best
+      executions.should == 4
+      executions = 0
+      @class.new(@ground, [bad1, bad2, good1, good2]).best
+      executions.should == 1
+    end
   end
 end
