@@ -102,16 +102,16 @@ to :play do
 end
 
 every :round do
-  puts "before " + action_cards.to_s
+  note "before " + action_cards.to_s
   lay_out_card_combinations
-  puts "left " + action_cards.to_s
+  note "left " + action_cards.to_s
   choose_card_combinations
   checkpoint
   play_the_cards
-  puts "after " + action_cards.to_s
+  note "after " + action_cards.to_s
   pay_basic_costs
   change_the_starting_player
-  #each_player {puts report}
+  #each_player {note report}
 end
 
 every :accident do
@@ -123,7 +123,7 @@ every :accident do
       when :yellow; pay 5, :money; lose(1, :growth) unless use(:bribery, held_cards);
       end
     end
-    puts report
+    note report
   end
 end
 

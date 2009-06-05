@@ -89,6 +89,7 @@ module GSL
       create_players(players)
       puts "#{@players.size} players"
       play
+      checkpoint
       puts "#{@w[:game_over]} at round #{@rounds} (#{seed})"
       #puts @w.world.state.depth
     end
