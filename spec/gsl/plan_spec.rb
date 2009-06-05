@@ -72,11 +72,6 @@ shared_examples_for "well behaved plans" do
   it "best rated nothing" do
     @class.new(@ground, []).best.should be_kind_of(GSL::Future::Nil)
   end
-  
-  it "adds a rating" do
-    best = @object.best
-    best.rating.should be_kind_of(Numeric)
-  end
 end
 
 describe GSL::Plan do
@@ -112,6 +107,16 @@ describe GSL::Plan do
   describe GSL::Plan::BroadShallow do
     before do
       @class = GSL::Plan::BroadShallow
+      @object = @class.new(@ground, [1, 2, 3]) {}
+    end
+      
+    it_should_behave_like "well behaved objects"
+    it_should_behave_like "well behaved plans"
+  end
+
+  describe GSL::Plan::Random do
+    before do
+      @class = GSL::Plan::Random
       @object = @class.new(@ground, [1, 2, 3]) {}
     end
       

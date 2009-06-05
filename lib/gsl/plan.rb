@@ -87,5 +87,11 @@ module GSL
         @@ratings[s.describe_action] ||= super
       end
     end
+    
+    class Random < Plan
+      def sort
+        @what.sort_by{|r| rand}
+      end
+    end
   end
 end
