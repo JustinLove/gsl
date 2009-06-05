@@ -11,6 +11,7 @@ end
 
 module GSL
   class Player
+    #PLAN = Plan::BroadShallow
     PLAN = Plan::Cached
     
     module Common

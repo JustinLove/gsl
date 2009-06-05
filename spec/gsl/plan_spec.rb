@@ -113,4 +113,14 @@ describe GSL::Plan do
       executions.should == 1
     end
   end
+  
+  describe GSL::Plan::BroadShallow do
+    before do
+      @class = GSL::Plan::BroadShallow
+      @object = @class.new(@ground, [1, 2, 3]) {}
+    end
+      
+    it_should_behave_like "well behaved objects"
+    it_should_behave_like "well behaved plans"
+  end
 end

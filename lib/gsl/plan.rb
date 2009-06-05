@@ -58,6 +58,26 @@ module GSL
       }
     end
 
+    class BroadShallow < Plan
+      def rate(what, why = 'rates')
+        s = Future.new(@who, what, why, &@how)
+        s.rating = @who.rate_state(s.state)
+        s
+      end
+
+      def best
+        if (@what.empty?)
+          return Future::Nil.new
+        end
+        @what.sort_by {|r| -r.rating}.each do |choice|
+          if choice.legal?
+            return choice
+          end
+        end
+        Game.illegal(:NoLegalOptions, @what.map{|c| c.why}.join(', '))
+      end
+    end
+
     class Cached < Plan
       @@ratings = {}
 
