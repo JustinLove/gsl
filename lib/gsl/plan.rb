@@ -63,22 +63,28 @@ module GSL
       s.rating = assign_rating(s);
       s
     end
+    
+    def best
+      if (@what.empty?)
+        return Future::Nil.new
+      end
+      choice = plan_best
+      return choice if choice
+      Game.illegal(:NoLegalOptions, @what.map{|c| c.why}.join(', '))
+    end
 
     class BroadShallow < Plan
       def assign_rating(s)
         @who.rate_state(s.state)
       end
 
-      def best
-        if (@what.empty?)
-          return Future::Nil.new
-        end
+      def plan_best
         @what.sort_by {|r| -r.rating}.each do |choice|
           if choice.legal?
             return choice
           end
         end
-        Game.illegal(:NoLegalOptions, @what.map{|c| c.why}.join(', '))
+        return nil
       end
     end
 
@@ -89,16 +95,13 @@ module GSL
         @@ratings[s.describe_action] ||= @who.rate_state(s.state)
       end
 
-      def best
-        if (@what.empty?)
-          return Future::Nil.new
-        end
+      def plan_best
         @what.sort_by {|r| -r.rating}.each do |choice|
           if choice.legal?
             return choice
           end
         end
-        Game.illegal(:NoLegalOptions, @what.map{|c| c.why}.join(', '))
+        nil
       end
     end
   end
