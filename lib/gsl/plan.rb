@@ -62,23 +62,21 @@ module GSL
       if (@what.empty?)
         return Future::Nil.new
       end
-      choice = plan_best
-      return choice if choice
+      sort.each do |choice|
+        if choice.legal?
+          return choice
+        end
+      end
       Game.illegal(:NoLegalOptions, @what.map{|c| c.why}.join(', '))
     end
-
+    
     class BroadShallow < Plan
       def rate_future(s)
         @who.rate_state(s.state)
       end
 
-      def plan_best
-        @what.sort_by {|r| -(r.rating = rate_future(r))}.each do |choice|
-          if choice.legal?
-            return choice
-          end
-        end
-        return nil
+      def sort
+        @what.sort_by {|r| -(r.rating = rate_future(r))}
       end
     end
 
