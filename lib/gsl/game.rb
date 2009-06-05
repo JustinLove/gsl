@@ -92,6 +92,7 @@ module GSL
         reset
         go(@number_of_players.random)
         each_player {puts report}
+        examine_history(@world.state, @world.state.depth)
         @seed = nil
       end
     end
@@ -243,6 +244,24 @@ module GSL
         @w[:absolute_fitness] = ((score * past) + (fit * remaining)) / total
         #p "#{self}: #{fit}"
       end
+    end
+    
+    def examine_history(state, n)
+      return unless state
+      @world.enter(state) do
+        sum = cv.resources.inject(state.depth * 100 / n) do |sum,res|
+          puts "#{self} #{res} #{resource(res).value}"
+          sum + resource(res).value.hash
+        end
+        each_player do
+          sum = cv.resources.inject(sum) do |sum,res|
+            puts "#{self} #{res} #{resource(res).value}"
+            sum + resource(res).value.hash
+          end
+        end
+        puts "#{state} #{n} #{sum}"
+      end
+      examine_history(state.parent, n)
     end
     
     def description
