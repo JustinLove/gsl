@@ -20,6 +20,7 @@ module GSL
     def initialize(*args)
       super()
       @trials = 1
+      @round_limit = 1000
       @seed = nil
       self.reset
       if (args.count > 0)
