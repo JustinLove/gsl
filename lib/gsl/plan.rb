@@ -57,12 +57,16 @@ module GSL
         rate(c)
       }
     end
+    
+    def rate(what, why = 'rates')
+      s = Future.new(@who, what, why, &@how)
+      s.rating = assign_rating(s);
+      s
+    end
 
     class BroadShallow < Plan
-      def rate(what, why = 'rates')
-        s = Future.new(@who, what, why, &@how)
-        s.rating = @who.rate_state(s.state)
-        s
+      def assign_rating(s)
+        @who.rate_state(s.state)
       end
 
       def best
@@ -81,10 +85,8 @@ module GSL
     class Cached < Plan
       @@ratings = {}
 
-      def rate(what, why = 'rates')
-        s = Future.new(@who, what, why, &@how)
-        s.rating = @@ratings[s.describe_action] ||= @who.rate_state(s.state)
-        s
+      def assign_rating(s)
+        @@ratings[s.describe_action] ||= @who.rate_state(s.state)
       end
 
       def best
