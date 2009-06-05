@@ -115,7 +115,7 @@ every :round do
 end
 
 every :accident do
-  p "Accident!"
+  note "Accident!"
   each_player do
     with_free_actions do
       case waste_disposal.section
@@ -130,7 +130,7 @@ end
 common_resource :combinations
 
 to :lay_out_card_combinations do
-  #p action_cards.to_s
+  #note action_cards.to_s
   set_to((number_playing? + 1).piles, :combinations)
   3.times do
     combinations.each do |pile|
@@ -279,7 +279,7 @@ to :pay_basic_costs do
 end
 
 to :change_the_starting_player do
-  p "----- rotate"
+  note"----- rotate"
   players.rotate
   if action_cards.discards.include? :accident
     reshuffle :action_cards
