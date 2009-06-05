@@ -17,13 +17,11 @@ module GSL
     as_proc :time_hint
 
     def initialize(*args)
-      @world = Yggdrasil::World.new
       super()
       @context = []
       @rounds = 0
-      @w[:game_over] = false
-      @world[:log] = []
       @seed = nil
+      self.reset
       if (args.count > 0)
         args.each do |arg|
           if File.exist?(arg)
@@ -33,9 +31,16 @@ module GSL
             self.instance_eval(arg)
           end
         end
-        init_random
         self.go(@number_of_players.random)
       end
+    end
+    
+    def reset
+      @world = Yggdrasil::World.new
+      @w = Yggdrasil::Passport.new(self)
+      @w[:game_over] = false
+      @world[:log] = []
+      init_random
     end
   
     def common_components(list)
