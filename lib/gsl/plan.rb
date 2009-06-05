@@ -88,20 +88,11 @@ module GSL
       end
     end
 
-    class Cached < Plan
+    class Cached < BroadShallow
       @@ratings = {}
 
       def assign_rating(s)
-        @@ratings[s.describe_action] ||= @who.rate_state(s.state)
-      end
-
-      def plan_best
-        @what.sort_by {|r| -r.rating}.each do |choice|
-          if choice.legal?
-            return choice
-          end
-        end
-        nil
+        @@ratings[s.describe_action] ||= super
       end
     end
   end
