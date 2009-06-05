@@ -27,15 +27,7 @@ class GroundPlan
   end
 end
 
-describe GSL::Plan do
-  before do
-    @ground = GroundPlan.new
-    @object = GSL::Plan.new(@ground, [1, 2, 3]) {}
-    @bad = lambda{GSL::Game.illegal("badness")}
-    @good = lambda{}
-  end
-  
-  it_should_behave_like "well behaved objects"
+shared_examples_for "well behaved plans" do
   
   describe "takes different inputs" do
     it "takes arrays" do
@@ -90,6 +82,18 @@ describe GSL::Plan do
     best = @object.best
     best.rating.should be_kind_of(Numeric)
   end
+end
+
+describe GSL::Plan do
+  before do
+    @ground = GroundPlan.new
+    @object = GSL::Plan.new(@ground, [1, 2, 3]) {}
+    @bad = lambda{GSL::Game.illegal("badness")}
+    @good = lambda{}
+  end
+  
+  it_should_behave_like "well behaved objects"
+  it_should_behave_like "well behaved plans"
   
   it "deferes later executions" do
     executions = 0
