@@ -11,6 +11,8 @@ end
 
 module GSL
   class Player
+    PLAN = Plan::Cached
+    
     module Common
       def choose(from, &doing)
         best = choose_best(from, &doing).switch
@@ -34,7 +36,7 @@ module GSL
       end
       
       def list_of_choices(from, &doing)
-        Plan.new(self, from, &doing)
+        PLAN.new(self, from, &doing)
       end
 
       def rate_state(state)
