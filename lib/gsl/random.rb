@@ -25,9 +25,11 @@ module Random
       v
     end
 
-    at_exit {
-      p $rand_trace
-    }
+    def self.included(base)
+      at_exit {
+        p $rand_trace
+      }
+    end
   end
 end
 #include Random::Tracing
