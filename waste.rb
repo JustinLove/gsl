@@ -91,8 +91,8 @@ player_resource :raw_materials
 player_resource :held_cards, 0..4, :discard_to => :action_cards_discard
 
 #hidden trackable information ;^)
-player_resource :money
-player_resource :loans
+player_resource :money, 0..Infinity, :visibility => :private
+player_resource :loans, 0..Infinity, :visibility => :private
 
 to :play do
   prepare
@@ -127,6 +127,7 @@ every :accident do
   end
 end
 
+common_resource :action_cards, 0..Infinity, :visibility => :hidden
 common_resource :combinations
 
 to :lay_out_card_combinations do
