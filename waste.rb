@@ -162,6 +162,7 @@ to :choose_card_combinations do
       discard card
     end
   end
+  set [], :combinations
 end
 
 to :play_the_cards do
