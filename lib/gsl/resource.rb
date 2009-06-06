@@ -43,6 +43,10 @@ module GSL
         end
       end
       
+      def visibility
+        @option[:visibility] || :public
+      end
+      
       def stub(name)
         define_method name do
           #p self.class, @owner.to_s
@@ -92,6 +96,14 @@ module GSL
 
     def self_include(_class)
       class << self; self; end.__send__(:include, _class)
+    end
+    
+    def visible?(observer = nil)
+      case self.class.visibility
+      when :hidden; false
+      when :private; observer == @owner
+      else; true
+      end
     end
     
     stub :gain

@@ -32,6 +32,31 @@ describe "all tests", :shared => true do
     it "object has a name" do
       @object.name.should be_kind_of(Symbol)
     end
+    
+    it "defaults to public" do
+      @object.visible?(@user).should be_true
+      @object.visible?(User.new()).should be_true
+    end
+    
+    describe "with modified visibility" do
+      before do
+        @class = GSL::Resource.define(:ninjas)
+        @object = @class.new(@user)
+        modify
+      end
+
+      it "can be hidden" do
+        @class.option.merge!(:visibility => :hidden)
+        @object.visible?(@user).should be_false
+        @object.visible?(User.new()).should be_false
+      end
+
+      it "can be private" do
+        @class.option.merge!(:visibility => :private)
+        @object.visible?(@user).should be_true
+        @object.visible?(User.new()).should be_false
+      end
+    end
   end
   
   describe "typed as value" do
