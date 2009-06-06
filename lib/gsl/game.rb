@@ -248,18 +248,23 @@ module GSL
     
     def examine_history(state, n)
       return unless state
+      row = []
+      row << state.depth * 100 / n
       @world.enter(state) do
         sum = cv.resources.inject(state.depth * 100 / n) do |sum,res|
-          puts "#{self} #{res} #{resource(res).value}"
+          #puts "#{self} #{res} #{resource(res).value}"
+          row << resource(res).value
           sum + resource(res).value.hash
         end
         each_player do
           sum = cv.resources.inject(sum) do |sum,res|
-            puts "#{self} #{res} #{resource(res).value}"
+            #puts "#{self} #{res} #{resource(res).value}"
+            row << resource(res).value
             sum + resource(res).value.hash
           end
         end
-        puts "#{state} #{n} #{sum}"
+        #puts "#{state} #{n} #{sum}"
+        puts row.join(',');
       end
       examine_history(state.parent, n)
     end
