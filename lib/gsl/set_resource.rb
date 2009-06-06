@@ -5,7 +5,7 @@ module GSL
         if self.class.range.include?(n.size)
           self.value = own(n).dup
         else
-          Language.error 'resource out of range'
+          Language.error "resource out of range #{name} #{n} #{self.class.range}"
         end
       end
   
