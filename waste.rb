@@ -106,7 +106,6 @@ every :round do
   lay_out_card_combinations
   note "left " + action_cards.to_s
   choose_card_combinations
-  checkpoint
   play_the_cards
   note "after " + action_cards.to_s
   pay_basic_costs
@@ -155,6 +154,7 @@ to :choose_card_combinations do
   each_player do
     what = take(:combinations) {|choice| gain(choice, :held_cards);}
     note "#{self} takes #{what}"
+    checkpoint
   end
   combinations.each do |pile|
     note "discard leftover #{pile.to_s}"
