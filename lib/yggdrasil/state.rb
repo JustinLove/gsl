@@ -55,6 +55,10 @@ module Yggdrasil
       def hit(k)
         @d[k]
       end
+      
+      def surface(k)
+        @d[k]
+      end
 
       def []=(k, v)
         @d[k] = v.freeze

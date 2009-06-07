@@ -248,14 +248,18 @@ module GSL
     
     def examine_history(state, n)
       return unless state
+      unless state.surface(:choice)
+        examine_history(state.parent, n)
+        return
+      end
       scores = {}
       each_player do
         scores[self] = score
       end
       row = []
       row << state.depth * 100 / n
-      row << state[:chooser]
-      row << state[:choice]
+      row << state.surface(:chooser)
+      row << state.surface(:choice)
       @world.enter(state) do
         sum = cv.resources.inject(state.depth * 100 / n) do |sum,res|
           #puts "#{self} #{res} #{resource(res).value}"
