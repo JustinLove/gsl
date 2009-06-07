@@ -55,6 +55,8 @@ module GSL
     
     def branch
       @who.world.branch(@why) do
+        @who.world[:chooser] = @who.to_s
+        @who.world[:choice] = @what.to_s
         propigate_errors(go)
       end
     end

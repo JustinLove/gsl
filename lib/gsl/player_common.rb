@@ -34,12 +34,7 @@ module GSL
       end
       
       def choose_best(from, &doing)
-        best = list_of_choices(from, &doing).best
-        unless (best.nil?)
-          best.state[:chooser] = to_s
-          best.state[:choice] = best.what.to_s
-        end
-        best
+        list_of_choices(from, &doing).best
       end
       
       def list_of_choices(from, &doing)
