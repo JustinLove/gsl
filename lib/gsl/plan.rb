@@ -93,5 +93,40 @@ module GSL
         @what.sort_by{|r| rand}
       end
     end
+    
+    class Biased < Plan
+      @@trials = Hash.new(1)
+      @@wins = Hash.new(1)
+      
+      def self.feedback(act, win)
+        @@trials[act] += 1
+        @@wins[act] += win
+      end
+      
+      def rate_future(s)
+        act = s.describe_action
+        @@wins[act].to_f / @@trials[act]
+      end
+      
+      def sort
+        sum = @what.inject(0){|s,x| s + (x.rating = rate_future(x))}
+        sorted = []
+        unsorted = @what
+        while unsorted.length > 0
+          v = sum * rand
+          el = unsorted.find do |x|
+            if v <= x.rating
+              sum -= x.rating
+              true
+            else
+              v -= x.rating
+              false
+            end
+          end
+          sorted << unsorted.delete(el)
+        end
+        return sorted
+      end
+    end
   end
 end

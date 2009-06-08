@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
-libs %w{gsl/misc gsl/plan gsl/ygg}
+libs %w{gsl/misc gsl/plan gsl/ygg gsl/future}
 
 class GSL::Plan
   include Tattler
@@ -122,5 +122,28 @@ describe GSL::Plan do
       
     it_should_behave_like "well behaved objects"
     it_should_behave_like "well behaved plans"
+  end
+
+  describe GSL::Plan::Biased do
+    before do
+      @class = GSL::Plan::Biased
+      @object = @class.new(@ground, [1, 2, 3]) {}
+    end
+      
+    it_should_behave_like "well behaved objects"
+    it_should_behave_like "well behaved plans"
+    
+    it "makes propotinal choice" do
+      @ok = lambda{}
+      g = GSL::Future.new(@ground, @good).describe_action
+      o = GSL::Future.new(@ground, @ok).describe_action
+      10.times do
+        @class.feedback(g, 1)
+        @class.feedback(o, 0)
+      end
+      (1..100).inject(0) {|s,x|
+        s + (@class.new(@ground, [@good, @ok]).best.what == @good ? 1 : 0)
+      }.should > 70
+    end
   end
 end
