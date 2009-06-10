@@ -149,4 +149,13 @@ describe Yggdrasil::World do
     @object.switch(@object.branch {@object[:leaf] = :green})
     @object[:leaf].should == :green
   end
+  
+  it "iterates each_state" do
+    @object[:i] = 1
+    @object.grow
+    @object[:i] = 2
+    visited = []
+    @object.each_state {visited << @object[:i]}
+    visited.should == [2, 1]
+  end
 end

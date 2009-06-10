@@ -93,5 +93,13 @@ module Yggdrasil
     def switch(w)
       @reality = @state = w
     end
+    
+    def each_state
+      s = @state
+      while !s.nil?
+        enter(s) {yield s}
+        s = s.parent
+      end
+    end
   end
 end
