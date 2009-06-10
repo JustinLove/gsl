@@ -90,20 +90,21 @@ module GSL
     def run_trials(n)
       n.times do
         reset
-        go(@number_of_players.random)
-        each_player {puts report}
+        #go(@number_of_players.random)
+        go(@number_of_players.first)
+        #each_player {puts report}
         examine_history(@world.state, @world.state.depth)
         @seed = nil
       end
     end
 
     def go(players)
-      puts description
+      #puts description
       create_players(players)
-      puts "#{@players.size} players"
+      #puts "#{@players.size} players"
       play
       checkpoint
-      puts "#{@w[:game_over]} at round #{@rounds} (#{seed})"
+      #puts "#{@w[:game_over]} at round #{@rounds} (#{seed})"
       #puts @w.world.state.depth
     end
   
@@ -248,18 +249,23 @@ module GSL
     
     def examine_history(state, n)
       return unless state
-      unless state.surface(:choice)
+      unless state.surface(:choice) and !state.surface(:choice).match('\[')
         examine_history(state.parent, n)
         return
       end
       scores = {}
+      colors = {}
       each_player do
+        colors[self.to_s] = self
         scores[self] = score
       end
+      winner = scores.values.max
       row = []
       row << state.depth * 100 / n
       row << state.surface(:chooser)
       row << state.surface(:choice)
+      row << scores[colors[state.surface(:chooser)]]
+      row << ((scores[colors[state.surface(:chooser)]] == winner) ? 1 : 0)
       @world.enter(state) do
         sum = cv.resources.inject(state.depth * 100 / n) do |sum,res|
           #puts "#{self} #{res} #{resource(res).value}"
