@@ -37,9 +37,13 @@ module GSL
      
     def initialize(name, kind = nil)
       super()
-      @world = nil
       @name = name
       @kind = kind || name
+      reset
+    end
+    
+    def reset
+      @world = nil
       @home = nil
     end
 

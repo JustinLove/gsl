@@ -56,7 +56,7 @@ module GSL
         hash[key] = Resource.define(key).new(self)
         if (cv.components.keys.include? key)
           cv.resources << key unless cv.resources.include?(key)
-          hash[key].set cv.components[key].dup
+          hash[key].set cv.components[key].dup.map {|c| c.reset; c}
         elsif (hash[key].class.option[:initial])
           begin
             hash[key].set hash[key].class.option[:initial].dup
