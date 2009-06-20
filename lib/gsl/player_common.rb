@@ -13,7 +13,8 @@ module GSL
   class Player
     #PLAN = Plan::BroadShallow
     #PLAN = Plan::Cached
-    PLAN = Plan::Random
+    #PLAN = Plan::Random
+    PLAN = Plan::Biased
     
     module Common
       def choose(from, &doing)

@@ -92,7 +92,7 @@ module GSL
         reset
         #go(@number_of_players.random)
         go(@number_of_players.first)
-        #each_player {puts report}
+        each_player {puts report}
         examine_history(@world.state, @world.state.depth)
         @seed = nil
       end
@@ -104,7 +104,7 @@ module GSL
       #puts "#{@players.size} players"
       play
       checkpoint
-      #puts "#{@w[:game_over]} at round #{@rounds} (#{seed})"
+      puts "#{@w[:game_over]} at round #{@rounds} (#{seed})"
       #puts @w.world.state.depth
     end
   
