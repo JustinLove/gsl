@@ -106,7 +106,7 @@ module GSL
       
       def self.dump
         @@trials.keys.each do |act|
-          puts "#{act}: #{@@wins[act].to_f / @@trials[act]}"
+          puts "#{act}: #{@@wins[act]}/#{@@trials[act]} = #{@@wins[act].to_f / @@trials[act]}"
         end
       end
       

@@ -58,7 +58,7 @@ module Yggdrasil
     end
     
     def checkpoint(_name = nil)
-      compact
+      #compact
       @reality = grow(_name)
     end
     
