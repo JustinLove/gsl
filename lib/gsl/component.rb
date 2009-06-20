@@ -42,8 +42,8 @@ module GSL
       reset
     end
     
-    def reset
-      @world = nil
+    def reset(_world = nil)
+      self.world = _world
       @home = nil
     end
 
@@ -60,7 +60,6 @@ module GSL
       if (@home.nil? && where.respond_to?(:discards))
         @home = where.discards
       end
-      self.world = where.world if (where)
       @w[:in] = where
     end
 
