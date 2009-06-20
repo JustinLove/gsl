@@ -254,42 +254,15 @@ module GSL
         return
       end
       scores = {}
-      colors = {}
+      winner = {}
       each_player do
-        colors[self.to_s] = self
         scores[self] = score
       end
-      winner = scores.values.max
-      row = []
-      row << state.depth * 100 / n
-      row << state.surface(:chooser)
-      row << state.surface(:choice)
-      row << scores[colors[state.surface(:chooser)]]
-      row << ((scores[colors[state.surface(:chooser)]] == winner) ? 1 : 0)
-      @world.enter(state) do
-        sum = cv.resources.inject(state.depth * 100 / n) do |sum,res|
-          #puts "#{self} #{res} #{resource(res).value}"
-          if (resource(res).visible? && !resource(res).kind_of?(Resource::Set))
-            row << resource(res).value
-            sum + resource(res).value.hash
-          else
-            sum
-          end
-        end
-        each_player do
-          row << scores[self]
-          sum = cv.resources.inject(sum) do |sum,res|
-            #puts "#{self} #{res} #{resource(res).value}"
-            unless (resource(res).kind_of? Resource::Set)
-              row << resource(res).value
-              sum + resource(res).value.hash
-            else
-              sum
-            end
-          end
-        end
-        #puts "#{state} #{n} #{sum}"
-        puts row.join(',');
+      best = scores.values.max
+      each_player do
+        Plan::Biased.feedback(
+          state.surface(:choice),
+          if (scores[self] == best) then 1 else 0 end)
       end
       examine_history(state.parent, n)
     end

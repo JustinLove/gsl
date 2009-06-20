@@ -99,6 +99,7 @@ module GSL
       @@wins = Hash.new(1)
       
       def self.feedback(act, win)
+        #p "#{act} #{win}"
         @@trials[act] += 1
         @@wins[act] += win
       end
