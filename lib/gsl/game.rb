@@ -22,7 +22,6 @@ module GSL
       @trials = 1
       @round_limit = 1000
       @seed = nil
-      self.reset
       if (args.count > 0)
         args.each do |arg|
           if File.exist?(arg)
@@ -34,6 +33,7 @@ module GSL
         end
         run_trials(@trials)
       end
+      self.reset
     end
     
     def reset
@@ -44,6 +44,7 @@ module GSL
       @context = []
       @rounds = 0
       init_random
+      create_resources
     end
   
     def common_components(list)

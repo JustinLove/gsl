@@ -48,6 +48,10 @@ module GSL
 
     def initialize
       super()
+      create_resources
+    end
+    
+    def create_resources
       @resources = Hash.new do |hash, key|
         hash[key] = Resource.define(key).new(self)
         if (cv.components.keys.include? key)
