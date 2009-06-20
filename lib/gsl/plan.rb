@@ -104,6 +104,14 @@ module GSL
         @@wins[act] += win
       end
       
+      def self.dump
+        @@trials.keys.each do |act|
+          puts "#{act}: #{@@wins[act].to_f / @@trials[act]}"
+        end
+      end
+      
+      at_exit {self.dump}
+      
       def rate_future(s)
         act = s.describe_action
         @@wins[act].to_f / @@trials[act]
