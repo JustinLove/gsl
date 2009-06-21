@@ -67,7 +67,7 @@ module GSL
           return choice
         end
       end
-      Game.illegal(:NoLegalOptions, @what.map{|c| c.why}.join(', '))
+      Game.illegal(:NoLegalOptions, @what.map{|c| c.why_failed}.join(', '))
     end
     
     class BroadShallow < Plan
