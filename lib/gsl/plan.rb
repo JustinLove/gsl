@@ -97,11 +97,13 @@ module GSL
     class Biased < BroadShallow
       @@trials = Hash.new(1)
       @@wins = Hash.new(1)
+      @@total_trials = 1
       
       def self.feedback(act, win)
         #p "#{act} #{win}"
         @@trials[act] += 1
         @@wins[act] += win
+        @@total_trials += 1
       end
       
       def self.dump
@@ -117,7 +119,7 @@ module GSL
         #inspired by http://senseis.xmp.net/?UCT
         n = @@trials[act]
         quality = (@@wins[act].to_f / n)
-        novelty = Math.sqrt(Math.log(n+2)/(5*n))
+        novelty = Math.sqrt(Math.log(@@total_trials)/(5*n))
         #puts "#{act} #{@@wins[act]}/#{n} #{quality} + #{novelty} = #{quality + novelty}"
         return quality + novelty
       end
