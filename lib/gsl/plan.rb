@@ -113,7 +113,7 @@ module GSL
       at_exit {self.dump}
       
       def rate_future(s)
-        act = s.what.to_key
+        act = s.describe_action
         #inspired by http://senseis.xmp.net/?UCT
         n = @@trials[act]
         winrate = (@@wins[act].to_f / n)

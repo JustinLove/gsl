@@ -56,7 +56,7 @@ module GSL
     def branch
       @who.world.branch(@why) do
         @who.world[:chooser] = @who.to_s
-        @who.world[:choice] = @what.to_key
+        @who.world[:choice] = describe_action
         propigate_errors(go)
       end
     end
@@ -106,7 +106,7 @@ module GSL
     end
     
     def execute
-      #d "exec #{@what} #{@how}"
+      #d "exec " + describe_action
       if @how
         @who.instance_exec(@what, &@how)
       elsif (@what && @what.respond_to?(:to_proc))
@@ -124,7 +124,7 @@ module GSL
     
     def describe_action
       if @how
-        get_location(@how) + "(#{@what})"
+        get_location(@how) + "(#{@what.to_key})"
       elsif (@what && @what.respond_to?(:to_proc))
         get_location(@what)
       else
