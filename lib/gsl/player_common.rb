@@ -11,12 +11,21 @@ end
 
 module GSL
   class Player
-    #PLAN = Plan::BroadShallow
-    #PLAN = Plan::Cached
-    #PLAN = Plan::Random
-    PLAN = Plan::Biased
-    
     module Common
+      PLANS = [
+        Plan::BroadShallow,
+        Plan::Cached,
+        Plan::Random,
+        Plan::Biased,
+      ]
+
+      attr_reader :plan
+      
+      def initialize(*args)
+        super
+        @plan = PLANS.random
+      end
+      
       def choose(from, &doing)
         best = choose_best(from, &doing).switch
         #note "choose #{best.what} from #{from}"
@@ -39,7 +48,7 @@ module GSL
       end
       
       def list_of_choices(from, &doing)
-        PLAN.new(self, from, &doing)
+        @plan.new(self, from, &doing)
       end
 
       def rate_state(state)

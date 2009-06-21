@@ -56,7 +56,7 @@ at_any_time :take_a_loan do
 end
 
 utility :report do
-  "%%%% #{self.to_s} " +
+  "%%%% #{self.to_s} #{self.plan} " +
     "#{co_workers.value}/#{rationalization.value}p " +
     "#{raw_materials.value}/#{materials_required.value}m " +
     "#{waste_disposal.value}(#{waste_disposal.section})/#{waste_reduction.value}w " +
