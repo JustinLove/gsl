@@ -113,11 +113,12 @@ module GSL
       at_exit {self.dump}
       
       def rate_future(s)
-        act = s.describe_action
+        act = s.what.to_s
         #inspired by http://senseis.xmp.net/?UCT
         n = @@trials[act]
         winrate = (@@wins[act].to_f / n)
         nudge = Math.sqrt(Math.log(n+2)/(5*n))
+        #puts "#{act} #{@@wins[act]}/#{n} #{winrate} + #{nudge} = #{winrate + nudge}"
         winrate + nudge
       end
     end
