@@ -97,6 +97,9 @@ module GSL
         examine_history(@world.state, @world.state.depth)
         @seed = nil
       end
+    rescue Language::Error => e
+      puts "last seed: #{seed}"
+      raise e
     end
 
     def go(players)
