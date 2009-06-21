@@ -246,7 +246,7 @@ module GSL
         fit = cv.hints.inject(fit) do |sum,proc|
           sum + (execute(proc) || 0)
         end
-        @w[:absolute_fitness] = ((score * past) + (fit * remaining)) / total
+        @w[:absolute_fitness] = ((score * past) + (fit * remaining)) / total.to_f
         #p "#{self}: #{fit}"
       end
     end

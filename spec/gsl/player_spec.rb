@@ -242,7 +242,7 @@ describe GSL::Player do
       
       it "doesn't handles recursive choice" do
         @object.class.make_resource(:doors)
-        @object.resource_hints(:doors => -1)
+        @object.resource_hints(:doors => -1, :keys => 0.5)
         @game.each_player {set_to 0, :doors}
         class GSL::Game
           def score
