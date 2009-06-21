@@ -105,7 +105,7 @@ module GSL
       end
       
       def self.dump
-        @@trials.keys.each do |act|
+        @@trials.keys.sort.each do |act|
           puts "#{act}: #{@@wins[act]}/#{@@trials[act]} = #{@@wins[act].to_f / @@trials[act]}"
         end
       end
@@ -113,7 +113,7 @@ module GSL
       at_exit {self.dump}
       
       def rate_future(s)
-        act = s.what.to_s
+        act = s.what.to_key
         #inspired by http://senseis.xmp.net/?UCT
         n = @@trials[act]
         winrate = (@@wins[act].to_f / n)

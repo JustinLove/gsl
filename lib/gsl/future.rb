@@ -34,7 +34,7 @@ module GSL
     end
     
     def d(s, indent = "- ")
-      #puts "#{' ' * @@level}#{indent}" + s
+      #puts "#{' ' * @@level}#{indent}" + s.to_s
     end
     
     def state
@@ -56,7 +56,7 @@ module GSL
     def branch
       @who.world.branch(@why) do
         @who.world[:chooser] = @who.to_s
-        @who.world[:choice] = @what.to_s
+        @who.world[:choice] = @what.to_key
         propigate_errors(go)
       end
     end

@@ -10,6 +10,10 @@ class Array
   def to_s
     '[' + (map {|i| i.to_s}).join(" ") + ']'
   end
+  
+  def to_key
+    '[' + (map {|i| i.to_s}).sort.join(" ") + ']'
+  end
 end
 
 class Range
@@ -58,6 +62,8 @@ class Object
       true
     end
   end
+  
+  def to_key; to_s; end
 end
 
 module GSL

@@ -253,7 +253,7 @@ module GSL
     
     def examine_history(state, n)
       return unless state
-      unless state.surface(:choice) and !state.surface(:choice).match('\[')
+      unless state.surface(:choice)
         examine_history(state.parent, n)
         return
       end
