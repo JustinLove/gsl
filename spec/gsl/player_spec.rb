@@ -4,7 +4,9 @@ libs %w{gsl/player gsl/game}
 class GSL::Player
   include Tattler
   ygg_accessor :passed
-  PLAN = GSL::Plan::Cached
+  module Common
+    PLANS = [GSL::Plan::Cached]
+  end
 end
 
 describe GSL::Player do
