@@ -13,9 +13,9 @@ module GSL
   class Player
     module Common
       PLANS = [
-        Plan::BroadShallow,
-        Plan::Cached,
-        Plan::Random,
+        #Plan::BroadShallow,
+        #Plan::Cached,
+        #Plan::Random,
         Plan::Biased,
       ]
 

@@ -94,7 +94,7 @@ module GSL
       end
     end
     
-    class Biased < Plan
+    class Biased < BroadShallow
       @@trials = Hash.new(1)
       @@wins = Hash.new(1)
       
@@ -114,27 +114,11 @@ module GSL
       
       def rate_future(s)
         act = s.describe_action
-        @@wins[act].to_f / @@trials[act]
-      end
-      
-      def sort
-        sum = @what.inject(0){|s,x| s + (x.rating = rate_future(x))}
-        sorted = []
-        unsorted = @what
-        while unsorted.length > 0
-          v = sum * rand
-          el = unsorted.find do |x|
-            if v <= x.rating
-              sum -= x.rating
-              true
-            else
-              v -= x.rating
-              false
-            end
-          end
-          sorted << unsorted.delete(el)
-        end
-        return sorted
+        #inspired by http://senseis.xmp.net/?UCT
+        n = @@trials[act]
+        winrate = (@@wins[act].to_f / n)
+        nudge = Math.sqrt(Math.log(n+2)/(5*n))
+        winrate + nudge
       end
     end
   end
