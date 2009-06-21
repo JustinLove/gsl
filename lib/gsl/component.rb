@@ -45,6 +45,7 @@ module GSL
     def reset(_world = nil)
       self.world = _world
       @home = nil
+      return self
     end
 
     def to_s
