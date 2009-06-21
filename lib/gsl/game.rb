@@ -257,14 +257,12 @@ module GSL
       scores = {}
       winner = {}
       each_player do
-        scores[self] = score
+        scores[self.to_s] = score
       end
       best = scores.values.max
-      each_player do
-        Plan::Biased.feedback(
-          state.surface(:choice),
-          if (scores[self] == best) then 1 else 0 end)
-      end
+      Plan::Biased.feedback(
+        state.surface(:choice),
+        if (scores[state.surface(:chooser)] == best) then 1 else 0 end)
       examine_history(state.parent, n)
     end
     
