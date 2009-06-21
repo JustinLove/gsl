@@ -62,6 +62,10 @@ describe GSL::Future do
     @illegal.why_failed.should be_kind_of(Exception)
   end
   
+  it "describes itself" do
+    @legal.describe_action.should be_kind_of(String)
+  end
+  
   it "switches" do
     @illegal.switch.should == @illegal
     @ground.world[:legal].should be_false

@@ -116,11 +116,17 @@ module GSL
       end
     end
     
+    def get_location(proc)
+      s = proc.to_s
+      m = s.match(/@(\/.*\/)?([^\/]+:\d+)/)
+      (m && m[2]) || s      
+    end
+    
     def describe_action
       if @how
-        eval('"#{__FILE__}:#{__LINE__}"', @how.binding) + "(#{@what})"
+        get_location(@how) + "(#{@what})"
       elsif (@what && @what.respond_to?(:to_proc))
-        eval('"#{__FILE__}:#{__LINE__}"', @what.binding)
+        get_location(@what)
       else
         Language.error "nothing executable"
       end
