@@ -116,10 +116,10 @@ module GSL
         act = s.describe_action
         #inspired by http://senseis.xmp.net/?UCT
         n = @@trials[act]
-        winrate = (@@wins[act].to_f / n)
-        nudge = Math.sqrt(Math.log(n+2)/(5*n))
-        #puts "#{act} #{@@wins[act]}/#{n} #{winrate} + #{nudge} = #{winrate + nudge}"
-        winrate + nudge
+        quality = (@@wins[act].to_f / n)
+        novelty = Math.sqrt(Math.log(n+2)/(5*n))
+        #puts "#{act} #{@@wins[act]}/#{n} #{quality} + #{novelty} = #{quality + novelty}"
+        return quality + novelty
       end
     end
   end
