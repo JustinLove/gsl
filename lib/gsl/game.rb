@@ -94,7 +94,7 @@ module GSL
         #go(@number_of_players.random)
         go(@number_of_players.first)
         each_player {puts report}
-        examine_history(@world.state, @world.state.depth)
+        examine_history
         @seed = nil
       end
     rescue Game::Illegal => e
@@ -251,22 +251,22 @@ module GSL
       end
     end
     
-    def examine_history(state, n)
-      return unless state
-      unless state.surface(:choice)
-        examine_history(state.parent, n)
-        return
-      end
+    def examine_history
       scores = {}
       winner = {}
       each_player do
         scores[self.to_s] = score
       end
       best = scores.values.max
-      Plan::Biased.feedback(
-        state.surface(:choice),
-        if (scores[state.surface(:chooser)] == best) then 1 else 0 end)
-      examine_history(state.parent, n)
+
+      @world.each_state do |state|
+        if state.surface(:choice)
+          Plan::Biased.feedback(
+            state[:choice],
+            if (scores[state[:chooser]] == best) then 1 else 0 end
+          )
+         end
+      end
     end
     
     def description
