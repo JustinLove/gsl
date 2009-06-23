@@ -20,14 +20,21 @@ end
 
 describe GSL::Historian do
   before do
-    @object = GSL::Historian.new
+    @object = @historian = GSL::Historian.new
     @user = User.new
     @user.set 0, :cheese
   end
   
   it_should_behave_like "well behaved objects"
   
-  it "records history" do
-    @object.record(@user.cheese)
+  describe GSL::Historian::Event do  
+    before do
+      @object = @event = @historian.event
+    end
+    
+    it "records history" do
+      @object.record(@user.cheese)
+    end
   end
 end
+
