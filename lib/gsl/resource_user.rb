@@ -147,5 +147,11 @@ module GSL
       c = cv.components[component]
       c.find_all(&proc).length.to_f / c.length
     end
+    
+    def important_data
+      cv.resources.
+        select {|res| @resources[res].visible?}.
+        map {|res| @resources[res].value}
+    end
   end
 end

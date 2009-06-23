@@ -253,7 +253,6 @@ module GSL
     
     def examine_history
       scores = {}
-      winner = {}
       each_player do
         scores[self.to_s] = score
       end
@@ -265,6 +264,7 @@ module GSL
             state[:choice],
             if (scores[state[:chooser]] == best) then 1 else 0 end
           )
+          p important_data
          end
       end
     end
