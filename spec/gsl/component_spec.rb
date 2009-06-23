@@ -114,8 +114,7 @@ describe GSL::Component do
     before do
       @class = GSL::Resource.define(:location)
       @resource = @class.new(@user)
-      @initial_value = GSL::Component.fromArray(:location, [:ace, :queen, :king])
-      @initial_value.each {|r| r.reset(@user.world)}
+      @initial_value = GSL::Component.fromArray(:location, [:ace, :queen, :king], @user.world)
       @resource.set(@initial_value)
       @object = @resource.first
     end

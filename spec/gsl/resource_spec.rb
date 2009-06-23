@@ -212,8 +212,7 @@ describe "all tests", :shared => true do
     before do
       @class = GSL::Resource.define(:frogs)
       @object = @class.new(@user)
-      @initial_value = [GSL::Component.new(:ed), GSL::Component.new(:george)]
-      @initial_value.each {|c| c.reset(@user.world)}
+      @initial_value = [GSL::Component.new(:ed, nil, @user.world), GSL::Component.new(:george, nil, @user.world)]
       @object.set(@initial_value)
       modify
     end

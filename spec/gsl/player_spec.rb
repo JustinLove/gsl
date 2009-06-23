@@ -306,7 +306,7 @@ describe GSL::Player do
           GSL::Component.define_action(:good, @good)
           @object.class.make_resource(:twigs)
           @object.class.make_resource(:twigs_discard)
-          @object.set_to [GSL::Component.new(:good).reset(@game.world)], :twigs
+          @object.set_to [GSL::Component.new(:good, :good, @game.world)], :twigs
           @object.set_to [], :twigs_discard
         end
         

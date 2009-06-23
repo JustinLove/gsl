@@ -7,25 +7,25 @@ module GSL
     attr_reader :name
 
     class << self
-      def from(name, value)
-        self.__send__("from"+value.class.name, name, value)
+      def from(name, value, world = nil)
+        self.__send__("from"+value.class.name, name, value, world)
       end
       
-      def fromHash(name, value)
+      def fromHash(name, value, world = nil)
         list = []
         value.keys.sort_by{|k| k.to_s}.each do|k|
-          value[k].times {list << Component.new(k, name)}
+          value[k].times {list << Component.new(k, name, world)}
         end
         list
       end
 
-      def fromArray(name, value)
-        value.map {|v| Component.new(v, name)}
+      def fromArray(name, value, world = nil)
+        value.map {|v| Component.new(v, name, world)}
       end
 
-      def fromFixnum(name, value)
+      def fromFixnum(name, value, world = nil)
         list = []
-        value.times {list << Component.new(name)}
+        value.times {list << Component.new(name, name, world)}
         list
       end
 
@@ -35,19 +35,18 @@ module GSL
       end
     end
      
-    def initialize(name, kind = nil)
+    def initialize(name, kind = nil, _world = nil)
       super()
       @name = name
       @kind = kind || name
-      reset
-    end
-    
-    def reset(_world = nil)
       self.world = _world
       @home = nil
-      return self
     end
-
+    
+    def dup(_world = nil)
+      self.class.new(@name, @kind, _world)
+    end
+    
     def to_s
       name.to_s
     end
