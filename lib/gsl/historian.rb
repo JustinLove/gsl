@@ -3,6 +3,7 @@ module GSL
     class Event
       def initialize(_historian)
         @historian = _historian
+        @data = {}
       end
       
       def record(what)
@@ -13,7 +14,11 @@ module GSL
       end
     
       def record_resource(what)
-        p what.value
+        @data[what.name] = what.value
+      end
+      
+      def [](k)
+        return @data[k]
       end
     end
     

@@ -32,8 +32,13 @@ describe GSL::Historian do
       @object = @event = @historian.event
     end
     
+    it "starts blank" do
+      @object[:cheese].should be_nil
+    end
+    
     it "records history" do
       @object.record(@user.cheese)
+      @object[:cheese].should_not be_nil
     end
   end
 end
