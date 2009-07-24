@@ -45,6 +45,11 @@ describe GSL::Historian do
       @object.record(@user.cheese)
       @object[:cheese].should_not be_nil
     end
+    
+    it "takes a hash" do
+      e = @historian.event(:milk => 1, :eggs => 12)
+      e[:eggs].should == 12
+    end
   end
 end
 

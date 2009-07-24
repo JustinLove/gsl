@@ -1,9 +1,9 @@
 module GSL
   class Historian
     class Event
-      def initialize(_historian)
+      def initialize(_historian, starting = {})
         @historian = _historian
-        @data = {}
+        @data = starting
         super()
       end
       
@@ -31,8 +31,8 @@ module GSL
       "History:"
     end
     
-    def event
-      Event.new(self)
+    def event(starting = {})
+      Event.new(self, starting)
     end
   end
 end
