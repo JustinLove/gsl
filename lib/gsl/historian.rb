@@ -4,6 +4,11 @@ module GSL
       def initialize(_historian)
         @historian = _historian
         @data = {}
+        super()
+      end
+      
+      def to_s
+        "Event: " + @data.to_s
       end
       
       def record(what)

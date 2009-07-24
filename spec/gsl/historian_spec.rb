@@ -3,6 +3,9 @@ libs %w{gsl/historian gsl/resource_user}
 
 class GSL::Historian
   include Tattler
+  class Event
+    include Tattler
+  end
 end
 
 class User
@@ -31,6 +34,8 @@ describe GSL::Historian do
     before do
       @object = @event = @historian.event
     end
+    
+    it_should_behave_like "well behaved objects"
     
     it "starts blank" do
       @object[:cheese].should be_nil
