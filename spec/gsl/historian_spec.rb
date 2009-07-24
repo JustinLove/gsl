@@ -51,5 +51,9 @@ describe GSL::Historian do
       e[:eggs].should == 12
     end
   end
+  
+  it "starts with no events" do
+    @object.events.should == 0
+  end
 end
 

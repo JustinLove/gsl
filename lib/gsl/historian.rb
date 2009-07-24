@@ -27,12 +27,21 @@ module GSL
       end
     end
     
+    def initialize
+      @events = []
+      super
+    end
+    
     def to_s
       "History:"
     end
     
     def event(starting = {})
       Event.new(self, starting)
+    end
+  
+    def events
+      @events.size
     end
   end
 end
