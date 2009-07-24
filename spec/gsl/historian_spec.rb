@@ -55,5 +55,10 @@ describe GSL::Historian do
   it "starts with no events" do
     @object.events.should == 0
   end
+  
+  it "keeps track of events" do
+    @object.event
+    @object.events.should == 1
+  end
 end
 

@@ -37,7 +37,9 @@ module GSL
     end
     
     def event(starting = {})
-      Event.new(self, starting)
+      x = Event.new(self, starting)
+      @events << x
+      x
     end
   
     def events
